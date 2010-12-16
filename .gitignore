@@ -1,0 +1,6 @@
+# SVN directories
+.svn
+
+# Flash Builder files
+.settings
+bin-debug/*

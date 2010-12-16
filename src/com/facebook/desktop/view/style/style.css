@@ -1,0 +1,49 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+.facebookButton {
+	cornerRadius: 0;
+	fillColors: #5f78ab, #617aac, #617aac, #617aac;
+	color: #ffffff;
+	textRollOverColor: #ffffff;
+	textSelectedColor: #ffffff;
+	borderColor: #29447e;
+	themeColor: #29447e;
+}
+
+.toastWindow {
+	showFlexChrome: false;
+}
+
+.popup {
+	showFlexChrome: false;
+	font-family: "lucida grande", tahoma, verdana, arial, sans-serif;
+}
+
+.bodyText {
+	color: #f7f7f7;
+	font-size: 11;
+	padding-left: 5;
+	top: -5;
+	verticalCenter: 0;
+}
+.toastCanvas {
+	padding-top: 8;
+	padding-right: 8;
+	padding-bottom: 8;
+	padding-left: 8;
+	vertical-align: top;
+	min-height: 48;
+}
+.shelfItem {
+	padding-bottom: 3;
+	padding-top: 3;
+}
+
+.moreLink {
+	padding-top: 6;
+	font-size: 11;
+	color: #EEEEEE;
+	text-align: right;
+}

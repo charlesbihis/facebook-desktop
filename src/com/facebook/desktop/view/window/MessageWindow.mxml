@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window
+		xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		width="300" height="{Capabilities.screenResolutionY}"
+		transparent="true" systemChrome="none" showStatusBar="false" type="lightweight"
+		maximizable="false" minimizable="false" resizable="false"
+		styleName="popup" alwaysInFront="true" backgroundAlpha="0">
+	
+	<fx:Script>
+		<![CDATA[
+			[Bindable] public var windowTitle:String;
+			[Bindable] public var windowMessage:String;
+			[Bindable] public var showOkayButton:Boolean
+			
+			
+			public override function open(openWindowActive:Boolean = true):void
+			{
+				// actually open the window
+				super.open(openWindowActive);
+				
+				// center it
+				nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
+				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
+				
+				fadein.play();
+			}  // open
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout verticalAlign="middle"/>
+	</s:layout>
+	
+	<fx:Declarations>
+		<mx:Fade id="fadein"
+				 target="{this}"
+				 alphaFrom="0"
+				 alphaTo="1"
+				 duration="300" />
+		<mx:Fade id="fadeout"
+				 target="{this}"
+				 alphaFrom="1"
+				 alphaTo="0"
+				 duration="300"
+				 effectEnd="close()" />
+	</fx:Declarations>
+	
+	<mx:VBox cornerRadius="8" backgroundColor="black" backgroundAlpha="0.4" width="100%" minHeight="90" verticalAlign="middle" paddingTop="12" paddingBottom="12" paddingLeft="12" paddingRight="12">
+		<mx:VBox id="mainCanvas" width="100%" height="100%" backgroundColor="white" paddingBottom="8">
+			<mx:VBox width="100%" height="35" backgroundColor="#6d84b4" verticalAlign="middle" paddingLeft="12">
+				<s:Label text="{windowTitle}" fontSize="17" color="white" />
+			</mx:VBox>
+			<mx:Text width="250" paddingLeft="10" text="{windowMessage}" fontSize="11" />
+			<mx:HBox height="100%" width="100%" backgroundColor="#f2f2f2" verticalAlign="middle" horizontalAlign="right" paddingRight="10" paddingBottom="10" paddingTop="10" visible="{showOkayButton}" includeInLayout="{showOkayButton}">
+				<s:Group verticalCenter="0" horizontalCenter="0" click="fadeout.play()">
+					<s:Rect id="rect" radiusX="0" radiusY="4" top="0" right="0" bottom="0" left="0">
+						<s:fill>
+							<s:SolidColor color="0x5f78ab" />
+						</s:fill>
+						<s:stroke>
+							<s:SolidColorStroke color="0x29447e" weight="1"/>
+						</s:stroke>
+					</s:Rect>
+					<s:Label text="Okay" color="0xffffff" 
+							 textAlign="center" verticalAlign="middle"
+							 horizontalCenter="0" verticalCenter="1"
+							 left="12" right="12" top="6" bottom="6" />
+				</s:Group>
+			</mx:HBox>
+		</mx:VBox>
+	</mx:VBox>
+	
+</s:Window>

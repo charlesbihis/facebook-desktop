@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:composer="com.facebook.desktop.view.composer.*"
+	xmlns:component="com.facebook.desktop.view.component.*"
+	title="Status Update Window"
+	width="400" height="132"
+	transparent="true"
+	systemChrome="none"
+	showStatusBar="false"
+	type="lightweight"
+	maximizable="false"
+	minimizable="false"
+	resizable="false"
+	styleName="popup"
+	alwaysInFront="true"
+	backgroundAlpha="0">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.facebook.desktop.control.Controller;
+			import com.facebook.desktop.control.api.GetStreamUpdates;
+			import com.facebook.desktop.control.api.UpdateStatus;
+			import com.facebook.desktop.control.notification.ToastManager;
+			import com.facebook.desktop.model.Model;
+			
+			import mx.logging.ILogger;
+			import mx.logging.Log;
+			
+			private static const RIGHT_MARGIN:int = 10;
+			private static const TOP_MARGIN:int = 5;
+			private static const DEFAULT_HEIGHT:int = 107;
+			
+			private static var logger:ILogger = Log.getLogger("com.facebook.composer.Composer");
+			private static var model:Model = Model.instance;
+			private static var controller:Controller = Controller.instance;
+
+			public override function open(openWindowActive:Boolean = true):void
+			{
+				logger.info("Showing status-update window");
+				
+				// actually open the window
+				super.open(openWindowActive);
+
+				// position it
+				if (model.operatingSystem == "Mac")
+				{
+					nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
+					nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
+				}  // if statement
+				else
+				{
+					nativeWindow.x = Capabilities.screenResolutionX - width - RIGHT_MARGIN;
+					nativeWindow.y = Screen.mainScreen.visibleBounds.y + Screen.mainScreen.visibleBounds.height - bounds.height - TOP_MARGIN;
+				}  // else statement
+				
+				// add event listeners
+				addEventListener(KeyboardEvent.KEY_DOWN, keyPressed);
+				
+				// make sure we aren't locked out from a failed update before
+				composerInput.editable = true;
+				shareButton.enabled = true;
+				
+				// fade it in
+				visible = true;
+				controller.statusUpdateWindowOpen = true;
+				fadein.play();
+			}  // open
+			
+			public function hide():void
+			{
+				logger.info("Hiding status-update window");
+				removeEventListener(KeyboardEvent.KEY_DOWN, keyPressed);
+				controller.statusUpdateWindowOpen = false;
+				visible = false;
+//				fadeout.play();
+			}  // hide
+			
+			private function shareStatus(event:MouseEvent):void
+			{
+				// ignore shift-clicks, and blank messages when composer is inactive
+				if (!composerInput.active || event.shiftKey || composerInput.text.length <= 0)
+				{
+					return;
+				}  // if statement
+				
+				// start the update process
+				composerInput.active = false;
+				composerInput.editable = false;
+				shareButton.enabled = false;
+				
+				var updateStatusCommand:UpdateStatus = new UpdateStatus();
+				updateStatusCommand.message = composerInput.text;
+				updateStatusCommand.execute(updateStatusHandler);
+				
+				function updateStatusHandler(result:Object, fail:Object):void
+				{
+					logger.info("Just published update: '" + composerInput.text + "'");
+					
+					composerInput.text = "";
+					composerInput.active = true;
+					composerInput.editable = true;
+					shareButton.enabled = true;
+					
+					var getStreamUpdatesCommand:GetStreamUpdates = new GetStreamUpdates();
+					getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
+					getStreamUpdatesCommand.execute();
+					
+					ToastManager.queueToast("Your status has been updated!", "", "http://www.facebook.com/profile.php", "/assets/images/toast/wall-post.png", true);
+					ToastManager.showAll();
+					
+					hide();
+				}  // updateStatusHandler
+				
+//				var publishUpdateCommand:StreamPublish = new StreamPublish();
+//				publishUpdateCommand.updateMessage = composerInput.text;
+//				publishUpdateCommand.execute(publishUpdateHandler, errorHandler);
+				
+				function publishUpdateHandler():void
+				{
+					logger.info("Just published update: '" + composerInput.text + "'");
+					
+					composerInput.text = "";
+					composerInput.active = true;
+					composerInput.editable = true;
+					shareButton.enabled = true;
+					
+					var getStreamUpdatesCommand:GetStreamUpdates = new GetStreamUpdates();
+					getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
+					getStreamUpdatesCommand.execute();
+					
+					ToastManager.queueToast("Your status has been updated!", "", "http://www.facebook.com/profile.php", "/assets/images/toast/wall-post.png", true);
+					ToastManager.showAll();
+					
+					hide();
+				}  // publishUpdateHandler
+			}  // shareStatus
+			
+			private function keyPressed(event:KeyboardEvent):void
+			{
+				if (event.keyCode == Keyboard.ESCAPE)
+				{
+					hide();
+				}  // if statement
+			}  // keyPressed
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout verticalAlign="bottom"/>
+	</s:layout>
+	
+	<fx:Declarations>
+		<mx:Fade id="fadein"
+				 target="{this}"
+				 alphaFrom="0"
+				 alphaTo="1"
+				 duration="300" />
+		<mx:Fade id="fadeout"
+				 target="{this}"
+				 alphaFrom="1"
+				 alphaTo="0"
+				 duration="300" />
+	</fx:Declarations>
+	
+	<mx:VBox width="100%" verticalAlign="middle"
+			 paddingTop="13" paddingBottom="13" paddingLeft="13" paddingRight="13"
+			 backgroundColor="black" backgroundAlpha="0.55" cornerRadius="8">
+		<mx:VBox width="100%" horizontalAlign="center" horizontalGap="5"
+				 paddingTop="5" paddingBottom="5" paddingLeft="8" paddingRight="8"
+				 backgroundColor="#E3E3E3">
+			<composer:ComposerTextArea id="composerInput" width="100%" heightInLines="{NaN}" minHeight="40" maxHeight="65" />
+			<mx:HBox width="100%" verticalAlign="middle">
+				<component:CustomButton width="15" height="15" offImage="/assets/images/composer/composer_close.png" onImage="/assets/images/composer/composer_close_over.png" click="hide()" />
+				<mx:Spacer width="100%" />
+				<component:FacebookButton id="shareButton" click="shareStatus(event)" height="25" width="55" text="Share" fontSize="15" />
+			</mx:HBox>
+		</mx:VBox>
+	</mx:VBox>
+	
+</s:Window>

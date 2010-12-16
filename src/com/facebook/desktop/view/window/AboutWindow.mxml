@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window
+		xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:component="com.facebook.desktop.view.component.*"
+		width="400" height="320"
+		transparent="true" systemChrome="none" showStatusBar="false" type="lightweight"
+		maximizable="false" minimizable="false" resizable="false"
+		styleName="popup" alwaysInFront="true" backgroundAlpha="0">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.facebook.desktop.control.Controller;
+			
+			private static var controller:Controller = Controller.instance;
+			
+			[Bindable]
+			private var version:String;
+			
+			
+			public override function open(openWindowActive:Boolean = true):void
+			{
+				// actually open the window
+				super.open(openWindowActive);
+				
+				// center it
+				nativeWindow.x = (Capabilities.screenResolutionX - nativeWindow.width) / 2;
+				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
+				
+				var applicationDescriptor:XML = NativeApplication.nativeApplication.applicationDescriptor;
+				var air:Namespace = applicationDescriptor.namespaceDeclarations()[0];	// define the Namespace (there is only one by default in the application descriptor file)
+				version = "(v" + applicationDescriptor.air::version + ")";
+				
+				fadein.play();
+			}  // open
+			
+			private function doClose():void
+			{
+				controller.aboutWindowOpen = false;
+				close();
+			}  // doClose
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<mx:Fade id="fadein"
+				 target="{this}"
+				 alphaFrom="0"
+				 alphaTo="1"
+				 duration="300" />
+		<mx:Fade id="fadeout"
+				 target="{this}"
+				 alphaFrom="1"
+				 alphaTo="0"
+				 duration="300"
+				 effectEnd="doClose()" />
+	</fx:Declarations>
+
+	<mx:VBox cornerRadius="8" backgroundColor="black" backgroundAlpha="0.4" width="100%" height="100%" verticalAlign="middle" paddingTop="12" paddingBottom="12" paddingLeft="12" paddingRight="12">
+		<mx:VBox id="mainCanvas" width="100%" height="100%" backgroundColor="white" horizontalAlign="center">
+			<mx:VBox width="100%" height="35" backgroundColor="#6d84b4" verticalAlign="middle" horizontalAlign="center" paddingLeft="12">
+				<s:Label text="About Facebook Desktop" fontSize="17" color="white" />
+			</mx:VBox>
+			<mx:VBox height="215" width="100%" horizontalAlign="center" verticalAlign="middle" verticalGap="0">
+				<mx:Image source="/assets/icons/icon48.png" />
+				<mx:HBox horizontalAlign="center" verticalAlign="middle" horizontalGap="3" paddingTop="7">
+					<s:Label text="Facebook Desktop" fontSize="14" fontWeight="bold" />
+					<s:Label text="{version}" fontSize="10" />
+				</mx:HBox>
+				<mx:Label text="Helping you stay connected" fontSize="11" />
+				<mx:Spacer height="10" />
+				<mx:Text textAlign="center" width="350" htmlText="Facebook Desktop is developed and maintained by Charles Bihis.  Find out more about us at our &lt;u&gt;&lt;a href='http://www.facebookdesktop.com'&gt;homepage&lt;/a&gt;&lt;/u&gt; or on our &lt;u&gt;&lt;a href='http://www.facebook.com/apps/application.php?id=95615112563'&gt;Facebook Application Page&lt;/a&gt;&lt;/u&gt;!  You can follow us on &lt;u&gt;&lt;a href='http://www.twitter.com/facebookdesktop'&gt;Twitter&lt;/a&gt;&lt;/u&gt; too!" />
+				<mx:Spacer height="20" />
+				<mx:Text textAlign="center" width="350" fontSize="9" color="#777777" htmlText="Not designed for use in aircraft, air traffic, navigation or aircraft communications; or in the design, construction, operation or maintenance of any nuclear facility." />
+			</mx:VBox>
+			<mx:HBox height="100%" width="100%" backgroundColor="#f2f2f2" verticalAlign="middle" horizontalAlign="right" paddingRight="12">
+				<component:FacebookButton click="fadeout.play()" width="51" height="24" text="Okay" />
+			</mx:HBox>
+		</mx:VBox>
+	</mx:VBox>
+	
+</s:Window>

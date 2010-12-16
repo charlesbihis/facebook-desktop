@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:composer="com.facebook.desktop.view.composer.*"
+	creationComplete="init()"
+	visible="false">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.facebook.desktop.control.api.GetActivityNotifications;
+			import com.facebook.desktop.control.api.GetProfileNotifications;
+			import com.facebook.desktop.control.api.GetStartupNotifications;
+			import com.facebook.desktop.control.api.GetStreamUpdates;
+			import com.facebook.desktop.control.logging.Logging;
+			import com.facebook.desktop.control.preferences.PreferencesManager;
+			import com.facebook.desktop.control.system.SystemIcons;
+			import com.facebook.desktop.control.util.Util;
+			import com.facebook.desktop.model.Model;
+			import com.facebook.graph.FacebookDesktop;
+			import com.facebook.desktop.control.notification.ToastManager;
+			import com.facebook.desktop.control.updates.UpdateManager;
+			import com.facebook.desktop.model.users.User;
+			
+			import mx.logging.ILogger;
+			import mx.logging.Log;
+			
+			private static const POLL_DELAY:uint = 60000;	// poll every minute
+			private static const IDLE_TIME:int = 15;		// idle starts after 15 seconds
+			
+			[Bindable] private var model:Model = Model.instance;
+			[Bindable] private var connected:Boolean;
+			[Bindable] private var paused:Boolean;
+			
+			private var logger:ILogger = Log.getLogger(className);
+			
+			private var pollTimer:Timer = new Timer(POLL_DELAY);
+			
+			private function init():void
+			{
+				// set up logging
+				Logging.init();
+				logger.info("\n********* starting new session *********\n");
+				logger.info("Logging initialized");
+
+				// grab preferences
+				PreferencesManager.loadPreferences();
+				
+				// set up application to start on user-login
+				if(!flash.system.Capabilities.isDebugger)
+				{
+					logger.info("Setting app to start on user-login");
+					NativeApplication.nativeApplication.startAtLogin = model.preferences.startAtLogin;
+				}  // if statement
+				
+				// determine OS
+				var os:String = flash.system.Capabilities.os.substr(0, 3);
+				if (os == "Win" || os == "Mac")
+				{
+					model.operatingSystem = os;
+				}  // if statement
+				else
+				{
+					model.operatingSystem = "Linux";
+				}  // else statement
+				logger.info("OS set to {0}", model.operatingSystem);
+				
+				// init tray/dock icon
+				SystemIcons.init();
+				
+				// init user-presence logic
+				logger.info("Initializing user-presence logic");
+				NativeApplication.nativeApplication.idleThreshold = IDLE_TIME;
+				NativeApplication.nativeApplication.addEventListener(Event.USER_IDLE, onIdle);
+				NativeApplication.nativeApplication.addEventListener(Event.USER_PRESENT, onPresence);
+
+				// check for updates
+				logger.info("Checking for updates");
+				UpdateManager.checkForUpdates();
+				
+				// initialize our Facebook session
+				FacebookDesktop.init(Model.APPLICATION_ID, loginHandler);
+				
+				var triedLogin:Boolean = false;
+				function loginHandler(session:Object, fail:Object):void
+				{
+					// if we have a session, restore it
+					if (session != null)
+					{
+						logger.info("Connected and all permissions granted! We are fully authorized!");
+						
+						// tell the model
+						model.connected = true;
+						
+						// adjust icon and menus
+						SystemIcons.changeIcon(true);
+						SystemIcons.changeMenus(true);
+						
+						// show login popup
+						ToastManager.show("Welcome to Facebook Desktop!", null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
+						model.latestFiveUpdates.removeAll();
+						
+						// get latest update so that we can start receiving pop-ups for *new* updates
+						FacebookDesktop.api("/me/home", getStreamHandler, {limit:1});
+					}  // if statement
+					else if (!triedLogin)
+					{
+						FacebookDesktop.login(loginHandler, Model.REQUIRED_PERMISSIONS);
+						triedLogin = true;
+					}  // else statement
+				}  // loginHandler
+				
+				function getStreamHandler(result:Object, fail:Object):void
+				{
+					if (!fail && result is Array && (result as Array).length > 0)
+					{
+						// set latest-story-update time
+						var latestStreamUpdate:Date = Util.RFC3339toDate(result[0].created_time);
+						logger.info("Setting latest update time to " + latestStreamUpdate.toString());
+						model.latestStreamUpdate = (latestStreamUpdate.time / 1000).toString();
+						
+						startTheShow();
+					}  // if statement
+					else
+					{
+						logger.error("Request to get latest update has failed!  Error object: " + fail);
+					}  // else statement
+				}  // getStreamHandler
+			}  // init
+			
+			private function onIdle(event:Event):void
+			{
+				logger.info("Idling...");
+				ToastManager.pauseExpiration();
+			}  // onIdle
+			
+			private function onPresence(event:Event):void
+			{
+				logger.info("Resuming...");
+				ToastManager.resumeExpiration();
+			}  // onPresence
+			
+			private function startTheShow():void
+			{
+				logger.info("Initialization and connection complete!");
+				
+				// check for start-up notifications (messages, pokes, shares, friend-requests, group-invites, and event-invites)
+				logger.info("Fetching start-up notifications");
+				
+				// messages, pokes, and shares
+				var getStartupNotificationsCommand:GetStartupNotifications = new GetStartupNotifications();
+				getStartupNotificationsCommand.execute();
+				
+				// friend-requests, group-invites, and event-invites
+				var getProfileNotificationsCommand:GetProfileNotifications = new GetProfileNotifications();
+				getProfileNotificationsCommand.execute();
+				
+				// finally, start the poller
+				logger.info("Starting the poller");
+				pollTimer.addEventListener(TimerEvent.TIMER, poll);
+				pollTimer.start();
+				
+				function poll():void
+				{
+					if (connected && !paused)
+					{
+						// check for real-time notifications (story-updates, likes, and comments)
+						logger.info("Polling!");
+						
+						// stream-updates
+						var getStreamUpdatesCommand:GetStreamUpdates = new GetStreamUpdates();
+						getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
+						getStreamUpdatesCommand.execute();
+						
+						// likes and comments
+						var getActivityNotificationsCommand:GetActivityNotifications = new GetActivityNotifications();
+						getActivityNotificationsCommand.includeRead = "0";
+						getActivityNotificationsCommand.startTime = model.latestActivityUpdate;
+						getActivityNotificationsCommand.execute();
+					}  // if statement
+				}  // poll
+			}  // startTheShow
+		]]>
+	</fx:Script>
+	
+	<fx:Style source="/com/facebook/desktop/view/style/style.css" />
+	
+	<fx:Binding source="model.connected" destination="connected" />
+	<fx:Binding source="model.paused" destination="paused" />
+	
+</s:WindowedApplication>
