@@ -27,7 +27,7 @@ package com.facebook.desktop.control.api
 			
 			function handler(updates:Object, fail:Object):void
 			{
-				if (updates is Array && (updates as Array).length > 0)
+				if (model.preferences.showStoryUpdates && updates is Array && (updates as Array).length > 0)
 				{
 					for (var i:int = 0; i < updates.length; i++)
 					{
