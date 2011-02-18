@@ -80,7 +80,7 @@
 			private function doClose():void
 			{
 				controller.settingsWindowOpen = false;
-				close()
+				close();
 			}  // doClose
 		]]>
 	</fx:Script>

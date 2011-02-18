@@ -48,6 +48,9 @@ package com.facebook.desktop.control.preferences
 		{
 			logger.info("Saving preferences");
 			sharedObject.data["preferences"] = model.preferences;
+			
+			// force to write object immediately
+			sharedObject.flush();
 		}  // savePreferences
 		
 		public static function getPreference(key:String):Object
