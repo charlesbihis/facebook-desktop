@@ -1,12 +1,13 @@
 package com.facebook.desktop.control.api
 {
-	import com.facebook.desktop.model.Model;
-	import com.facebook.graph.FacebookDesktop;
 	import com.facebook.desktop.control.notification.ToastManager;
+	import com.facebook.desktop.model.Model;
 	import com.facebook.desktop.model.users.UserCache;
+	import com.facebook.graph.FacebookDesktop;
 	
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.resources.ResourceManager;
 
 	public class GetStreamUpdates
 	{
@@ -43,7 +44,7 @@ package com.facebook.desktop.control.api
 						// put in generic message for blank updates
 						if (update.message == null || update.message == "")
 						{
-							update.message = "has posted a story to Facebook";
+							update.message = ResourceManager.getInstance().getString("resources", "toast.someonePostedStory");
 						}  // if statement
 						
 						makeToast(uids, update.message, update.permalink, (i == (updates.length - 1)) ? true : false);

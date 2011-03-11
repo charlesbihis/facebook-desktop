@@ -98,7 +98,7 @@
 						SystemIcons.changeMenus(true);
 						
 						// show login popup
-						ToastManager.show("Welcome to Facebook Desktop!", null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
+						ToastManager.show(resourceManager.getString("resources", "toast.welcome"), null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
 						model.latestFiveUpdates.removeAll();
 						
 						// get latest update so that we can start receiving pop-ups for *new* updates
@@ -183,6 +183,10 @@
 			}  // startTheShow
 		]]>
 	</fx:Script>
+	
+	<fx:Metadata>
+		[ResourceBundle("resources")]
+	</fx:Metadata>
 	
 	<fx:Style source="/com/facebook/desktop/view/style/style.css" />
 	

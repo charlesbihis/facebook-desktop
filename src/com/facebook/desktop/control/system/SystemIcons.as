@@ -3,11 +3,11 @@ package com.facebook.desktop.control.system
 	import com.facebook.desktop.control.Controller;
 	import com.facebook.desktop.control.api.GetActivityNotifications;
 	import com.facebook.desktop.control.api.GetStreamUpdates;
+	import com.facebook.desktop.control.notification.ToastManager;
 	import com.facebook.desktop.control.util.Util;
 	import com.facebook.desktop.model.Model;
-	import com.facebook.graph.FacebookDesktop;
-	import com.facebook.desktop.control.notification.ToastManager;
 	import com.facebook.desktop.model.users.UserCache;
+	import com.facebook.graph.FacebookDesktop;
 	
 	import flash.desktop.DockIcon;
 	import flash.desktop.NativeApplication;
@@ -21,9 +21,11 @@ package com.facebook.desktop.control.system
 	import flash.net.SharedObject;
 	import flash.net.URLRequest;
 	
+	import mx.binding.utils.ChangeWatcher;
 	import mx.charts.AreaChart;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.resources.ResourceManager;
 	
 	public class SystemIcons
 	{
@@ -31,15 +33,15 @@ package com.facebook.desktop.control.system
 		private static var systemTrayIcon:SystemTrayIcon;
 		private static var dockIcon:DockIcon;
 		
-		private static var aboutCommand:NativeMenuItem = new NativeMenuItem("About");
-		private static var updateStatusCommand:NativeMenuItem = new NativeMenuItem("Update Status");
-		private static var pausePlayCommand:NativeMenuItem = new NativeMenuItem("Pause");
-		private static var checkForUpdatesCommand:NativeMenuItem = new NativeMenuItem("Check for Updates");
-		private static var replayLatestFiveUpdatesCommand:NativeMenuItem = new NativeMenuItem("Replay Latest Five Updates");
-		private static var settingsCommand:NativeMenuItem = new NativeMenuItem("Settings");
-		private static var loginCommand:NativeMenuItem = new NativeMenuItem("Login");
-		private static var logoutCommand:NativeMenuItem = new NativeMenuItem("Logout");
-		private static var exitCommand:NativeMenuItem = new NativeMenuItem("Exit");
+		private static var aboutCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.about"));
+		private static var updateStatusCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.updateStatus"));
+		private static var pausePlayCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.pause"));
+		private static var checkForUpdatesCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.checkForUpdates"));
+		private static var replayLatestFiveUpdatesCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.replayLatestFive"));
+		private static var settingsCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.settings"));
+		private static var loginCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.login"));
+		private static var logoutCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.logout"));
+		private static var exitCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.exit"));
 		private static var topSeparator:NativeMenuItem = new NativeMenuItem("", true);
 		private static var bottomSeparator:NativeMenuItem = new NativeMenuItem("", true);
 		
@@ -64,13 +66,16 @@ package com.facebook.desktop.control.system
 			loginCommand.addEventListener(Event.SELECT, loginHandler);
 			exitCommand.addEventListener(Event.SELECT, exitHandler);
 			
+			// listen to changes in language so I can reset the context menus
+			ResourceManager.getInstance().addEventListener(Event.CHANGE, changeLanguage);
+			
 			if (supportsSystemTray)
 			{
 				logger.info("Initializing system-tray icon and menu");
 				iconLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, iconLoadComplete);
 				iconLoader.load(new URLRequest("/assets/icons/paused-icon16.png"));
 				systemTrayIcon = NativeApplication.nativeApplication.icon as SystemTrayIcon;
-				systemTrayIcon.tooltip = "Facebook Desktop";
+				systemTrayIcon.tooltip = ResourceManager.getInstance().getString("resources", "application.name");
 				systemTrayIcon.menu = createIconMenu(supportsSystemTray);
 				systemTrayIcon.addEventListener(MouseEvent.CLICK, iconClick);
 			}  // if statement
@@ -95,6 +100,19 @@ package com.facebook.desktop.control.system
 				updateStatusHandler();
 //				flash.net.navigateToURL(new URLRequest("http://www.facebook.com/"));
 			}  // iconClick
+			
+			function changeLanguage(event:Event):void
+			{
+				aboutCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.about");
+				updateStatusCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.updateStatus");
+				pausePlayCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.pause");
+				checkForUpdatesCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.checkForUpdates");
+				replayLatestFiveUpdatesCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.replayLatestFive");
+				settingsCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.settings");
+				loginCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.login");
+				logoutCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.logout");
+				exitCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.exit");
+			}  // changeLanguage
 		}  // init
 		
 		public static function changeMenus(loggedIn:Boolean):void
@@ -285,7 +303,7 @@ package com.facebook.desktop.control.system
 					SystemIcons.changeMenus(true);
 					
 					// show login popup
-					ToastManager.show("Welcome to Facebook Desktop!", null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
+					ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.welcome"), null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
 					model.latestFiveUpdates.removeAll();
 					
 					// get latest update so that we can start receiving pop-ups for *new* updates
@@ -314,7 +332,7 @@ package com.facebook.desktop.control.system
 			logger.info("Logging out! Goodbye!");
 			
 			changeIcon(false);
-			ToastManager.show("Goodbye!", "");
+			ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.goodbye"), "");
 			
 			// clear toast-history
 			model.latestFiveUpdates.removeAll();
@@ -332,19 +350,19 @@ package com.facebook.desktop.control.system
 		
 		private static function pausePlayHandler(event:Event = null):void
 		{
-			if (pausePlayCommand.label == "Pause")
+			if (pausePlayCommand.label == ResourceManager.getInstance().getString("resources", "contextMenu.pause"))
 			{
 				logger.info("Pausing notifications");
 				changeIcon(false);
 				model.paused = true;
-				pausePlayCommand.label = "Resume";
+				pausePlayCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.resume");
 			}  // if statement
 			else
 			{
 				logger.info("Resuming notifications");
 				changeIcon(true);
 				model.paused = false;
-				pausePlayCommand.label = "Pause";
+				pausePlayCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.pause");
 			}  // else statement
 		}  // pausePlayHandler
 		
@@ -383,7 +401,7 @@ package com.facebook.desktop.control.system
 				if (totalUpdates == 0)
 				{
 					logger.info("No new updates to show");
-					ToastManager.show("No New Updates", "");
+					ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.noNewUpdates"), "");
 				}  // if statement
 			}  // getActivityNotificationsHandler
 		}  // checkForUpdatesHandler

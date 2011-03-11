@@ -10,6 +10,7 @@ package com.facebook.desktop.control.notification
 	import mx.collections.ArrayCollection;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.resources.ResourceManager;
 
 	public class ToastManager
 	{
@@ -54,8 +55,8 @@ package com.facebook.desktop.control.notification
 			{
 				logger.info("Displaying summary-toast with a queue of {0} messages", model.activeToasts.length);
 				summaryToast.toastImage = DEFAULT_ICON;
-				summaryToast.toastTitle = "Story Updates!";
-				summaryToast.toastMessage = "There have been " + model.activeToasts.length + " stories posted to your stream while you were gone.";
+				summaryToast.toastTitle = ResourceManager.getInstance().getString("resources", "toast.storyUpdates");
+				summaryToast.toastMessage = ResourceManager.getInstance().getString("resources", "toast.summaryBegin") + " " + model.activeToasts.length + " " + ResourceManager.getInstance().getString("resources", "toast.summaryEnd");
 //				summaryToast.toastLink = "http://www.facebook.com/";
 				summaryToast.alwaysInFront = true;
 				summaryToast.open(false);
@@ -110,7 +111,7 @@ package com.facebook.desktop.control.notification
 		{
 			if (model.latestFiveUpdates.length <= 0)
 			{
-				ToastManager.show("No Updates to Show", "");
+				ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.noUpdates"), "");
 				
 				return;
 			}  // if statement
@@ -183,7 +184,7 @@ package com.facebook.desktop.control.notification
 			if (toast.toastLink != null && toast.toastLink != "")
 			{
 				// let's filter particular toasts here
-				if (toast.toastTitle != "Welcome to Facebook Desktop!")
+				if (toast.toastTitle != ResourceManager.getInstance().getString("resources", "toast.welcome"))
 				{
 					model.latestFiveUpdates.addItem(toast);
 				}  // if statement

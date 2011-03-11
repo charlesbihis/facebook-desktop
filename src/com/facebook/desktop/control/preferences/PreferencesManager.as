@@ -6,6 +6,7 @@ package com.facebook.desktop.control.preferences
 	
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.resources.ResourceManager;
 
 	public class PreferencesManager
 	{
@@ -21,6 +22,9 @@ package com.facebook.desktop.control.preferences
 			{
 				logger.info("Loading previously saved preferences");
 				model.preferences = sharedObject.data["preferences"];
+				
+				// load up the previously used language
+				ResourceManager.getInstance().localeChain = [model.locales[model.preferences.language].locale];
 			}  // if statement
 			else
 			{
@@ -28,7 +32,7 @@ package com.facebook.desktop.control.preferences
 				
 				var preferences:Object = new Object();
 				preferences.startAtLogin = true;
-				preferences.playSound = false;
+				preferences.language = 0;		// defaults to en_US which is index 0 in model.locales - must remember to change this if we ever put in another language before en_US
 				preferences.showStoryUpdates = true;
 				preferences.showStoryActivity = true;
 				preferences.showFriendRequests = true;
@@ -38,6 +42,9 @@ package com.facebook.desktop.control.preferences
 				preferences.showGroupInvites = true;
 				preferences.showEventInvites = true;
 				preferences.markNotificationsAsRead = false;
+				
+				// not yet implemented
+				preferences.playSound = false;
 				
 				model.preferences = preferences;
 				sharedObject.data["preferences"] = preferences;

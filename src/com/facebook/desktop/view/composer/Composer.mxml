@@ -56,8 +56,11 @@
 					nativeWindow.y = Screen.mainScreen.visibleBounds.y + Screen.mainScreen.visibleBounds.height - bounds.height - TOP_MARGIN;
 				}  // else statement
 				
-				// add event listeners
-				addEventListener(KeyboardEvent.KEY_DOWN, keyPressed);
+				// listen to key-strokes to detect the ESC key
+				if (!hasEventListener(KeyboardEvent.KEY_DOWN))
+				{
+					addEventListener(KeyboardEvent.KEY_DOWN, keyPressed);
+				}  // if statement
 				
 				// make sure we aren't locked out from a failed update before
 				composerInput.editable = true;
@@ -97,45 +100,25 @@
 				
 				function updateStatusHandler(result:Object, fail:Object):void
 				{
-					logger.info("Just published update: '" + composerInput.text + "'");
-					
-					composerInput.text = "";
-					composerInput.active = true;
-					composerInput.editable = true;
-					shareButton.enabled = true;
-					
-					var getStreamUpdatesCommand:GetStreamUpdates = new GetStreamUpdates();
-					getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
-					getStreamUpdatesCommand.execute();
-					
-					ToastManager.queueToast("Your status has been updated!", "", "http://www.facebook.com/profile.php", "/assets/images/toast/wall-post.png", true);
-					ToastManager.showAll();
+					if (!fail)
+					{
+						logger.info("Just published update: '" + composerInput.text + "'");
+						
+						composerInput.text = "";
+						composerInput.active = true;
+						composerInput.editable = true;
+						shareButton.enabled = true;
+						
+						var getStreamUpdatesCommand:GetStreamUpdates = new GetStreamUpdates();
+						getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
+						getStreamUpdatesCommand.execute();
+						
+						ToastManager.queueToast(resourceManager.getString("resources", "action.statusUpdate.success"), "", "http://www.facebook.com/profile.php", "/assets/images/toast/wall-post.png", true);
+						ToastManager.showAll();
+					}  // if statement
 					
 					hide();
 				}  // updateStatusHandler
-				
-//				var publishUpdateCommand:StreamPublish = new StreamPublish();
-//				publishUpdateCommand.updateMessage = composerInput.text;
-//				publishUpdateCommand.execute(publishUpdateHandler, errorHandler);
-				
-				function publishUpdateHandler():void
-				{
-					logger.info("Just published update: '" + composerInput.text + "'");
-					
-					composerInput.text = "";
-					composerInput.active = true;
-					composerInput.editable = true;
-					shareButton.enabled = true;
-					
-					var getStreamUpdatesCommand:GetStreamUpdates = new GetStreamUpdates();
-					getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
-					getStreamUpdatesCommand.execute();
-					
-					ToastManager.queueToast("Your status has been updated!", "", "http://www.facebook.com/profile.php", "/assets/images/toast/wall-post.png", true);
-					ToastManager.showAll();
-					
-					hide();
-				}  // publishUpdateHandler
 			}  // shareStatus
 			
 			private function keyPressed(event:KeyboardEvent):void
@@ -175,7 +158,7 @@
 			<mx:HBox width="100%" verticalAlign="middle">
 				<component:CustomButton width="15" height="15" offImage="/assets/images/composer/composer_close.png" onImage="/assets/images/composer/composer_close_over.png" click="hide()" />
 				<mx:Spacer width="100%" />
-				<component:FacebookButton id="shareButton" click="shareStatus(event)" height="25" width="55" text="Share" fontSize="15" />
+				<component:FacebookButton id="shareButton" click="shareStatus(event)" text="{resourceManager.getString('resources','component.button.share')}" fontSize="15" />
 			</mx:HBox>
 		</mx:VBox>
 	</mx:VBox>

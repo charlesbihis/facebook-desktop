@@ -7,33 +7,36 @@ package com.facebook.desktop.view.composer
 	
 	import mx.events.FlexEvent;
 	import mx.managers.FocusManager;
+	import mx.resources.ResourceManager;
 	import mx.utils.StringUtil;
 	
 	import spark.components.TextArea;
 	
 	public class ComposerTextArea extends TextArea
 	{
-		private static const SHADOW_TEXT:String = "What's on your mind?";
 		private static const ENABLED_TEXT_COLOR:uint = 0x333333;
 		private static const DISABLED_TEXT_COLOR:uint = 0x808080;
 		
+		private var shadowText:String = ResourceManager.getInstance().getString("resources", "component.composer.shadowText");
 		private var _active:Boolean = true;
 		
 		public function ComposerTextArea()
 		{
 			super();
 			
-			text = SHADOW_TEXT;
+			text = shadowText;
 			
+			// add event listeners
 			addEventListener(FocusEvent.FOCUS_IN, focusIn);
 			addEventListener(FocusEvent.FOCUS_OUT, focusOut);
 			addEventListener(FlexEvent.CREATION_COMPLETE, creationComplete);
+			ResourceManager.getInstance().addEventListener(Event.CHANGE, changeLanguage);
 			
 			function focusIn(event:FocusEvent):void
 			{
 				active = true;
 				
-				if (text == SHADOW_TEXT)
+				if (text == shadowText)
 				{
 					text = "";
 				}  // if statement
@@ -43,6 +46,12 @@ package com.facebook.desktop.view.composer
 			{
 				active = false;
 			}  // focusOut
+			
+			function changeLanguage(event:Event):void
+			{
+				// reload the shadow-text (note: this erases whatever message was typed into the composer before - may want to change this logic at some point)
+				shadowText = text = ResourceManager.getInstance().getString("resources", "component.composer.shadowText");
+			}  // changeLanguage
 		}  // GrowableTextArea
 		
 		[Bindable]
@@ -68,7 +77,7 @@ package com.facebook.desktop.view.composer
 			
 			if (!active && mx.utils.StringUtil.trim(text).length == 0)
 			{
-				text = SHADOW_TEXT;
+				text = shadowText;
 			}  // if statement
 		}  // updateState
 	}  // class declaration

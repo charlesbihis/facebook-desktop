@@ -3,7 +3,8 @@
 		xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		width="550" height="500"
+		xmlns:component="com.facebook.desktop.view.component.*"
+		minWidth="550" minHeight="525" width="{mainCanvas.width + 30}" height="{mainCanvas.height + 30}"
 		transparent="true"
 		systemChrome="none"
 		showStatusBar="false"
@@ -24,10 +25,11 @@
 			import mx.logging.ILogger;
 			import mx.logging.Log;
 			
+			private static var logger:ILogger = Log.getLogger("com.facebook.preferences.PreferencesWindow");
 			private static var controller:Controller = Controller.instance;
 			
+			[Bindable]
 			private var model:Model = Model.instance;
-			private static var logger:ILogger = Log.getLogger("com.facebook.preferences.PreferencesWindow");
 			
 			public override function open(openWindowActive:Boolean = true):void
 			{
@@ -39,6 +41,7 @@
 				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
 				
 				// now load up the preferences
+				localeComboBox.selectedIndex = model.preferences.language;
 				startAtLoginCheckbox.selected = model.preferences.startAtLogin;
 				showStoriesCheckBox.selected = model.preferences.showStoryUpdates;
 				showStoryActivityCheckBox.selected = model.preferences.showStoryActivity;
@@ -50,11 +53,15 @@
 				eventInviteCheckBox.selected = model.preferences.showEventInvites;
 				markAsReadCheckBox.selected = model.preferences.markNotificationsAsRead;
 				
+				// for some reason, combo-box won't drop down on first click unless it's given focus
+				localeComboBox.setFocus();
+				
 				fadein.play();
 			}  // open
 			
 			private function saveSettings():void
 			{
+				model.preferences.language = localeComboBox.selectedIndex;
 				model.preferences.startAtLogin = startAtLoginCheckbox.selected;
 				model.preferences.showStoryUpdates = showStoriesCheckBox.selected;
 				model.preferences.showStoryActivity = showStoryActivityCheckBox.selected;
@@ -68,6 +75,11 @@
 				
 				PreferencesManager.savePreferences();
 			}  // saveSettings
+			
+			private function changeLanguage():void
+			{
+				resourceManager.localeChain = [localeComboBox.selectedItem.locale];
+			}  // changeLanguage
 			
 			private function setStartAtLogin():void
 			{
@@ -99,101 +111,93 @@
 				 effectEnd="doClose()" />
 	</fx:Declarations>
 	
-	<mx:VBox cornerRadius="8" backgroundColor="black" backgroundAlpha="0.4" width="100%" height="100%" verticalAlign="middle" paddingTop="12" paddingBottom="12" paddingLeft="12" paddingRight="12">
-		<mx:VBox id="mainCanvas" width="100%" height="100%" backgroundColor="white">
+	<mx:VBox cornerRadius="8" backgroundColor="black" backgroundAlpha="0.4" width="{mainCanvas.width + 25}" height="{mainCanvas.height + 25}" verticalAlign="middle" paddingTop="12" paddingBottom="12" paddingLeft="12" paddingRight="12">
+		<mx:VBox id="mainCanvas" minWidth="525" minHeight="500" backgroundColor="white">
 			<mx:VBox width="100%" height="35" backgroundColor="#6d84b4" verticalAlign="middle" paddingLeft="12">
-				<s:Label text="Preferences" fontSize="17" color="white" />
+				<s:Label text="{resourceManager.getString('resources','preferences.title')}" fontSize="17" color="white" />
 			</mx:VBox>
-			<mx:HBox height="385" width="100%">
+			<mx:HBox minHeight="410" width="100%">
 				<mx:VBox paddingLeft="15" paddingRight="15" paddingTop="15" paddingBottom="15" width="100%">
 					<mx:HBox verticalAlign="middle">
-						<s:Label text="Application Settings" fontWeight="bold" />
+						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.header')}" fontWeight="bold" />
 					</mx:HBox>
 					
 					<mx:HRule width="100%" />
 					
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Run on startup" />
+						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.option.language')}" />
+						<mx:Spacer width="100%" />
+						<mx:ComboBox id="localeComboBox" dataProvider="{model.locales}" change="saveSettings();changeLanguage();logger.info('Changing \'Language\' setting to {0}',localeComboBox.selectedItem.label)"/>
+					</mx:HBox>
+					<mx:HBox verticalAlign="middle" width="100%">
+						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.option.runOnStartup')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="startAtLoginCheckbox" change="saveSettings();setStartAtLogin();logger.info('Changing \'Run on startup\' setting to {0}',startAtLoginCheckbox.selected)" />
 					</mx:HBox>
 					
+					
 					<mx:Spacer height="15" />
 					<mx:HBox verticalAlign="middle">
-						<s:Label text="Notification Settings" fontWeight="bold" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.header')}" fontWeight="bold" />
 					</mx:HBox>
 					<mx:HRule width="100%" />
 					
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Notify me when new stories are posted to my stream" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyNewStories')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="showStoriesCheckBox" change="saveSettings();logger.info('Changing \'Notify me when new stories are posted to my stream\' setting to {0}',showStoriesCheckBox.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Notify me when there is activity in a post that I am in or have participated in" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyActivity')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showStoryActivityCheckBox" change="saveSettings();logger.info('Changing \'Notify me when new stories are posted to my stream\' setting to {0}',showStoriesCheckBox.selected)" />
+						<s:CheckBox id="showStoryActivityCheckBox" change="saveSettings();logger.info('Changing \'Notify me when there is activity in a post that I am in or have participated in\' setting to {0}',showStoriesCheckBox.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Notify me when I get a new friend request" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyFriendRequest')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="friendRequestCheckBox" change="saveSettings();logger.info('Changing \'Notify me when I get a new friend request\' setting to {0}',friendRequestCheckBox.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Notify me when someone sends me a message" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyMessage')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="messageCheckBox" change="saveSettings();logger.info('Changing \'Notify me when someone sends me a message\' setting to {0}',messageCheckBox.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Notify me when someone pokes me" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyMessage')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="pokeCheckBox" change="saveSettings();logger.info('Changing \'Notify me when someone pokes me\' setting to {0}',pokeCheckBox.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Notify me when someone shares something with me" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyShare')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="shareCheckBox" change="saveSettings();logger.info('Changing \'Notify me when someone shares something with me\' setting to {0}',shareCheckBox.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Notify me when I get a group invite" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyGroupInvite')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="groupInviteCheckBox" change="saveSettings();logger.info('Changing \'Notify me when I get a group invite\' setting to {0}',groupInviteCheckBox.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Notify me when I get an event invite" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyEventInvite')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="eventInviteCheckBox" change="saveSettings();logger.info('Changing \'Notify me when I get an event invite\' setting to {0}',eventInviteCheckBox.selected)" />
 					</mx:HBox>
 					
 					<mx:Spacer height="15" />
 					<mx:HBox verticalAlign="middle">
-						<s:Label text="Profile Settings" fontWeight="bold" />
+						<s:Label text="{resourceManager.getString('resources','preferences.profileSettings.header')}" fontWeight="bold" />
 					</mx:HBox>
 					<mx:HRule width="100%" />
 					
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="Mark notifications as read when they appear on my screen" />
+						<s:Label text="{resourceManager.getString('resources','preferences.profileSettings.option.markNotificationsRead')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="markAsReadCheckBox" change="saveSettings();logger.info('Changing \'Mark notifications as read when they appear on my screen\' setting to {0}',markAsReadCheckBox.selected)" />
 					</mx:HBox>
 				</mx:VBox>
 			</mx:HBox>
-			<mx:HBox height="100%" width="100%" backgroundColor="#f2f2f2" verticalAlign="middle" paddingRight="12">
-				<mx:Spacer width="100%" />
-				<s:Group verticalCenter="0" horizontalCenter="0" click="fadeout.play()">
-					<s:Rect id="rect" radiusX="0" radiusY="4" top="0" right="0" bottom="0" left="0">
-						<s:fill>
-							<s:SolidColor color="0x5f78ab" />
-						</s:fill>
-						<s:stroke>
-							<s:SolidColorStroke color="0x29447e" weight="1"/>
-						</s:stroke>
-					</s:Rect>
-					<s:Label text="Okay" color="0xffffff" 
-							 textAlign="center" verticalAlign="middle"
-							 horizontalCenter="0" verticalCenter="1"
-							 left="12" right="12" top="6" bottom="6" />
-				</s:Group>
+			<mx:HBox minHeight="43" width="100%" backgroundColor="#f2f2f2" verticalAlign="middle" horizontalAlign="right" paddingRight="12" paddingTop="9" paddingBottom="9">
+				<component:FacebookButton click="fadeout.play()" text="{resourceManager.getString('resources','component.button.okay')}" />
 			</mx:HBox>
 		</mx:VBox>
 	</mx:VBox>

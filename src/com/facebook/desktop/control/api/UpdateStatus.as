@@ -5,6 +5,7 @@ package com.facebook.desktop.control.api
 	
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.resources.ResourceManager;
 
 	public class UpdateStatus
 	{
@@ -29,9 +30,9 @@ package com.facebook.desktop.control.api
 					logger.error("Error updating status!  Error: " + fail);
 					
 					var messageWindow:MessageWindow = new MessageWindow();
-					messageWindow.windowTitle = "Error";
+					messageWindow.windowTitle = ResourceManager.getInstance().getString("resources", "action.error");
 					messageWindow.showOkayButton = true;
-					messageWindow.windowMessage = "There was an error updating your status.  Please try again later.";
+					messageWindow.windowMessage = ResourceManager.getInstance().getString("resources", "action.statusUpdate.error");
 					messageWindow.open();
 				}  // else statement
 				
