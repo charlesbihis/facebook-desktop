@@ -11,19 +11,20 @@ package com.facebook.desktop.model
 		
 		[Bindable] public var connected:Boolean;
 		[Bindable] public var paused:Boolean;
-		[Bindable] public var locales:Array = [{label:ResourceManager.getInstance().getString('resources','language.english').toString(), locale:"en_US"},
-											   {label:ResourceManager.getInstance().getString('resources','language.bosnian').toString(), locale:"bs_BA"},
-											   {label:ResourceManager.getInstance().getString('resources','language.chinese').toString(), locale:"zh_CN"},
-											   {label:ResourceManager.getInstance().getString('resources','language.dutch').toString(), locale:"nl_NL"},
-											   {label:ResourceManager.getInstance().getString('resources','language.german').toString(), locale:"de_DE"},
-											   {label:ResourceManager.getInstance().getString('resources','language.hebrew').toString(), locale:"he_IL"},
-											   {label:ResourceManager.getInstance().getString('resources','language.hindi').toString(), locale:"hi_IN"},
-											   {label:ResourceManager.getInstance().getString('resources','language.italian').toString(), locale:"it_IT"},
-											   {label:ResourceManager.getInstance().getString('resources','language.malay').toString(), locale:"ms_MY"},
-											   {label:ResourceManager.getInstance().getString('resources','language.polish').toString(), locale:"pl_PL"},
-											   {label:ResourceManager.getInstance().getString('resources','language.russian').toString(), locale:"ru_RU"},
-											   {label:ResourceManager.getInstance().getString('resources','language.spanish').toString(), locale:"es_ES"},
-											   {label:ResourceManager.getInstance().getString('resources','language.turkish').toString(), locale:"tr_TR"}]; 
+		[Bindable] public var locales:Array = [{label:ResourceManager.getInstance().getString('resources','language.english').toString(), locale:"en_US", toolTip:"English"},
+											   {label:ResourceManager.getInstance().getString('resources','language.malay').toString(), locale:"ms_MY", toolTip:"Malay"},
+											   {label:ResourceManager.getInstance().getString('resources','language.bosnian').toString(), locale:"bs_BA", toolTip:"Bosnian"},
+											   {label:ResourceManager.getInstance().getString('resources','language.german').toString(), locale:"de_DE", toolTip:"German"},
+											   {label:ResourceManager.getInstance().getString('resources','language.spanish').toString(), locale:"es_ES", toolTip:"Spanish"},
+											   {label:ResourceManager.getInstance().getString('resources','language.korean').toString(), locale:"ko_KR", toolTip:"Korean"},
+											   {label:ResourceManager.getInstance().getString('resources','language.italian').toString(), locale:"it_IT", toolTip:"Italian"},
+											   {label:ResourceManager.getInstance().getString('resources','language.dutch').toString(), locale:"nl_NL", toolTip:"Dutch"},
+											   {label:ResourceManager.getInstance().getString('resources','language.polish').toString(), locale:"pl_PL", toolTip:"Polish"},
+											   {label:ResourceManager.getInstance().getString('resources','language.russian').toString(), locale:"ru_RU", toolTip:"Russian"},
+											   {label:ResourceManager.getInstance().getString('resources','language.turkish').toString(), locale:"tr_TR", toolTip:"Turkish"},
+											   {label:ResourceManager.getInstance().getString('resources','language.chinese.traditional.hongKong').toString(), locale:"zh_HK", toolTip:"Traditional Chinese (Hong Kong)"},
+											   {label:ResourceManager.getInstance().getString('resources','language.hebrew').toString(), locale:"he_IL", toolTip:"Hebrew"},
+											   {label:ResourceManager.getInstance().getString('resources','language.hindi').toString(), locale:"hi_IN", toolTip:"Hindi"}];
 		
 		public var preferences:Object;
 		public var operatingSystem:String;
