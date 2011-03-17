@@ -47,3 +47,16 @@
 	color: #EEEEEE;
 	text-align: right;
 }
+
+.toolTip { 
+	backgroundColor: #333333;
+	color: #FFFFFF; 
+	fontSize: 9; 
+	fontWeight: "bold"; 
+	shadowColor: #000000; 
+	borderColor: #333333; 
+	paddingBottom: 4; 
+	paddingLeft: 4; 
+	paddingRight: 4; 
+	paddingTop: 4; 
+}

@@ -4,7 +4,7 @@
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:component="com.facebook.desktop.view.component.*"
-		minWidth="550" minHeight="525" width="{mainCanvas.width + 30}" height="{mainCanvas.height + 30}"
+		minWidth="550" minHeight="525" width="{mainCanvas.width + 175}" height="{mainCanvas.height + 30}"
 		transparent="true"
 		systemChrome="none"
 		showStatusBar="false"
@@ -19,17 +19,23 @@
 	<fx:Script>
 		<![CDATA[
 			import com.facebook.desktop.control.Controller;
-			import com.facebook.desktop.model.Model;
 			import com.facebook.desktop.control.preferences.PreferencesManager;
+			import com.facebook.desktop.model.Model;
 			
+			import mx.controls.ToolTip;
+			import mx.core.IUIComponent;
+			import mx.events.ListEvent;
 			import mx.logging.ILogger;
 			import mx.logging.Log;
+			import mx.managers.ToolTipManager;
 			
 			private static var logger:ILogger = Log.getLogger("com.facebook.preferences.PreferencesWindow");
 			private static var controller:Controller = Controller.instance;
 			
 			[Bindable]
 			private var model:Model = Model.instance;
+			
+			private var languageToolTip:ToolTip;
 			
 			public override function open(openWindowActive:Boolean = true):void
 			{
@@ -79,6 +85,7 @@
 			private function changeLanguage():void
 			{
 				resourceManager.localeChain = [localeComboBox.selectedItem.locale];
+				hideToolTip();
 			}  // changeLanguage
 			
 			private function setStartAtLogin():void
@@ -94,6 +101,34 @@
 				controller.settingsWindowOpen = false;
 				close();
 			}  // doClose
+			
+			private function showToolTip(event:ListEvent):void
+			{
+				if (languageToolTip == null)
+				{
+					languageToolTip = ToolTipManager.createToolTip(event.itemRenderer.data.toolTip,
+						localeComboBox.x + localeComboBox.width + event.itemRenderer.x,
+						110 + event.itemRenderer.y,
+						"errorTipRight",
+						IUIComponent(event.currentTarget)) as ToolTip;
+					languageToolTip.setStyle("styleName", "toolTip");
+				}  // if statement
+				else
+				{
+					languageToolTip.text = event.itemRenderer.data.toolTip;
+					languageToolTip.y = 110 + event.itemRenderer.y;
+				}  // else statement
+				
+				languageToolTip.visible = true;
+			}  // showToolTip
+			
+			private function hideToolTip():void
+			{
+				if (languageToolTip != null)
+				{
+					languageToolTip.visible = false;
+				}  // if statement
+			}  // hideToolTip
 		]]>
 	</fx:Script>
 	
@@ -111,6 +146,8 @@
 				 effectEnd="doClose()" />
 	</fx:Declarations>
 	
+	<fx:Style source="/com/facebook/desktop/view/style/style.css" />
+	
 	<mx:VBox cornerRadius="8" backgroundColor="black" backgroundAlpha="0.4" width="{mainCanvas.width + 25}" height="{mainCanvas.height + 25}" verticalAlign="middle" paddingTop="12" paddingBottom="12" paddingLeft="12" paddingRight="12">
 		<mx:VBox id="mainCanvas" minWidth="525" minHeight="500" backgroundColor="white">
 			<mx:VBox width="100%" height="35" backgroundColor="#6d84b4" verticalAlign="middle" paddingLeft="12">
@@ -127,7 +164,7 @@
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.option.language')}" />
 						<mx:Spacer width="100%" />
-						<mx:ComboBox id="localeComboBox" dataProvider="{model.locales}" change="saveSettings();changeLanguage();logger.info('Changing \'Language\' setting to {0}',localeComboBox.selectedItem.label)"/>
+						<mx:ComboBox id="localeComboBox" itemRollOver="showToolTip(event)" rollOut="hideToolTip()" dataProvider="{model.locales}" change="saveSettings();changeLanguage();logger.info('Changing \'Language\' setting to {0}',localeComboBox.selectedItem.label)"/>
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.option.runOnStartup')}" />
