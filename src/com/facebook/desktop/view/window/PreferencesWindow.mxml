@@ -164,7 +164,7 @@
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.option.language')}" />
 						<mx:Spacer width="100%" />
-						<mx:ComboBox id="localeComboBox" itemRollOver="showToolTip(event)" rollOut="hideToolTip()" dataProvider="{model.locales}" change="saveSettings();changeLanguage();logger.info('Changing \'Language\' setting to {0}',localeComboBox.selectedItem.label)"/>
+						<mx:ComboBox id="localeComboBox" itemRollOver="showToolTip(event)" itemRollOut="hideToolTip()" rollOut="hideToolTip()" dataProvider="{model.locales}" change="saveSettings();changeLanguage();logger.info('Changing \'Language\' setting to {0}',localeComboBox.selectedItem.label)"/>
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.option.runOnStartup')}" />
@@ -200,7 +200,7 @@
 						<s:CheckBox id="messageCheckBox" change="saveSettings();logger.info('Changing \'Notify me when someone sends me a message\' setting to {0}',messageCheckBox.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyMessage')}" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyPoke')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="pokeCheckBox" change="saveSettings();logger.info('Changing \'Notify me when someone pokes me\' setting to {0}',pokeCheckBox.selected)" />
 					</mx:HBox>
