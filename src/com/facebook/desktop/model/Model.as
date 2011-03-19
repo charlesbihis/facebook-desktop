@@ -24,6 +24,7 @@ package com.facebook.desktop.model
 											   {label:ResourceManager.getInstance().getString('resources','language.turkish').toString(), locale:"tr_TR", toolTip:"Turkish"},
 											   {label:ResourceManager.getInstance().getString('resources','language.chinese.traditional.hongKong').toString(), locale:"zh_HK", toolTip:"Traditional Chinese (Hong Kong)"},
 											   {label:ResourceManager.getInstance().getString('resources','language.hebrew').toString(), locale:"he_IL", toolTip:"Hebrew"},
+											   {label:ResourceManager.getInstance().getString('resources','language.persian').toString(), locale:"fa_IR", toolTip:"Persian"},
 											   {label:ResourceManager.getInstance().getString('resources','language.hindi').toString(), locale:"hi_IN", toolTip:"Hindi"}];
 		
 		public var preferences:Object;
