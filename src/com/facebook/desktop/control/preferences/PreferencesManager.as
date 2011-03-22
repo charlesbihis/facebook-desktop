@@ -23,8 +23,11 @@ package com.facebook.desktop.control.preferences
 				logger.info("Loading previously saved preferences");
 				model.preferences = sharedObject.data["preferences"];
 				
-				// load up the previously used language
-				ResourceManager.getInstance().localeChain = [model.locales[model.preferences.language].locale];
+				// load up the previously used language, if there is one
+				if (model.preferences.language != null)
+				{
+					ResourceManager.getInstance().localeChain = [model.locales[model.preferences.language].locale];
+				}  // if statement
 			}  // if statement
 			else
 			{
