@@ -22,6 +22,7 @@ package com.facebook.desktop.model
 											   {label:ResourceManager.getInstance().getString('resources','language.polish').toString(), locale:"pl_PL", toolTip:"Polish"},
 											   {label:ResourceManager.getInstance().getString('resources','language.russian').toString(), locale:"ru_RU", toolTip:"Russian"},
 											   {label:ResourceManager.getInstance().getString('resources','language.turkish').toString(), locale:"tr_TR", toolTip:"Turkish"},
+											   {label:ResourceManager.getInstance().getString('resources','language.chinese.simplified.china').toString(), locale:"zh_CN", toolTip:"Simplified Chinese (China)"},
 											   {label:ResourceManager.getInstance().getString('resources','language.chinese.traditional.hongKong').toString(), locale:"zh_HK", toolTip:"Traditional Chinese (Hong Kong)"},
 											   {label:ResourceManager.getInstance().getString('resources','language.hebrew').toString(), locale:"he_IL", toolTip:"Hebrew"},
 											   {label:ResourceManager.getInstance().getString('resources','language.persian').toString(), locale:"fa_IR", toolTip:"Persian"},
