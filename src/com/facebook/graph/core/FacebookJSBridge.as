@@ -46,7 +46,11 @@ package com.facebook.graph.core {
 		public function FacebookJSBridge() {
 			try {
 				if( ExternalInterface.available ) {
-					ExternalInterface.call( script_js );					
+					ExternalInterface.call( script_js );	
+					
+					/*Get a reference to the embedded SWF (object/embed tag). Note that Chrome/Mozilla Browsers get the 'name' attribute whereas IE uses the 'id' attribute. 
+					This is important to note, since it relies on how you embed the SWF. In the examples, we embed using swfObject and we have to set the attribute 'name' the 
+					same as the id.*/
 					ExternalInterface.call( "FBAS.setSWFObjectID", ExternalInterface.objectID );
 				}
 			} catch( error:Error ) {}
@@ -114,8 +118,9 @@ package com.facebook.graph.core {
 							},
 								
 							ui: function( params ) {
-								obj = FB.JSON.parse( params );
-								cb = function( response ) { FBAS.getSwf().uiResponse( FB.JSON.stringify( response ), obj.method ); }
+								obj = FB.JSON.parse( params );								
+								method = obj.method;
+								cb = function( response ) { FBAS.getSwf().uiResponse( FB.JSON.stringify( response ), method ); }
 								FB.ui( obj, cb );
 							},
 								
