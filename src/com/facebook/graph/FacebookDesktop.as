@@ -591,7 +591,8 @@ package com.facebook.graph {
 		}
 		params.method = "auth.logout";
 		params.next = "http://static.ak.fbcdn.net/connect/xd_proxy.php#origin="+(appOrigin?appOrigin:"");
-		var req:FacebookRequest = new FacebookRequest("https://www.facebook.com/logout.php");
+//		var req:FacebookRequest = new FacebookRequest("https://www.facebook.com/logout.php");
+		var req:FacebookRequest = new FacebookRequest("http://m.facebook.com/logout.php?confirm=1");
 		openRequests[req] = handleLogout;
 		req.call("", params, handleRequestLoad);
 		
