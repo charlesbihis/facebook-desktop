@@ -63,6 +63,15 @@
 				else if (os.indexOf("Mac") >= 0)
 				{
 					model.operatingSystem = "Mac";
+					
+					// Unfortunately, Hindi characters don't render correctly using
+					// the Spark component namespace on Mac, so instead of removing
+					// support for it entirely, let's just remove support for it on
+					// OS X :S  Not sure if this will go over well, but until I can 
+					// find a solution that allows text-wrapping and displays
+					// characters as expected in all languages, then let's go with
+					// this.
+					model.locales.pop();
 				}  // else-if statement
 				else
 				{
