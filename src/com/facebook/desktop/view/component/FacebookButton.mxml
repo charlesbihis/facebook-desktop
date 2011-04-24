@@ -9,12 +9,41 @@
 	
 	<fx:Script>
 		<![CDATA[
-			[Bindable] public var text:String;
-			[Bindable] public var fontSize:int;
+			private static const DEFAULT_FONT_SIZE:int = 12;
+			
+			private var _text:String;
+			private var _fontSize:int;
+			
+			[Bindable]
+			public function get text():String
+			{
+				return _text;
+			}  // text
+			
+			public function set text(text:String):void
+			{
+				_text = text;
+			}  // text
+			
+			[Bindable]
+			public function get fontSize():int
+			{
+				if (_fontSize <= 0)
+				{
+					return DEFAULT_FONT_SIZE;
+				}
+				
+				return _fontSize;
+			}  // fontSize
+			
+			public function set fontSize(fontSize:int):void
+			{
+				_fontSize = fontSize;
+			}  // fontSize
 		]]>
 	</fx:Script>
 	
-	<s:Group verticalCenter="0" horizontalCenter="0" width="{buttonText.width + 24}" height="{buttonText.height + 12}">
+	<s:Group verticalCenter="0" horizontalCenter="0" width="{buttonText.width + 20}" height="{buttonText.height + 10}">
 		<s:Rect radiusX="0" radiusY="4" top="0" right="0" bottom="0" left="0">
 			<s:fill>
 				<s:SolidColor color="0x5f78ab" />
@@ -23,9 +52,8 @@
 				<s:SolidColorStroke color="0x29447e" weight="1"/>
 			</s:stroke>
 		</s:Rect>
-		<s:Label id="buttonText" text="{text}" color="0xffffff" fontSize="{fontSize}"
-				 textAlign="center" verticalAlign="middle"
-				 horizontalCenter="0" verticalCenter="1" />
+		<mx:Label id="buttonText" text="{text}" color="0xffffff" fontSize="{fontSize}" styleName="label"
+				 textAlign="center" horizontalCenter="0" verticalCenter="1" />
 	</s:Group>
 	
 </mx:HBox>

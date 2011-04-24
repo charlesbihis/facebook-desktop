@@ -5,12 +5,11 @@ package com.facebook.desktop.view.composer
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	
+	import mx.controls.TextArea;
 	import mx.events.FlexEvent;
 	import mx.managers.FocusManager;
 	import mx.resources.ResourceManager;
 	import mx.utils.StringUtil;
-	
-	import spark.components.TextArea;
 	
 	public class ComposerTextArea extends TextArea
 	{
@@ -18,13 +17,14 @@ package com.facebook.desktop.view.composer
 		private static const DISABLED_TEXT_COLOR:uint = 0x808080;
 		
 		private var shadowText:String = ResourceManager.getInstance().getString("resources", "component.composer.shadowText");
-		private var _active:Boolean = true;
+		private var _active:Boolean;
 		
 		public function ComposerTextArea()
 		{
 			super();
 			
 			text = shadowText;
+			setStyle("fontFamily", "Lucida Grande, Tahoma, Verdana, Arial, sans-serif");
 			
 			// add event listeners
 			addEventListener(FocusEvent.FOCUS_IN, focusIn);

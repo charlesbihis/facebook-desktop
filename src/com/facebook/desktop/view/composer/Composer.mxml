@@ -154,7 +154,7 @@
 		<mx:VBox width="100%" horizontalAlign="center" horizontalGap="5"
 				 paddingTop="5" paddingBottom="5" paddingLeft="8" paddingRight="8"
 				 backgroundColor="#E3E3E3">
-			<composer:ComposerTextArea id="composerInput" width="100%" heightInLines="{NaN}" minHeight="40" maxHeight="65" />
+			<composer:ComposerTextArea id="composerInput" width="100%" minHeight="40" maxHeight="65" />
 			<mx:HBox width="100%" verticalAlign="middle">
 				<component:CustomButton width="15" height="15" offImage="/assets/images/composer/composer_close.png" onImage="/assets/images/composer/composer_close_over.png" click="hide()" />
 				<mx:Spacer width="100%" />

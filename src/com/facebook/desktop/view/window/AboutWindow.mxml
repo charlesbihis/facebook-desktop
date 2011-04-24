@@ -60,21 +60,21 @@
 	<mx:VBox cornerRadius="8" backgroundColor="black" backgroundAlpha="0.4" width="{mainCanvas.width + 25}" height="{mainCanvas.height + 25}" verticalAlign="middle" paddingTop="12" paddingBottom="12" paddingLeft="12" paddingRight="12">
 		<mx:VBox id="mainCanvas" minWidth="375" minHeight="305" backgroundColor="white" horizontalAlign="center">
 			<mx:VBox width="100%" height="35" backgroundColor="#6d84b4" verticalAlign="middle" horizontalAlign="center" paddingLeft="12">
-				<s:Label text="{resourceManager.getString('resources','about.title')}" fontSize="17" color="white" />
+				<mx:Label text="{resourceManager.getString('resources','about.title')}" fontSize="17" color="white" styleName="label" />
 			</mx:VBox>
-			<mx:VBox height="215" width="100%" horizontalAlign="center" verticalAlign="middle" verticalGap="0">
+			<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" verticalGap="0">
 				<mx:Image source="/assets/icons/icon48.png" />
 				<mx:HBox horizontalAlign="center" verticalAlign="middle" horizontalGap="3" paddingTop="7">
-					<s:Label text="{resourceManager.getString('resources','application.name')}" fontSize="14" fontWeight="bold" />
-					<s:Label text="{version}" fontSize="10" />
+					<mx:Label text="{resourceManager.getString('resources','application.name')}" fontSize="14" fontWeight="bold" styleName="label" />
+					<mx:Label text="{version}" fontSize="10" styleName="label" />
 				</mx:HBox>
-				<mx:Label text="{resourceManager.getString('resources','about.subtitle')}" fontSize="11" />
+				<mx:Label text="{resourceManager.getString('resources','about.subtitle')}" fontSize="11" styleName="label" />
 				<mx:Spacer height="10" />
 				<mx:Text textAlign="center" width="350" htmlText="{resourceManager.getString('resources','about.text')}" />
 				<mx:Spacer height="20" />
 				<mx:Text textAlign="center" width="350" fontSize="9" color="#777777" htmlText="{resourceManager.getString('resources','about.footer')}" />
 			</mx:VBox>
-			<mx:HBox minHeight="43" width="100%" backgroundColor="#f2f2f2" verticalAlign="middle" horizontalAlign="right" paddingRight="12" paddingTop="9" paddingBottom="9">
+			<mx:HBox width="100%" minHeight="43" backgroundColor="#f2f2f2" verticalAlign="middle" horizontalAlign="right" paddingRight="12" paddingTop="9" paddingBottom="9">
 				<component:FacebookButton click="fadeout.play()" text="{resourceManager.getString('resources','component.button.okay')}" />
 			</mx:HBox>
 		</mx:VBox>

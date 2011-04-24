@@ -205,9 +205,9 @@
 	<mx:Canvas>
 		<mx:HBox id="toastContent" cornerRadius="8" backgroundColor="black" backgroundAlpha="0.8" paddingTop="10" paddingBottom="10" paddingLeft="15" paddingRight="15" width="300">
 			<mx:Image height="{(toastIsNotification) ? 16 : 50}" width="{(toastIsNotification) ? 16 : 50}" source="{toastImage}" />
-			<mx:VBox>
-				<s:RichText text="{toastTitle}" color="white" fontWeight="bold" width="210" />
-				<s:RichText text="{toastMessage}" color="white" width="210" visible="{(toastIsNotification) ? false : true}" includeInLayout="{(toastIsNotification) ? false : true}" />
+			<mx:VBox verticalGap="0">
+				<mx:Label text="{toastTitle}" color="white" fontWeight="bold" width="210" styleName="label" />
+				<mx:Label text="{toastMessage}" color="white" width="210" visible="{(toastIsNotification) ? false : true}" includeInLayout="{(toastIsNotification) ? false : true}" styleName="label" />
 			</mx:VBox>
 		</mx:HBox>
 		<mx:Image id="closeShadow" source="/assets/images/toast/close.png" x="282" y="6" visible="false" rollOver="{closeButton.visible=true}" rollOut="{closeButton.visible=false}" />
