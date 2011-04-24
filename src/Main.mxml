@@ -56,11 +56,11 @@
 				
 				// determine OS
 				var os:String = flash.system.Capabilities.os.substr(0, 3);
-				if (os.indexOf("Win") > 0)
+				if (os.indexOf("Win") >= 0)
 				{
 					model.operatingSystem = "Win";
 				}  // if statement
-				else if (os.indexOf("Mac") > 0)
+				else if (os.indexOf("Mac") >= 0)
 				{
 					model.operatingSystem = "Mac";
 				}  // else-if statement
