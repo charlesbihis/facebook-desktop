@@ -5,11 +5,12 @@ package com.facebook.desktop.view.composer
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	
-	import mx.controls.TextArea;
 	import mx.events.FlexEvent;
 	import mx.managers.FocusManager;
 	import mx.resources.ResourceManager;
 	import mx.utils.StringUtil;
+	
+	import spark.components.TextArea;
 	
 	public class ComposerTextArea extends TextArea
 	{
@@ -24,7 +25,6 @@ package com.facebook.desktop.view.composer
 			super();
 			
 			text = shadowText;
-			setStyle("fontFamily", "Lucida Grande, Tahoma, Verdana, Arial, sans-serif");
 			
 			// add event listeners
 			addEventListener(FocusEvent.FOCUS_IN, focusIn);

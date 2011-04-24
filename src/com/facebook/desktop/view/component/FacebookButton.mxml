@@ -52,7 +52,7 @@
 				<s:SolidColorStroke color="0x29447e" weight="1"/>
 			</s:stroke>
 		</s:Rect>
-		<mx:Label id="buttonText" text="{text}" color="0xffffff" fontSize="{fontSize}" styleName="label"
+		<s:Label id="buttonText" text="{text}" color="0xffffff" fontSize="{fontSize}"
 				 textAlign="center" horizontalCenter="0" verticalCenter="1" />
 	</s:Group>
 	
