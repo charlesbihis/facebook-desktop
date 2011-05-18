@@ -24,14 +24,14 @@
 	<name>Facebook Desktop</name>
 
 	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
-	<version>0.83</version>
+	<version>0.84</version>
 
 	<!-- Description, displayed in the AIR application installer.
 	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<description>Keep up to date with all of your friends with the help of Facebook Desktop!</description>
+	<description>Bringing Facebook to your desktop, one notification at a time.</description>
 
 	<!-- Copyright information. Optional -->
-	<copyright>Copyright © 2010 Charles Bihis</copyright>
+	<copyright>Copyright © 2011 Charles Bihis</copyright>
 
 	<!-- Publisher ID. Used if you're updating an application created prior to 1.5.3 -->
 	<!-- <publisherID></publisherID> -->
