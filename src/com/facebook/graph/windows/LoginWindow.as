@@ -177,7 +177,9 @@ package com.facebook.graph.windows {
 				
             } else if (html.location.indexOf (
                     FacebookURLDefaults.DESKTOP_REDIRECT_URL
-                    ) == 0)
+                    ) == 0 || html.location.indexOf (
+						FacebookURLDefaults.DESKTOP_REDIRECT_URL_SECURE
+					) == 0)
             {				
                 loginCallback(getURLVariables(), null);
 
