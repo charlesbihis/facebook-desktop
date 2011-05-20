@@ -50,7 +50,7 @@ package com.facebook.desktop.control.api
 						}
 						else
 						{
-							youHaveGroupInvitesMessage = ResourceManager.getInstance().getString("resources", "notification.groupInvitationBegin") + " 1 " + ResourceManager.getInstance().getString("resources", "notification.groupInvitationEnd");
+							youHaveGroupInvitesMessage = ResourceManager.getInstance().getString("resources", "notification.groupInvitation");
 						}  // if statement
 						
 						logger.info("Profile update!  - {0}", youHaveGroupInvitesMessage);
