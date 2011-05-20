@@ -116,6 +116,7 @@
 				else
 				{
 					languageToolTip.text = event.itemRenderer.data.toolTip;
+					languageToolTip.x = localeComboBox.x + localeComboBox.width + event.itemRenderer.x;
 					languageToolTip.y = 110 + event.itemRenderer.y;
 				}  // else statement
 				
