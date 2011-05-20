@@ -73,10 +73,13 @@ package com.facebook.graph.core {
      */
     public static var DESKTOP_REDIRECT_URL:String
       = 'http://www.facebook.com/connect/login_success.html';
+	
+	public static var DESKTOP_REDIRECT_URL_SECURE:String
+	  = 'https://www.facebook.com/connect/login_success.html';
 
 	public static var MOBILE_REDIRECT_URL:String
 	  = 'http://www.facebook.com/connect/login_success.html';
-
+	  
 	public static var LOGIN_FAIL_URL:String
 	  = 'http://www.facebook.com/connect/login_success.html?error_reason';
 
