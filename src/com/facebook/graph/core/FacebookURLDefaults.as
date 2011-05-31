@@ -71,17 +71,17 @@ package com.facebook.graph.core {
      * @see http://developers.facebook.com/docs/authentication/desktop
      *
      */
-    public static var DESKTOP_REDIRECT_URL:String
+	public static var LOGIN_SUCCESS_URL:String
       = 'http://www.facebook.com/connect/login_success.html';
-	
-	public static var DESKTOP_REDIRECT_URL_SECURE:String
+	  
+	public static var LOGIN_SUCCESS_SECUREURL:String
 	  = 'https://www.facebook.com/connect/login_success.html';
 
-	public static var MOBILE_REDIRECT_URL:String
-	  = 'http://www.facebook.com/connect/login_success.html';
-	  
 	public static var LOGIN_FAIL_URL:String
 	  = 'http://www.facebook.com/connect/login_success.html?error_reason';
+	
+	public static var LOGIN_FAIL_SECUREURL:String 
+	  = 'https://www.facebook.com/connect/login_success.html?error_reason';
 
 	public static var LOGIN_URL:String
 	  = 'https://login.facebook.com/login.php';

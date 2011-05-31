@@ -140,7 +140,7 @@ package com.facebook.graph.windows {
 
             var vars:URLVariables = new URLVariables();
             vars.client_id = applicationId;
-            vars.redirect_uri = FacebookURLDefaults.DESKTOP_REDIRECT_URL;
+            vars.redirect_uri = FacebookURLDefaults.LOGIN_SUCCESS_URL;
             vars.display = 'popup';
             vars.type = 'user_agent';
 
@@ -166,21 +166,15 @@ package com.facebook.graph.windows {
         *
         */
         override protected function handleLocationChange(event:Event):void {
-            super.handleLocationChange(event);
-            if (html.location.indexOf(
-				FacebookURLDefaults.LOGIN_FAIL_URL
-            ) == 0) {
+            super.handleLocationChange(event);			
+			
+            if (html.location.indexOf(FacebookURLDefaults.LOGIN_FAIL_URL) == 0 || html.location.indexOf(FacebookURLDefaults.LOGIN_FAIL_SECUREURL) == 0) {
                 loginCallback(null, getURLVariables().error_reason);
 				
 				userClosedWindow =  false;
 				html.stage.nativeWindow.close();
 				
-            } else if (html.location.indexOf (
-                    FacebookURLDefaults.DESKTOP_REDIRECT_URL
-                    ) == 0 || html.location.indexOf (
-						FacebookURLDefaults.DESKTOP_REDIRECT_URL_SECURE
-					) == 0)
-            {				
+            } else if (html.location.indexOf (FacebookURLDefaults.LOGIN_SUCCESS_URL) == 0 || html.location.indexOf(FacebookURLDefaults.LOGIN_SUCCESS_SECUREURL) == 0) {				
                 loginCallback(getURLVariables(), null);
 
                 userClosedWindow = false;
