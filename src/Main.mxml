@@ -21,7 +21,6 @@
 			import com.facebook.graph.FacebookDesktop;
 			import com.facebook.desktop.control.notification.ToastManager;
 			import com.facebook.desktop.control.updates.UpdateManager;
-			import com.facebook.desktop.model.users.User;
 			
 			import mx.logging.ILogger;
 			import mx.logging.Log;

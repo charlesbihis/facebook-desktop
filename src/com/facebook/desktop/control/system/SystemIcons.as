@@ -6,7 +6,7 @@ package com.facebook.desktop.control.system
 	import com.facebook.desktop.control.notification.ToastManager;
 	import com.facebook.desktop.control.util.Util;
 	import com.facebook.desktop.model.Model;
-	import com.facebook.desktop.model.users.UserCache;
+	import com.facebook.desktop.model.cache.UserCache;
 	import com.facebook.graph.FacebookDesktop;
 	
 	import flash.desktop.DockIcon;

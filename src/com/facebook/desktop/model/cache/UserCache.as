@@ -1,4 +1,4 @@
-package com.facebook.desktop.model.users
+package com.facebook.desktop.model.cache
 {
 	public class UserCache
 	{

@@ -2,7 +2,7 @@ package com.facebook.desktop.control.api
 {
 	import com.facebook.desktop.model.Model;
 	import com.facebook.graph.FacebookDesktop;
-	import com.facebook.desktop.model.users.UserCache;
+	import com.facebook.desktop.model.cache.UserCache;
 	
 	import mx.logging.ILogger;
 	import mx.logging.Log;
@@ -58,10 +58,9 @@ package com.facebook.desktop.control.api
 					{
 						var user:Object = users[i];
 						
-						logger.info("Placing " + user.first_name + " " + user.last_name + "(" + user.uid + ") into the user-cache");
+						logger.info("Placing " + user.name + "(" + user.uid + ") into the user-cache");
 						userCache.cache[user.uid] = new Object();
-						userCache.cache[user.uid].firstName = user.first_name;
-						userCache.cache[user.uid].lastName = user.last_name;
+						userCache.cache[user.uid].name = user.name;
 						userCache.cache[user.uid].picSquare = user.pic_square;
 					}  // for loop
 				}  // if statement

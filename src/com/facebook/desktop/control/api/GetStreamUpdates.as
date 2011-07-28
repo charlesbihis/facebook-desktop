@@ -2,7 +2,7 @@ package com.facebook.desktop.control.api
 {
 	import com.facebook.desktop.control.notification.ToastManager;
 	import com.facebook.desktop.model.Model;
-	import com.facebook.desktop.model.users.UserCache;
+	import com.facebook.desktop.model.cache.UserCache;
 	import com.facebook.graph.FacebookDesktop;
 	
 	import mx.logging.ILogger;
@@ -66,7 +66,7 @@ package com.facebook.desktop.control.api
 			function makeToast(uids:String, message:String, permalink:String, last:Boolean):void
 			{
 				var getUserInfoCommand:GetUserInfo = new GetUserInfo();
-				getUserInfoCommand.fields = "first_name, last_name, pic_square";
+				getUserInfoCommand.fields = "name, pic_square";
 				getUserInfoCommand.uids = uids;
 				getUserInfoCommand.execute(getUserInfoHandler);
 				
@@ -79,13 +79,13 @@ package com.facebook.desktop.control.api
 						var actorId:String = uidsArray[0];
 						var targetId:String = uidsArray[1];
 						
-						logger.info("Story update! - " + userCache.cache[actorId].firstName + " " + userCache.cache[actorId].lastName + " ► " + userCache.cache[targetId].firstName + " " + userCache.cache[targetId].lastName + " - " + message);
-						ToastManager.queueToast(userCache.cache[actorId].firstName + " " + userCache.cache[actorId].lastName + " ► " + userCache.cache[targetId].firstName + " " + userCache.cache[targetId].lastName, message, permalink, userCache.cache[actorId].picSquare);
+						logger.info("Story update! - " + userCache.cache[actorId].name + " ► " + userCache.cache[targetId].name + " - " + message);
+						ToastManager.queueToast(userCache.cache[actorId].name + " ► " + userCache.cache[targetId].name, message, permalink, userCache.cache[actorId].picSquare);
 					}  // if statement
 					else
 					{
-						logger.info("Story update! - " + userCache.cache[uids].firstName + " " + userCache.cache[uids].lastName + " " + message);
-						ToastManager.queueToast(userCache.cache[uids].firstName + " " + userCache.cache[uids].lastName, message, permalink, userCache.cache[uids].picSquare);
+						logger.info("Story update! - " + userCache.cache[uids].name + " " + message);
+						ToastManager.queueToast(userCache.cache[uids].name, message, permalink, userCache.cache[uids].picSquare);
 					}  // else statement
 					
 					if (last)
