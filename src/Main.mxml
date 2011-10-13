@@ -14,13 +14,13 @@
 			import com.facebook.desktop.control.api.GetStartupNotifications;
 			import com.facebook.desktop.control.api.GetStreamUpdates;
 			import com.facebook.desktop.control.logging.Logging;
+			import com.facebook.desktop.control.notification.ToastManager;
 			import com.facebook.desktop.control.preferences.PreferencesManager;
 			import com.facebook.desktop.control.system.SystemIcons;
+			import com.facebook.desktop.control.updates.UpdateManager;
 			import com.facebook.desktop.control.util.Util;
 			import com.facebook.desktop.model.Model;
 			import com.facebook.graph.FacebookDesktop;
-			import com.facebook.desktop.control.notification.ToastManager;
-			import com.facebook.desktop.control.updates.UpdateManager;
 			
 			import mx.logging.ILogger;
 			import mx.logging.Log;

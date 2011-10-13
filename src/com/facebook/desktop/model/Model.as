@@ -16,6 +16,7 @@ package com.facebook.desktop.model
 											   {label:ResourceManager.getInstance().getString('resources','language.bosnian').toString(), locale:"bs_BA", toolTip:"Bosnian"},
 											   {label:ResourceManager.getInstance().getString('resources','language.german').toString(), locale:"de_DE", toolTip:"German"},
 											   {label:ResourceManager.getInstance().getString('resources','language.spanish').toString(), locale:"es_ES", toolTip:"Spanish"},
+											   {label:ResourceManager.getInstance().getString('resources','language.galician').toString(), locale:"ga_ES", toolTip:"Galego"},
 											   {label:ResourceManager.getInstance().getString('resources','language.korean').toString(), locale:"ko_KR", toolTip:"Korean"},
 											   {label:ResourceManager.getInstance().getString('resources','language.italian').toString(), locale:"it_IT", toolTip:"Italian"},
 											   {label:ResourceManager.getInstance().getString('resources','language.leet').toString(), locale:"lt_US", toolTip:"Leet"},
