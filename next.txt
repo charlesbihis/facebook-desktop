@@ -1,0 +1,31 @@
+TO DO FOR v1.0.0
+-look at all update mechanisms in Graph API
+	-notifications
+	-messages
+	-pages
+-add unread messages count in context menu
+-add event invites count in context menu
+-add group invites count in context menu
+-add friend-requests count in context menu
+-add new settings
+	-modifiable-length toasts
+	-optional sound
+-detect online/offline status
+-fix bug where last-check time doesn't reset when user goes offline
+
+
+WOULD BE NICE
+	-theming
+	-birthday functionality
+	-notification count to dock/system-tray icon
+	-write on friends wall
+	-send message to friend
+	-chat
+
+
+RELEASE NOTES WILL HIGHLIGHT EVERYTHING
+	-1.0.0 release!
+	-better notifications (we use Graph API so we don't miss a thing) <- don't know if this is release-notes-worthy :\
+		-includes page updates
+	-ability to view unread, friend-requests, etc
+	-get message notifications in real-time
