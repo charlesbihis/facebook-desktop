@@ -16,9 +16,26 @@ package com.facebook.desktop.control.api
 		private static var model:Model = Model.instance;
 		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetNotifications");
 		
+		private var args:Object;
+		
+		public function GetNotifications(args:Object = null)
+		{
+			this.args = args;
+		}  // GetNotifications
+		
 		public function execute(callback:Function = null):void
 		{
-			FacebookDesktop.api(API, getNotificationsHandler, (model.latestNotificationUpdate != null ? {since:model.latestNotificationUpdate} : null));
+			// configure arguments
+			if (args == null)
+			{
+				args = new Object();
+			}  // if statement
+			if (args.since == null && model.latestNotificationUpdate != null)
+			{
+				args.since = model.latestNotificationUpdate;
+			}  // if statement
+			
+			FacebookDesktop.api(API, getNotificationsHandler, args);
 			
 			function getNotificationsHandler(result:Object, fail:Object):void
 			{
