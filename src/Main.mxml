@@ -10,6 +10,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.facebook.desktop.control.api.GetActivityNotifications;
+			import com.facebook.desktop.control.api.GetNotifications;
 			import com.facebook.desktop.control.api.GetProfileNotifications;
 			import com.facebook.desktop.control.api.GetStartupNotifications;
 			import com.facebook.desktop.control.api.GetStreamUpdates;
@@ -20,10 +21,12 @@
 			import com.facebook.desktop.control.updates.UpdateManager;
 			import com.facebook.desktop.control.util.Util;
 			import com.facebook.desktop.model.Model;
+			import com.facebook.desktop.view.window.MessageWindow;
 			import com.facebook.graph.FacebookDesktop;
 			
 			import mx.logging.ILogger;
 			import mx.logging.Log;
+			import mx.utils.ObjectUtil;
 			
 			private static const POLL_DELAY:uint = 60000;	// poll every minute
 			private static const IDLE_TIME:int = 15;		// idle starts after 15 seconds
@@ -97,29 +100,41 @@
 				var triedLogin:Boolean = false;
 				function loginHandler(session:Object, fail:Object):void
 				{
-					// if we have a session, restore it
-					if (session != null)
+					if (fail == null)
 					{
-						logger.info("Connected and all permissions granted! We are fully authorized!");
-						
-						// tell the model
-						model.connected = true;
-						
-						// adjust icon and menus
-						SystemIcons.changeIcon(true);
-						SystemIcons.changeMenus(true);
-						
-						// show login popup
-						ToastManager.show(resourceManager.getString("resources", "toast.welcome"), null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
-						model.latestFiveUpdates.removeAll();
-						
-						// get latest update so that we can start receiving pop-ups for *new* updates
-						FacebookDesktop.api("/me/home", getStreamHandler, {limit:1});
+						// if we have a session, restore it
+						if (session != null)
+						{
+							logger.info("Connected and all permissions granted! We are fully authorized!");
+							
+							// tell the model
+							model.connected = true;
+							
+							// adjust icon and menus
+							SystemIcons.changeIcon(true);
+							SystemIcons.changeMenus(true);
+							
+							// show login popup
+							ToastManager.show(resourceManager.getString("resources", "toast.welcome"), null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
+							model.latestFiveUpdates.removeAll();
+							
+							// get latest update so that we can start receiving pop-ups for *new* updates
+							FacebookDesktop.api("/me/home", getStreamHandler, {limit:1});
+						}  // if statement
+						else if (!triedLogin)
+						{
+							FacebookDesktop.login(loginHandler, Model.REQUIRED_PERMISSIONS);
+							triedLogin = true;
+						}  // else-if statement
 					}  // if statement
-					else if (!triedLogin)
+					else
 					{
-						FacebookDesktop.login(loginHandler, Model.REQUIRED_PERMISSIONS);
-						triedLogin = true;
+						logger.error("Error logging in.  Error object: " + ObjectUtil.toString(fail));
+						var messageWindow:MessageWindow = new MessageWindow();
+						messageWindow.windowTitle = "Login Error";
+						messageWindow.windowMessage = fail.error.type + ": " + fail.error.message;
+						messageWindow.showOkayButton = true;
+						messageWindow.open();
 					}  // else statement
 				}  // loginHandler
 				
@@ -157,6 +172,35 @@
 			{
 				logger.info("Initialization and connection complete!");
 				
+				// check for start-up notifications (likes, comments, group posts, messages, pokes, shares, friend-requests, group-invites, event-invites)
+				logger.info("Fetching start-up notifications");
+				
+				// likes, comments, and group posts
+				var getNotificationsCommand:GetNotifications = new GetNotifications();
+				getNotificationsCommand.execute();
+				
+				// messages, pokes, shares, friend-requests, group-invites, and event-invites
+				
+				pollTimer.addEventListener(TimerEvent.TIMER, poll);
+				pollTimer.start();
+				
+				function poll():void
+				{
+					if (connected && !paused)
+					{
+						// check for news feed updates
+						
+						// check for new likes, comments, and group posts
+						getNotificationsCommand.execute();
+						
+						// check for new messages, pokes, shares, friend-requests, group-invites, and event-invites
+						
+						// check for 
+					}  // if statement
+				}  // poll
+				
+				
+				/*
 				// check for start-up notifications (messages, pokes, shares, friend-requests, group-invites, and event-invites)
 				logger.info("Fetching start-up notifications");
 				
@@ -185,13 +229,14 @@
 						getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
 						getStreamUpdatesCommand.execute();
 						
-						// likes and comments
+						// likes, comments, and group posts
 						var getActivityNotificationsCommand:GetActivityNotifications = new GetActivityNotifications();
 						getActivityNotificationsCommand.includeRead = "0";
 						getActivityNotificationsCommand.startTime = model.latestActivityUpdate;
 						getActivityNotificationsCommand.execute();
 					}  // if statement
 				}  // poll
+				*/
 			}  // startTheShow
 		]]>
 	</fx:Script>
