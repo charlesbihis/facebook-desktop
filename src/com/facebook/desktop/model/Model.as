@@ -35,6 +35,8 @@ package com.facebook.desktop.model
 		public var preferences:Object;
 		public var operatingSystem:String;
 		
+		public var latestNotificationUpdate:String;
+		
 		public var latestStreamUpdate:String;
 		public var latestMessageUpdate:String;
 		public var latestPokeUpdate:String;
