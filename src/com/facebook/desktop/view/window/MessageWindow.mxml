@@ -4,7 +4,7 @@
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx"
 		xmlns:component="com.facebook.desktop.view.component.*"
-		width="300" height="{Capabilities.screenResolutionY}"
+		minWidth="300" width="{mainCanvas.width + 175}" height="{Capabilities.screenResolutionY}"
 		transparent="true" systemChrome="none" showStatusBar="false" type="lightweight"
 		maximizable="false" minimizable="false" resizable="false"
 		styleName="popup" alwaysInFront="true" backgroundAlpha="0">
@@ -14,7 +14,6 @@
 			[Bindable] public var windowTitle:String;
 			[Bindable] public var windowMessage:String;
 			[Bindable] public var showOkayButton:Boolean
-			
 			
 			public override function open(openWindowActive:Boolean = true):void
 			{
@@ -48,13 +47,13 @@
 				 effectEnd="close()" />
 	</fx:Declarations>
 	
-	<mx:VBox cornerRadius="8" backgroundColor="black" backgroundAlpha="0.4" width="100%" minHeight="90" verticalAlign="middle" paddingTop="12" paddingBottom="12" paddingLeft="12" paddingRight="12">
-		<mx:VBox id="mainCanvas" width="100%" height="100%" backgroundColor="white" paddingBottom="8">
+	<mx:VBox cornerRadius="8" backgroundColor="black" backgroundAlpha="0.4" width="{mainCanvas.width + 25}" height="{mainCanvas.height + 25}" verticalAlign="middle" paddingTop="12" paddingBottom="12" paddingLeft="12" paddingRight="12">
+		<mx:VBox id="mainCanvas" minWidth="300" maxWidth="500" backgroundColor="white">
 			<mx:VBox width="100%" height="35" backgroundColor="#6d84b4" verticalAlign="middle" paddingLeft="12">
 				<s:Label text="{windowTitle}" fontSize="17" color="white" />
 			</mx:VBox>
-			<mx:Text width="250" paddingLeft="10" text="{windowMessage}" fontSize="11" />
-			<mx:HBox height="100%" width="100%" backgroundColor="#f2f2f2" verticalAlign="middle" horizontalAlign="right" paddingRight="10" paddingBottom="10" paddingTop="10" visible="{showOkayButton}" includeInLayout="{showOkayButton}">
+			<mx:Text paddingLeft="10" text="{windowMessage}" fontSize="11" />
+			<mx:HBox minHeight="43" width="100%" backgroundColor="#f2f2f2" verticalAlign="middle" horizontalAlign="right" paddingRight="10" paddingBottom="10" paddingTop="10" visible="{showOkayButton}" includeInLayout="{showOkayButton}">
 				<component:FacebookButton click="fadeout.play()" text="{resourceManager.getString('resources','component.button.okay')}" />
 			</mx:HBox>
 		</mx:VBox>
