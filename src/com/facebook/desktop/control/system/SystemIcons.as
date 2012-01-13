@@ -42,18 +42,23 @@ package com.facebook.desktop.control.system
 		private static var loginCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.login"));
 		private static var logoutCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.logout"));
 		private static var exitCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.exit"));
+		private static var unreadMessagesCommand:NativeMenuItem = new NativeMenuItem(" ");
 		private static var topSeparator:NativeMenuItem = new NativeMenuItem("", true);
+		private static var middleSeparator:NativeMenuItem = new NativeMenuItem("", true);
 		private static var bottomSeparator:NativeMenuItem = new NativeMenuItem("", true);
 		
 		private static var model:Model = Model.instance;
 		private static var controller:Controller = Controller.instance;
 		private static var userCache:UserCache = UserCache.instance;
-		private static var logger:ILogger = Log.getLogger("com.facebook.desktop.control.system.SystemIcons");
+		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.system.SystemIcons");
+		
+		private static var supportsSystemTray:Boolean;
+		private static var supportsDock:Boolean;
 		
 		public static function init():void
 		{
-			var supportsSystemTray:Boolean = NativeApplication.supportsSystemTrayIcon;
-			var supportsDock:Boolean = NativeApplication.supportsDockIcon;
+			supportsSystemTray = NativeApplication.supportsSystemTrayIcon;
+			supportsDock = NativeApplication.supportsDockIcon;
 			
 			// initialize commands - add event-handlers here...ONCE
 			aboutCommand.addEventListener(Event.SELECT, aboutHandler);
@@ -71,7 +76,7 @@ package com.facebook.desktop.control.system
 			
 			if (supportsSystemTray)
 			{
-				logger.info("Initializing system-tray icon and menu");
+				log.info("Initializing system-tray icon and menu");
 				iconLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, iconLoadComplete);
 				iconLoader.load(new URLRequest("/assets/icons/paused-icon16.png"));
 				systemTrayIcon = NativeApplication.nativeApplication.icon as SystemTrayIcon;
@@ -82,7 +87,7 @@ package com.facebook.desktop.control.system
 			
 			if (supportsDock)
 			{
-				logger.info("Initializing dock icon and menu");
+				log.info("Initializing dock icon and menu");
 				iconLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, iconLoadComplete);
 				iconLoader.load(new URLRequest("/assets/icons/paused-icon128.png"));
 				dockIcon = NativeApplication.nativeApplication.icon as DockIcon;
@@ -115,19 +120,9 @@ package com.facebook.desktop.control.system
 			}  // changeLanguage
 		}  // init
 		
-		public static function changeMenus(loggedIn:Boolean):void
+		public static function changedLoggedInMenuState(loggedIn:Boolean):void
 		{
-			if (loggedIn)
-			{
-				logger.info("Changing menus to logged-in set of menus");
-			}  // if statement
-			else
-			{
-				logger.info("Changing menus to logged-out set of menus");
-			}  // else statement
-			
-			var supportsSystemTray:Boolean = NativeApplication.supportsSystemTrayIcon;
-			var supportsDock:Boolean = NativeApplication.supportsDockIcon;
+			log.info("Changing menus to " + (loggedIn ? "logged-in" : "logged-out") + " set of menus");
 			
 			if (supportsSystemTray)
 			{
@@ -191,13 +186,64 @@ package com.facebook.desktop.control.system
 					dockIcon.menu.addItem(loginCommand);
 				}  // else statement
 			}  // else statement
-		}  // changeMenus
+		}  // changedLoggedInMenuState
+		
+		public static function addAdditionalNotificationsToMenu(messageCount:int):void
+		{
+			unreadMessagesCommand.label = messageCount == 1 ? ResourceManager.getInstance().getString("resources", "notification.unreadMessage") : ResourceManager.getInstance().getString("resources", "notification.unreadMessagesBegin") + " " + messageCount + " " + ResourceManager.getInstance().getString("resources", "notification.unreadMessagesEnd"); 
+			
+			if (supportsSystemTray)
+			{
+				// clear out menu items
+				systemTrayIcon.menu.removeAllItems();
+				
+				// re-build top menu items
+				systemTrayIcon.menu.addItem(aboutCommand);
+				systemTrayIcon.menu.addItem(updateStatusCommand);
+				systemTrayIcon.menu.addItem(topSeparator);
+				systemTrayIcon.menu.addItem(checkForUpdatesCommand);
+				systemTrayIcon.menu.addItem(replayLatestFiveUpdatesCommand);
+				systemTrayIcon.menu.addItem(pausePlayCommand);
+				
+				// insert middle menu items
+				if (messageCount > 0)
+				{
+					systemTrayIcon.menu.addItem(middleSeparator);
+					
+					if (messageCount > 0)
+					{
+						systemTrayIcon.menu.addItem(unreadMessagesCommand);
+					}
+				}
+				
+				// re-build bottom menu items
+				systemTrayIcon.menu.addItem(bottomSeparator);
+				systemTrayIcon.menu.addItem(settingsCommand);
+				systemTrayIcon.menu.addItem(logoutCommand);
+				systemTrayIcon.menu.addItem(exitCommand);
+			}  // if statement
+			else
+			{
+				// clear out menu items
+				dockIcon.menu.removeAllItems();
+				
+				// re-build menu
+				dockIcon.menu.addItem(aboutCommand);
+				dockIcon.menu.addItem(updateStatusCommand);
+				dockIcon.menu.addItem(topSeparator);
+				dockIcon.menu.addItem(checkForUpdatesCommand);
+				dockIcon.menu.addItem(replayLatestFiveUpdatesCommand);
+				dockIcon.menu.addItem(pausePlayCommand);
+				dockIcon.menu.addItem(bottomSeparator);
+				dockIcon.menu.addItem(settingsCommand);
+				dockIcon.menu.addItem(logoutCommand);
+			}  // else statement
+			
+		}  // addAdditionalNotificationsToMenu
 		
 		public static function changeIcon(live:Boolean):void
 		{
-			logger.info("Proceeding to change the icon");
-			var supportsSystemTray:Boolean = NativeApplication.supportsSystemTrayIcon;
-			var supportsDock:Boolean = NativeApplication.supportsDockIcon;
+			log.info("Proceeding to change the icon");
 			
 			var icon:String = null;
 			
@@ -205,12 +251,12 @@ package com.facebook.desktop.control.system
 			{
 				if (live)
 				{
-					logger.info("Changing system-tray icon to live 16x16 image");
+					log.info("Changing system-tray icon to live 16x16 image");
 					icon = "/assets/icons/icon16.png";
 				}  // if statement
 				else
 				{
-					logger.info("Changing system-tray icon to paused 16x16 image");
+					log.info("Changing system-tray icon to paused 16x16 image");
 					icon = "/assets/icons/paused-icon16.png"
 				}  // else statement
 				
@@ -222,12 +268,12 @@ package com.facebook.desktop.control.system
 			{
 				if (live)
 				{
-					logger.info("Changing dock icon to live 128x128 image");
+					log.info("Changing dock icon to live 128x128 image");
 					icon = "/assets/icons/icon128.png";
 				}  // if statement
 				else
 				{
-					logger.info("Changing dock icon to paused 128x128 image");
+					log.info("Changing dock icon to paused 128x128 image");
 					icon = "/assets/icons/paused-icon128.png"
 				}  // else statement
 				
@@ -275,32 +321,33 @@ package com.facebook.desktop.control.system
 			if ((dockIcon != null && dockIcon.menu != null && dockIcon.menu.containsItem(updateStatusCommand)) ||
 				(systemTrayIcon != null && systemTrayIcon.menu != null && systemTrayIcon.menu.containsItem(updateStatusCommand)))
 			{
-				logger.info("Attempting to show/hide status-update window");
+				log.info("Attempting to show/hide status-update window");
 				controller.openStatusUpdateWindow();
 			}  // if statement
 			else
 			{
-				logger.info("System-tray/dock icon clicked but user not logged in. Suppressing display of status-update window.");
+				log.info("System-tray/dock icon clicked but user not logged in. Suppressing display of status-update window.");
 			}  // else statement
 		}  // updateStatusHandler
 		
+		// TODO: match login logic in Main.mxml
 		private static function loginHandler(event:Event = null):void
 		{
-			logger.info("Logging in...");
+			log.info("Logging in...");
 			FacebookDesktop.login(loginHandler, Model.REQUIRED_PERMISSIONS);
 			
 			function loginHandler(session:Object, fail:Object):void
 			{
 				if (session != null)
 				{
-					logger.info("Login from system-tray successful");
+					log.info("Login from system-tray successful");
 					
 					// tell the model
 					model.connected = true;
 					
 					// adjust icon and menus
 					SystemIcons.changeIcon(true);
-					SystemIcons.changeMenus(true);
+					SystemIcons.changedLoggedInMenuState(true);
 					
 					// show login popup
 					ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.welcome"), null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
@@ -317,19 +364,19 @@ package com.facebook.desktop.control.system
 				{
 					// set latest-story-update time
 					var latestStreamUpdate:Date = Util.RFC3339toDate(result[0].created_time);
-					logger.info("Setting latest update time to " + latestStreamUpdate.toString());
+					log.info("Setting latest update time to " + latestStreamUpdate.toString());
 					model.latestStreamUpdate = (latestStreamUpdate.time / 1000).toString();
 				}  // if statement
 				else
 				{
-					logger.error("Request to get latest update has failed!  Error object: " + fail);
+					log.error("Request to get latest update has failed!  Error object: " + fail);
 				}  // else statement
 			}  // getStreamHandler
 		}  // loginHandler
 		
 		private static function logoutHandler(event:Event = null):void
 		{
-			logger.info("Logging out! Goodbye!");
+			log.info("Logging out! Goodbye!");
 			
 			changeIcon(false);
 			ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.goodbye"), "");
@@ -340,7 +387,7 @@ package com.facebook.desktop.control.system
 			
 			FacebookDesktop.logout();
 			
-			SystemIcons.changeMenus(false);
+			SystemIcons.changedLoggedInMenuState(false);
 		}  // logoutHandler
 		
 		private static function settingsHandler(event:Event = null):void
@@ -352,14 +399,14 @@ package com.facebook.desktop.control.system
 		{
 			if (pausePlayCommand.label == ResourceManager.getInstance().getString("resources", "contextMenu.pause"))
 			{
-				logger.info("Pausing notifications");
+				log.info("Pausing notifications");
 				changeIcon(false);
 				model.paused = true;
 				pausePlayCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.resume");
 			}  // if statement
 			else
 			{
-				logger.info("Resuming notifications");
+				log.info("Resuming notifications");
 				changeIcon(true);
 				model.paused = false;
 				pausePlayCommand.label = ResourceManager.getInstance().getString("resources", "contextMenu.pause");
@@ -368,7 +415,7 @@ package com.facebook.desktop.control.system
 		
 		private static function checkForUpdatesHandler(event:Event = null):void
 		{
-			logger.info("Forcing a check for updates");
+			log.info("Forcing a check for updates");
 			
 			var totalUpdates:int = 0;
 			
@@ -400,7 +447,7 @@ package com.facebook.desktop.control.system
 				
 				if (totalUpdates == 0)
 				{
-					logger.info("No new updates to show");
+					log.info("No new updates to show");
 					ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.noNewUpdates"), "");
 				}  // if statement
 			}  // getActivityNotificationsHandler
@@ -408,13 +455,13 @@ package com.facebook.desktop.control.system
 		
 		private static function replayLatestFiveUpdatesHandler(event:Event = null):void
 		{
-			logger.info("Displaying latest 5 updates");
+			log.info("Displaying latest 5 updates");
 			ToastManager.showLatestFiveUpdates();
 		}  // replayLatestFiveUpdatesHandler
 		
 		private static function exitHandler(event:Event = null):void
 		{
-			logger.info("Exiting the application.");
+			log.info("Exiting the application.");
 			NativeApplication.nativeApplication.exit();
 		}  // exitHandler
 	}  // class declaration
