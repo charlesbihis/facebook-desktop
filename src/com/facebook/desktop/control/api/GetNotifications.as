@@ -53,7 +53,7 @@ package com.facebook.desktop.control.api
 						getApplicationCommand.execute(getApplicationHandler, notifications[i]);
 					}  // for loop
 				}  // if statement
-				else
+				else if (fail != null)
 				{
 					log.error("Request to get latest notifications has failed!  Error object: " + ObjectUtil.toString(fail));
 				}  // else statement
