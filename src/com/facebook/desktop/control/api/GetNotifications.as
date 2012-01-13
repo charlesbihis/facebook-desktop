@@ -37,9 +37,10 @@ package com.facebook.desktop.control.api
 			
 			FacebookDesktop.api(API, getNotificationsHandler, args);
 			
+			// TODO: add control over this in the preferences
 			function getNotificationsHandler(result:Object, fail:Object):void
 			{
-				if (!fail && result is Array && (result as Array).length > 0)
+				if (fail == null && result is Array && (result as Array).length > 0)
 				{
 					var notifications:Array = result as Array;
 					var latestNotificationUpdate:Date = Util.RFC3339toDate(notifications[0].created_time);
