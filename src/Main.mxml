@@ -10,6 +10,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.facebook.desktop.control.api.GetActivityNotifications;
+			import com.facebook.desktop.control.api.GetAdditionalNotifications;
 			import com.facebook.desktop.control.api.GetNotifications;
 			import com.facebook.desktop.control.api.GetProfileNotifications;
 			import com.facebook.desktop.control.api.GetStartupNotifications;
@@ -112,7 +113,7 @@
 							
 							// adjust icon and menus
 							SystemIcons.changeIcon(true);
-							SystemIcons.changeMenus(true);
+							SystemIcons.changedLoggedInMenuState(true);
 							
 							// show login popup
 							ToastManager.show(resourceManager.getString("resources", "toast.welcome"), null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
@@ -180,9 +181,11 @@
 				getNotificationsCommand.execute();
 				
 				// messages, pokes, shares, friend-requests, group-invites, and event-invites
+				var getAdditionalNotificationsCommand:GetAdditionalNotifications = new GetAdditionalNotifications();
+				getAdditionalNotificationsCommand.execute(null, true);
 				
 				pollTimer.addEventListener(TimerEvent.TIMER, poll);
-				pollTimer.start();
+//				pollTimer.start();
 				
 				function poll():void
 				{
