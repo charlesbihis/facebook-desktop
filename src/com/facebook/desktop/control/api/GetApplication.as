@@ -13,7 +13,7 @@ package com.facebook.desktop.control.api
 		private static var applicationCache:ApplicationCache = ApplicationCache.instance;
 		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetApplication");
 		
-		public function GetApplication(applicationId:String)
+		public function GetApplication(applicationId:String = null)
 		{
 			this.applicationId = applicationId;
 		}  // GetApplication
