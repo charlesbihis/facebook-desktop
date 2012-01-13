@@ -30,7 +30,7 @@ package com.facebook.desktop.control.api
 			
 			function getObjectHandler(result:Object, fail:Object):void
 			{
-				if (callback)
+				if (callback != null)
 				{
 					callback(result);
 				}  // if statement
