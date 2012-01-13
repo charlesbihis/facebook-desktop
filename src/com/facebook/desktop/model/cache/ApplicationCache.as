@@ -1,6 +1,6 @@
 package com.facebook.desktop.model.cache
 {
-	public class ApplicationCache
+	public class ApplicationCache implements ICache
 	{
 		private static var _instance:ApplicationCache = new ApplicationCache(SingletonLock);
 		
