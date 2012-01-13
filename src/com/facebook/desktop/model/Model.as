@@ -6,7 +6,7 @@ package com.facebook.desktop.model
 	public class Model
 	{
 		public static const APPLICATION_ID:String = "95615112563";
-		public static const REQUIRED_PERMISSIONS:Array = ["user_about_me", "friends_birthday", "read_stream", "read_mailbox", "read_requests", "read_insights", "publish_stream", "publish_checkins", "user_events", "user_groups", "offline_access", "user_checkins"];
+		public static const REQUIRED_PERMISSIONS:Array = ["manage_notifications", "user_about_me", "friends_birthday", "read_stream", "read_mailbox", "read_requests", "read_insights", "publish_stream", "publish_checkins", "user_events", "user_groups", "offline_access", "user_checkins"];
 		public static const MAX_ACTIVE_TOASTS:int = 5;
 		
 		[Bindable] public var connected:Boolean;
@@ -36,11 +36,12 @@ package com.facebook.desktop.model
 		public var operatingSystem:String;
 		
 		public var latestNotificationUpdate:String;
-		
-		public var latestStreamUpdate:String;
 		public var latestMessageUpdate:String;
 		public var latestPokeUpdate:String;
 		public var latestShareUpdate:String;
+		
+
+		public var latestStreamUpdate:String;
 		public var latestActivityUpdate:String;
 		public var latestFiveUpdates:ArrayCollection;
 		public var activeToasts:ArrayCollection;
