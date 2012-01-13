@@ -26,7 +26,7 @@ package com.facebook.desktop.control.api
 			for (var i:int = 0; i < results.length; i++)
 			{
 				var uid:String = results[i];
-				if (!userCache.cache[uid])
+				if (!userCache.get(uid))
 				{
 					allInCache = false;
 				}  // if statement
@@ -59,9 +59,7 @@ package com.facebook.desktop.control.api
 						var user:Object = users[i];
 						
 						logger.info("Placing " + user.name + "(" + user.uid + ") into the user-cache");
-						userCache.cache[user.uid] = new Object();
-						userCache.cache[user.uid].name = user.name;
-						userCache.cache[user.uid].picSquare = user.pic_square;
+						userCache.put(user.uid, user);
 					}  // for loop
 				}  // if statement
 				
