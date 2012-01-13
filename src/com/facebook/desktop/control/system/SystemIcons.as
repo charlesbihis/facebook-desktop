@@ -42,7 +42,12 @@ package com.facebook.desktop.control.system
 		private static var loginCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.login"));
 		private static var logoutCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.logout"));
 		private static var exitCommand:NativeMenuItem = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.exit"));
+		private static var eventInvitesCommand:NativeMenuItem = new NativeMenuItem(" ");
+		private static var friendRequestsCommand:NativeMenuItem = new NativeMenuItem(" ");
+		private static var groupInvitesCommand:NativeMenuItem = new NativeMenuItem(" ");
 		private static var unreadMessagesCommand:NativeMenuItem = new NativeMenuItem(" ");
+		private static var newPokesCommand:NativeMenuItem = new NativeMenuItem(" ");
+		private static var newSharesCommand:NativeMenuItem = new NativeMenuItem(" ");
 		private static var topSeparator:NativeMenuItem = new NativeMenuItem("", true);
 		private static var middleSeparator:NativeMenuItem = new NativeMenuItem("", true);
 		private static var bottomSeparator:NativeMenuItem = new NativeMenuItem("", true);
@@ -70,6 +75,12 @@ package com.facebook.desktop.control.system
 			logoutCommand.addEventListener(Event.SELECT, logoutHandler);
 			loginCommand.addEventListener(Event.SELECT, loginHandler);
 			exitCommand.addEventListener(Event.SELECT, exitHandler);
+			eventInvitesCommand.addEventListener(Event.SELECT, eventInvitesHandler);
+			friendRequestsCommand.addEventListener(Event.SELECT, friendRequestsHandler);
+			groupInvitesCommand.addEventListener(Event.SELECT, groupInvitesHandler);
+			unreadMessagesCommand.addEventListener(Event.SELECT, unreadMessagesHandler);
+			newPokesCommand.addEventListener(Event.SELECT, newPokesHandler);
+			newSharesCommand.addEventListener(Event.SELECT, newSharesHandler);
 			
 			// listen to changes in language so I can reset the context menus
 			ResourceManager.getInstance().addEventListener(Event.CHANGE, changeLanguage);
@@ -188,10 +199,16 @@ package com.facebook.desktop.control.system
 			}  // else statement
 		}  // changedLoggedInMenuState
 		
-		public static function addAdditionalNotificationsToMenu(messageCount:int):void
+		public static function addAdditionalNotificationsToMenu(additionalNotifications:Object):void
 		{
-			unreadMessagesCommand.label = messageCount == 1 ? ResourceManager.getInstance().getString("resources", "notification.unreadMessage") : ResourceManager.getInstance().getString("resources", "notification.unreadMessagesBegin") + " " + messageCount + " " + ResourceManager.getInstance().getString("resources", "notification.unreadMessagesEnd"); 
+			eventInvitesCommand.label = additionalNotifications.event_invites.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.eventInvitation") : ResourceManager.getInstance().getString("resources", "notification.eventInvitationsBegin") + " " + additionalNotifications.event_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.eventInvitationsEnd");
+			friendRequestsCommand.label = additionalNotifications.friend_requests.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.friendRequest") : ResourceManager.getInstance().getString("resources", "notification.friendRequestsBegin") + " " + additionalNotifications.friend_requests.length + " " + ResourceManager.getInstance().getString("resources", "notification.friendRequestsEnd");
+			groupInvitesCommand.label = additionalNotifications.group_invites.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.groupInvitation") : ResourceManager.getInstance().getString("resources", "notification.groupInvitationsBegin") + " " + additionalNotifications.group_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.groupInvitationsEnd");
+			unreadMessagesCommand.label = additionalNotifications.messages.unread == 1 ? ResourceManager.getInstance().getString("resources", "notification.unreadMessage") : ResourceManager.getInstance().getString("resources", "notification.unreadMessagesBegin") + " " + additionalNotifications.messages.unread + " " + ResourceManager.getInstance().getString("resources", "notification.unreadMessagesEnd");
+			newPokesCommand.label = ResourceManager.getInstance().getString("resources", "notification.poked");
+			newSharesCommand.label = ResourceManager.getInstance().getString("resources", "notification.sharedLink");
 			
+			var notificationCount:int = 0;
 			if (supportsSystemTray)
 			{
 				// clear out menu items
@@ -206,15 +223,53 @@ package com.facebook.desktop.control.system
 				systemTrayIcon.menu.addItem(pausePlayCommand);
 				
 				// insert middle menu items
-				if (messageCount > 0)
+				if (additionalNotifications.event_invites.length > 0 || additionalNotifications.friend_requests.length > 0 || additionalNotifications.group_invites.length > 0 ||
+					additionalNotifications.messages.unread > 0 || additionalNotifications.pokes.unread > 0 || additionalNotifications.shares.unread > 0)
 				{
 					systemTrayIcon.menu.addItem(middleSeparator);
 					
-					if (messageCount > 0)
+					// event invites
+					if (additionalNotifications.event_invites.length > 0)
+					{
+						systemTrayIcon.menu.addItem(eventInvitesCommand);
+						notificationCount += additionalNotifications.event_invites.length;
+					}  // if statement
+					
+					// friend requests
+					if (additionalNotifications.friend_requests.length > 0)
+					{
+						systemTrayIcon.menu.addItem(friendRequestsCommand);
+						notificationCount += additionalNotifications.event_invites.length;
+					}  // if statement
+					
+					// group invites
+					if (additionalNotifications.group_invites.length > 0)
+					{
+						systemTrayIcon.menu.addItem(groupInvitesCommand);
+						notificationCount += additionalNotifications.group_invites.length;
+					}  // if statement
+					
+					// unread messages
+					if (additionalNotifications.messages.unread > 0)
 					{
 						systemTrayIcon.menu.addItem(unreadMessagesCommand);
-					}
-				}
+						notificationCount += additionalNotifications.messages.unread;
+					}  // if statement
+					
+					// pokes
+					if (additionalNotifications.pokes.unread > 0)
+					{
+						systemTrayIcon.menu.addItem(newPokesCommand);
+						notificationCount += additionalNotifications.pokes.unread;
+					}  // if statement
+					
+					// shares
+					if (additionalNotifications.shares.unread > 0)
+					{
+						systemTrayIcon.menu.addItem(newSharesCommand);
+						notificationCount += additionalNotifications.shares.unread;
+					}  // if statement
+				}  // if statement
 				
 				// re-build bottom menu items
 				systemTrayIcon.menu.addItem(bottomSeparator);
@@ -227,18 +282,70 @@ package com.facebook.desktop.control.system
 				// clear out menu items
 				dockIcon.menu.removeAllItems();
 				
-				// re-build menu
+				// re-build top menu items
 				dockIcon.menu.addItem(aboutCommand);
 				dockIcon.menu.addItem(updateStatusCommand);
 				dockIcon.menu.addItem(topSeparator);
 				dockIcon.menu.addItem(checkForUpdatesCommand);
 				dockIcon.menu.addItem(replayLatestFiveUpdatesCommand);
 				dockIcon.menu.addItem(pausePlayCommand);
+				
+				// insert middle menu items
+				if (additionalNotifications.event_invites.length > 0 || additionalNotifications.friend_requests.length > 0 || additionalNotifications.group_invites.length > 0 ||
+					additionalNotifications.messages.unread > 0 || additionalNotifications.pokes.unread > 0 || additionalNotifications.shares.unread > 0)
+				{
+					dockIcon.menu.addItem(middleSeparator);
+					
+					// event invites
+					if (additionalNotifications.event_invites.length > 0)
+					{
+						dockIcon.menu.addItem(eventInvitesCommand);
+						notificationCount += additionalNotifications.event_invites.length;
+					}  // if statement
+					
+					// friend requests
+					if (additionalNotifications.friend_requests.length > 0)
+					{
+						dockIcon.menu.addItem(friendRequestsCommand);
+						notificationCount += additionalNotifications.event_invites.length;
+					}  // if statement
+					
+					// group invites
+					if (additionalNotifications.group_invites.length > 0)
+					{
+						dockIcon.menu.addItem(groupInvitesCommand);
+						notificationCount += additionalNotifications.group_invites.length;
+					}  // if statement
+					
+					// unread messages
+					if (additionalNotifications.messages.unread > 0)
+					{
+						dockIcon.menu.addItem(unreadMessagesCommand);
+						notificationCount += additionalNotifications.messages.unread;
+					}  // if statement
+					
+					// pokes
+					if (additionalNotifications.pokes.unread > 0)
+					{
+						dockIcon.menu.addItem(newPokesCommand);
+						notificationCount += additionalNotifications.pokes.unread;
+					}  // if statement
+					
+					// shares
+					if (additionalNotifications.shares.unread > 0)
+					{
+						dockIcon.menu.addItem(newSharesCommand);
+						notificationCount += additionalNotifications.shares.unread;
+					}  // if statement
+				}  // if statement
+				
+				// re-build bottom menu items
 				dockIcon.menu.addItem(bottomSeparator);
 				dockIcon.menu.addItem(settingsCommand);
 				dockIcon.menu.addItem(logoutCommand);
 			}  // else statement
 			
+			// TODO: change icon based on notificationCount
 		}  // addAdditionalNotificationsToMenu
 		
 		public static function changeIcon(live:Boolean):void
@@ -464,5 +571,41 @@ package com.facebook.desktop.control.system
 			log.info("Exiting the application.");
 			NativeApplication.nativeApplication.exit();
 		}  // exitHandler
+		
+		private static function eventInvitesHandler(event:Event):void
+		{
+			log.info("Context menu click - viewing event invites");
+			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/events/"));
+		}  // eventInvitesHandler
+		
+		private static function friendRequestsHandler(event:Event):void
+		{
+			log.info("Context menu click - viewing friend requests");
+			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/friends/edit/?sk=requests"));
+		}  // friendRequestsHandler
+		
+		private static function groupInvitesHandler(event:Event):void
+		{
+			log.info("Context menu click - viewing group invites");
+			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/bookmarks/groups/"));
+		}  // groupInvitesHandler
+		
+		private static function unreadMessagesHandler(event:Event):void
+		{
+			log.info("Context menu click - viewing unread messages");
+			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/messages/"));
+		}  // unreadMessagesHandler
+		
+		private static function newPokesHandler(event:Event):void
+		{
+			log.info("Context menu click - viewing new pokes");
+			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/notifications/"));
+		}  // newPokesHandler
+		
+		private static function newSharesHandler(event:Event):void
+		{
+			log.info("Context menu click - viewing new shares");
+			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/notifications/"));
+		}  // newSharesHandler
 	}  // class declaration
 }  // package
