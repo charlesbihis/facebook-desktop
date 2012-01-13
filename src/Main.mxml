@@ -36,7 +36,7 @@
 			[Bindable] private var connected:Boolean;
 			[Bindable] private var paused:Boolean;
 			
-			private var logger:ILogger = Log.getLogger(className);
+			private var log:ILogger = Log.getLogger(className);
 			
 			private var pollTimer:Timer = new Timer(POLL_DELAY);
 			
@@ -44,8 +44,8 @@
 			{
 				// set up logging
 				Logging.init();
-				logger.info("\n********* starting new session *********\n");
-				logger.info("Logging initialized");
+				log.info("\n********* starting new session *********\n");
+				log.info("Logging initialized");
 
 				// grab preferences
 				PreferencesManager.loadPreferences();
@@ -53,7 +53,7 @@
 				// set up application to start on user-login
 				if(!flash.system.Capabilities.isDebugger)
 				{
-					logger.info("Setting app to start on user-login");
+					log.info("Setting app to start on user-login");
 					NativeApplication.nativeApplication.startAtLogin = model.preferences.startAtLogin;
 				}  // if statement
 				
@@ -80,19 +80,19 @@
 				{
 					model.operatingSystem = "Linux";
 				}  // else statement
-				logger.info("OS set to {0}", model.operatingSystem);
+				log.info("OS set to {0}", model.operatingSystem);
 				
 				// init tray/dock icon
 				SystemIcons.init();
 				
 				// init user-presence logic
-				logger.info("Initializing user-presence logic");
+				log.info("Initializing user-presence logic");
 				NativeApplication.nativeApplication.idleThreshold = IDLE_TIME;
 				NativeApplication.nativeApplication.addEventListener(Event.USER_IDLE, onIdle);
 				NativeApplication.nativeApplication.addEventListener(Event.USER_PRESENT, onPresence);
 
 				// check for updates
-				logger.info("Checking for updates");
+				log.info("Checking for updates");
 				UpdateManager.checkForUpdates();
 				
 				// initialize our Facebook session
@@ -106,7 +106,7 @@
 						// if we have a session, restore it
 						if (session != null)
 						{
-							logger.info("Connected and all permissions granted! We are fully authorized!");
+							log.info("Connected and all permissions granted! We are fully authorized!");
 							
 							// tell the model
 							model.connected = true;
@@ -130,7 +130,7 @@
 					}  // if statement
 					else
 					{
-						logger.error("Error logging in.  Error object: " + ObjectUtil.toString(fail));
+						log.error("Error logging in.  Error object: " + ObjectUtil.toString(fail));
 						var messageWindow:MessageWindow = new MessageWindow();
 						messageWindow.windowTitle = "Login Error";
 						messageWindow.windowMessage = fail.error.type + ": " + fail.error.message;
@@ -145,36 +145,36 @@
 					{
 						// set latest-story-update time
 						var latestStreamUpdate:Date = Util.RFC3339toDate(result[0].created_time);
-						logger.info("Setting latest update time to " + latestStreamUpdate.toString());
+						log.info("Setting latest wall feed update time to " + latestStreamUpdate.toString());
 						model.latestStreamUpdate = (latestStreamUpdate.time / 1000).toString();
 						
 						startTheShow();
 					}  // if statement
 					else
 					{
-						logger.error("Request to get latest update has failed!  Error object: " + fail);
+						log.error("Request to get latest update has failed!  Error object: " + fail);
 					}  // else statement
 				}  // getStreamHandler
 			}  // init
 			
 			private function onIdle(event:Event):void
 			{
-				logger.info("Idling...");
+				log.info("Idling...");
 				ToastManager.pauseExpiration();
 			}  // onIdle
 			
 			private function onPresence(event:Event):void
 			{
-				logger.info("Resuming...");
+				log.info("Resuming...");
 				ToastManager.resumeExpiration();
 			}  // onPresence
 			
 			private function startTheShow():void
 			{
-				logger.info("Initialization and connection complete!");
+				log.info("Initialization and connection complete!");
 				
 				// check for start-up notifications (likes, comments, group posts, messages, pokes, shares, friend-requests, group-invites, event-invites)
-				logger.info("Fetching start-up notifications");
+				log.info("Fetching start-up notifications");
 				
 				// likes, comments, and group posts
 				var getNotificationsCommand:GetNotifications = new GetNotifications();
@@ -184,39 +184,8 @@
 				var getAdditionalNotificationsCommand:GetAdditionalNotifications = new GetAdditionalNotifications();
 				getAdditionalNotificationsCommand.execute(null, true);
 				
-				pollTimer.addEventListener(TimerEvent.TIMER, poll);
-//				pollTimer.start();
-				
-				function poll():void
-				{
-					if (connected && !paused)
-					{
-						// check for news feed updates
-						
-						// check for new likes, comments, and group posts
-						getNotificationsCommand.execute();
-						
-						// check for new messages, pokes, shares, friend-requests, group-invites, and event-invites
-						
-						// check for 
-					}  // if statement
-				}  // poll
-				
-				
-				/*
-				// check for start-up notifications (messages, pokes, shares, friend-requests, group-invites, and event-invites)
-				logger.info("Fetching start-up notifications");
-				
-				// messages, pokes, and shares
-				var getStartupNotificationsCommand:GetStartupNotifications = new GetStartupNotifications();
-				getStartupNotificationsCommand.execute();
-				
-				// friend-requests, group-invites, and event-invites
-				var getProfileNotificationsCommand:GetProfileNotifications = new GetProfileNotifications();
-				getProfileNotificationsCommand.execute();
-				
 				// finally, start the poller
-				logger.info("Starting the poller");
+				log.info("Starting the poller");
 				pollTimer.addEventListener(TimerEvent.TIMER, poll);
 				pollTimer.start();
 				
@@ -224,22 +193,17 @@
 				{
 					if (connected && !paused)
 					{
-						// check for real-time notifications (story-updates, likes, and comments)
-						logger.info("Polling!");
+						log.info("Polling!");
 						
-						// stream-updates
-						var getStreamUpdatesCommand:GetStreamUpdates = new GetStreamUpdates();
-						getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
-						getStreamUpdatesCommand.execute();
+						// check for news feed updates
 						
-						// likes, comments, and group posts
-						var getActivityNotificationsCommand:GetActivityNotifications = new GetActivityNotifications();
-						getActivityNotificationsCommand.includeRead = "0";
-						getActivityNotificationsCommand.startTime = model.latestActivityUpdate;
-						getActivityNotificationsCommand.execute();
+						// check for new likes, comments, and group posts
+						getNotificationsCommand.execute();
+						
+						// check for new messages, pokes, shares, friend-requests, group-invites, and event-invites
+						getAdditionalNotificationsCommand.execute();
 					}  // if statement
 				}  // poll
-				*/
 			}  // startTheShow
 		]]>
 	</fx:Script>
