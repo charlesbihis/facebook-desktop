@@ -1,10 +1,10 @@
 package com.facebook.desktop.model.cache
 {
-	public class UserCache
+	public class UserCache implements ICache
 	{
-		public var cache:Object;
-		
 		private static var _instance:UserCache = new UserCache(SingletonLock);
+		
+		private var cache:Object;
 		
 		public function UserCache(lock:Class)
 		{
@@ -20,6 +20,21 @@ package com.facebook.desktop.model.cache
 		{
 			return _instance;
 		}  // instance
+		
+		public function get(key:String):Object
+		{
+			return cache[key];
+		}  // get
+		
+		public function put(key:String, value:Object):void
+		{
+			cache[key] = value;
+		}  // put
+		
+		public function contains(key:String):Boolean
+		{
+			return cache[key] != null;
+		}  // contains
 	}  // class declaration
 }  // package
 

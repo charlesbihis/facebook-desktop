@@ -79,13 +79,13 @@ package com.facebook.desktop.control.api
 						var actorId:String = uidsArray[0];
 						var targetId:String = uidsArray[1];
 						
-						logger.info("Story update! - " + userCache.cache[actorId].name + " ► " + userCache.cache[targetId].name + " - " + message);
-						ToastManager.queueToast(userCache.cache[actorId].name + " ► " + userCache.cache[targetId].name, message, permalink, userCache.cache[actorId].picSquare);
+						logger.info("Story update! - " + userCache.get(actorId).name + " ► " + userCache.get(targetId).name + " - " + message);
+						ToastManager.queueToast(userCache.get(actorId).name + " ► " + userCache.get(targetId).name, message, permalink, userCache.get(actorId).picSquare);
 					}  // if statement
 					else
 					{
-						logger.info("Story update! - " + userCache.cache[uids].name + " " + message);
-						ToastManager.queueToast(userCache.cache[uids].name, message, permalink, userCache.cache[uids].picSquare);
+						logger.info("Story update! - " + userCache.get(uids).name + " " + message);
+						ToastManager.queueToast(userCache.get(uids).name, message, permalink, userCache.get(uids).picSquare);
 					}  // else statement
 					
 					if (last)
