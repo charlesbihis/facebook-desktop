@@ -11,6 +11,7 @@
 		<![CDATA[
 			import com.facebook.desktop.control.api.GetActivityNotifications;
 			import com.facebook.desktop.control.api.GetAdditionalNotifications;
+			import com.facebook.desktop.control.api.GetNewsFeed;
 			import com.facebook.desktop.control.api.GetNotifications;
 			import com.facebook.desktop.control.api.GetProfileNotifications;
 			import com.facebook.desktop.control.api.GetStartupNotifications;
@@ -196,6 +197,7 @@
 						log.info("Polling!");
 						
 						// check for news feed updates
+						var getNewsFeedCommand:GetNewsFeed = new GetNewsFeed();
 						
 						// check for new likes, comments, and group posts
 						getNotificationsCommand.execute();

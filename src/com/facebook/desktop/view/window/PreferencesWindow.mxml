@@ -173,7 +173,6 @@
 						<s:CheckBox id="startAtLoginCheckbox" change="saveSettings();setStartAtLogin();logger.info('Changing \'Run on startup\' setting to {0}',startAtLoginCheckbox.selected)" />
 					</mx:HBox>
 					
-					
 					<mx:Spacer height="15" />
 					<mx:HBox verticalAlign="middle">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.header')}" fontWeight="bold" />
