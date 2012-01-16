@@ -1,17 +1,65 @@
 TO DO FOR v1.0.0
 -look at all update mechanisms in Graph API
 	-notifications
-	-messages
-	-pages
--add unread messages count in context menu
--add event invites count in context menu
--add group invites count in context menu
--add friend-requests count in context menu
+	(done) messages
+	(done) pages
+(done) add unread messages count in context menu
+(done) add event invites count in context menu
+(done) add group invites count in context menu
+(done) add friend-requests count in context menu
+(done) add click handlers to take to appropriate pages
 -add new settings
 	-modifiable-length toasts
 	-optional sound
 -detect online/offline status
 -fix bug where last-check time doesn't reset when user goes offline
+-fix bug where clicking "check for updates" right after start still shows all the initial updates
+-make constants class for things like icon location, facebook url, colors
+-create interface and/or parent class for system-icon control classes (one for windows and linux, one for mac - really one for system-tray support and another for dock support)
+-create interface for api commands (has execute that takes a call back and possibly pass-through-args, constructor takes args??)
+  -maybe constructor can take optional args
+  -maybe execute can take optional args, callback, pass-through-args
+  -likely execute can take optional args and pass-through-args, but implements an event model instead of callback model
+-look at notification engine and see if i can't make a better interface
+-look at bugs where notifications don't overlap other notifications, but also the preferences window, error window, etc.
+
+PRESENTATION AND ORGANIZATION
+-general
+  -www.charlesbihis.com forwards to www.whoischarles.com
+  -[MAYBE] have www.whoischarles.com stop forwarding to blogs.adobe.com/charles and instead host a list of all my relevant contact points
+    -facebook
+	-twitter
+	-blog
+	-github
+  -[EVENTUALLY] when I have enough projects, create a page (like www.whoischarles.com/projects or code.charlesbihis.com) that hosts all of my projects with links to more information
+    -like this -> http://code.quirkey.com/
+-on GitHub
+  -create project page for actionscript-notification-engine
+    -http://pages.github.com/
+	-http://xlson.com/2010/11/09/getting-started-with-github-pages.html
+	-http://drnicwilliams.com/2008/12/21/migrating-project-websites-to-github-pages-with-sake-tasks-new-websites-with-jekyll_generator/
+    -use http://mxcl.github.com/homebrew/ as a reference
+	-use http://visionmedia.github.com/mini/ too
+	-and this too -> http://joehewitt.github.com/scrollability/
+	-follow guidelines on http://thechangelog.com/post/3032074343/top-ten-reasons-why-i-wont-use-your-open-source-project
+  -change all custom project namespaces to com.charlesbihis
+  -put license info in all projects
+    -like this -> https://github.com/JakeWharton/ActionBarSherlock
+	-and like this -> https://github.com/joehewitt/nerve
+-on Dreamhost
+  -clean up all domains
+  -delete all old domains
+  -delete all unused DBs
+  -remove unecessary redirects
+  -make sure I'm using the minimum services in all instances
+    -make sure that all domains have the same settings for those using hosting/Gmail/etc
+-on Adobe blog
+  -post about open-source OAuth 2.0 library
+  -post about release of facebook desktop v1.0.0
+  -post some puzzler(s)
+  -post about open-sourcing of notification engine used in facebookdesktop
+  -post some more articles, maybe puzzler(s)
+  -post about open-sourcing of entire facebook desktop project
 
 
 WOULD BE NICE
