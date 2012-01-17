@@ -5,7 +5,6 @@ package com.facebook.desktop.control.logging
 	import flash.filesystem.File;
 	
 	import mx.formatters.DateFormatter;
-	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.logging.LogEventLevel;
 	
