@@ -11,10 +11,6 @@ package com.facebook.desktop.control.api
 		private static var applicationCache:ApplicationCache = ApplicationCache.instance;
 		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetApplication");
 		
-		public function GetApplication()
-		{
-		}  // GetApplication
-		
 		public function execute(args:Object = null, callback:Function = null, passThroughVariables:Object = null):void
 		{
 			if (args != null && args is String)
