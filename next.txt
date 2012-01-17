@@ -8,6 +8,7 @@ TO DO FOR v1.0.0
 -create interface and/or parent class for system-icon control classes (one for windows and linux, one for mac - really one for system-tray support and another for dock support)
 -add notification count to dock/system-tray icon
 -get rid of controller class
+-grab latest facebook-actionscript-api code and drop into project
 -fix about page to link to my homepage, www.whoischarles.com
 -add birthdays feature
 -fix website so that there is a clear download link
