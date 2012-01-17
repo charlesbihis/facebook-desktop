@@ -31,9 +31,9 @@ package com.facebook.desktop.control.updates
 			appUpdater.initialize();
 			
 			// Delaying call to checkNow() by 100ms because of bug in ApplicationUpdaterUI in Flex 3.2
-			function onUpdaterInitialized(e:Event):void
+			function onUpdaterInitialized(event:Event):void
 			{
-				setTimeout(delayedUpdaterInitialized, 100, UpdateEvent(e));
+				setTimeout(delayedUpdaterInitialized, 100, UpdateEvent(event));
 			}  // onUpdaterInitialized
 			
 			function delayedUpdaterInitialized(event:Event):void
@@ -61,6 +61,6 @@ package com.facebook.desktop.control.updates
 			{
 				logger.error("Error while downloading or parsing the update descriptor file (air.update.events.StatusUpdateErrorEvent.UPDATE_ERROR)");
 			}  // onStatusUpdateError
-		}
-	}
-}
+		}  // checkForUpdates
+	}  // class declaration
+}  // package
