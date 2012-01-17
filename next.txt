@@ -1,27 +1,36 @@
 TO DO FOR v1.0.0
--look at all update mechanisms in Graph API
-	-notifications
-	(done) messages
-	(done) pages
-(done) add unread messages count in context menu
-(done) add event invites count in context menu
-(done) add group invites count in context menu
-(done) add friend-requests count in context menu
-(done) add click handlers to take to appropriate pages
 -add new settings
 	-modifiable-length toasts
 	-optional sound
+	-make some notifications sticky
 -detect online/offline status
 -fix bug where last-check time doesn't reset when user goes offline
--fix bug where clicking "check for updates" right after start still shows all the initial updates
--make constants class for things like icon location, facebook url, colors
 -create interface and/or parent class for system-icon control classes (one for windows and linux, one for mac - really one for system-tray support and another for dock support)
--create interface for api commands (has execute that takes a call back and possibly pass-through-args, constructor takes args??)
-  -maybe constructor can take optional args
-  -maybe execute can take optional args, callback, pass-through-args
-  -likely execute can take optional args and pass-through-args, but implements an event model instead of callback model
--look at notification engine and see if i can't make a better interface
--look at bugs where notifications don't overlap other notifications, but also the preferences window, error window, etc.
+-add birthdays feature
+-add notification count to dock/system-tray icon
+-get rid of controller class
+-fix about page to link to my homepage, www.whoischarles.com
+-fix website so that there is a clear download link
+
+PREFERENCES
+-Application Settings
+	-Language
+	-Run on startup
+-Notification Settings
+	-Notify me when new stories are posted to my news feed					STICKY
+	-Notify me when there is activity in a post I am involved in			STICKY
+	-Notify me when someone sends me a message								STICKY
+	-Notify me when I get a new friend request								STICKY
+	-Notify me when someone pokes me										STICKY
+	-Notify me when someone shares something with me						STICKY
+	-Notify me when I get a group invite									STICKY
+	-Notify me when I get an event invite									STICKY
+	-Notify me when it is a friend's birthday
+-Advanced Settings
+	-Notification display length
+	-Mark notifications as read when they appear on my screen
+	-Play notification sound
+
 
 PRESENTATION AND ORGANIZATION
 -general
@@ -64,8 +73,6 @@ PRESENTATION AND ORGANIZATION
 
 WOULD BE NICE
 	-theming
-	-birthday functionality
-	-notification count to dock/system-tray icon
 	-write on friends wall
 	-send message to friend
 	-chat
