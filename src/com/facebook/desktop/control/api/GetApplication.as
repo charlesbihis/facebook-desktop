@@ -6,33 +6,30 @@ package com.facebook.desktop.control.api
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 
-	public class GetApplication
+	public class GetApplication implements ICommand
 	{
-		public var applicationId:String;
-		
 		private static var applicationCache:ApplicationCache = ApplicationCache.instance;
 		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetApplication");
 		
-		public function GetApplication(applicationId:String = null)
+		public function GetApplication()
 		{
-			this.applicationId = applicationId;
 		}  // GetApplication
 		
-		public function execute(callback:Function = null, passThroughVariables:Object = null):void
+		public function execute(args:Object = null, callback:Function = null, passThroughVariables:Object = null):void
 		{
-			log.info("Retrieving application object with ID " + applicationId);
-			
-			if (applicationId != null)
+			if (args != null && args is String)
 			{
-				if (applicationCache.contains(applicationId))
+				log.info("Retrieving application object with ID " + args);
+				
+				if (applicationCache.contains(args as String))
 				{
-					log.info("Application object with ID " + applicationId + " found in application cache.  Returning cached object instead.");
-					callback(applicationCache.get(applicationId), passThroughVariables);
+					log.info("Application object with ID " + args + " found in application cache.  Returning cached object instead.");
+					callback(applicationCache.get(args as String), passThroughVariables);
 				}  // if statement
 				else
 				{
 					var getObjectCommand:GetObject = new GetObject();
-					getObjectCommand.execute(applicationId, getObjectHandler);
+					getObjectCommand.execute(args, getObjectHandler);
 				}  // else statement
 			}  // if statement
 			else
@@ -44,9 +41,9 @@ package com.facebook.desktop.control.api
 			{
 				if (callback != null)
 				{
-					log.info("Placing application object with ID " + applicationId + " in application cache");
-					applicationCache.put(applicationId, result);
-					callback(result, passThroughVariables);
+					log.info("Placing application object with ID " + args + " in application cache");
+					applicationCache.put(args as String, result);
+					callback(result, fail, passThroughVariables);
 				}  // if statement
 			}  // getObjectHandler
 		}  // execute

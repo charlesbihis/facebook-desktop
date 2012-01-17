@@ -42,8 +42,8 @@ package com.facebook.desktop.control.api
 						// get application objects so we can use the icons in the notification window
 						for (var i:int = 0; i < notifications.length; i++)
 						{
-							var getApplicationCommand:GetApplication = new GetApplication(notifications[i].application.id);
-							getApplicationCommand.execute(getApplicationHandler, notifications[i]);
+							var getApplicationCommand:GetApplication = new GetApplication();
+							getApplicationCommand.execute(notifications[i].application.id, getApplicationHandler, notifications[i]);
 							
 							// if user prefers to mark notifications as read, let's keep track of the notification IDs
 							if (model.preferences.markNotificationsAsRead)
@@ -73,16 +73,16 @@ package com.facebook.desktop.control.api
 				}  // if statement
 			}  // getNotificationsHandler
 			
-			function getApplicationHandler(applicationObject:Object, notificationObject:Object):void
+			function getApplicationHandler(result:Object, fail:Object, passThrough:Object):void
 			{
 				// show notification
-				log.info("Notification update! - " + notificationObject.title);
+				log.info("Notification update! - " + passThrough.title);
 
 				var notification:Notification = new Notification();
-				notification.notificationTitle = notificationObject.title;
+				notification.notificationTitle = passThrough.title;
 				notification.notificationMessage = "";
-				notification.notificationImage = applicationObject.icon_url;
-				notification.notificationLink = notificationObject.link;
+				notification.notificationImage = result.icon_url;
+				notification.notificationLink = passThrough.link;
 				notification.isCompact = true;
 				notificationManager.showNotification(notification);
 			}  // getApplicationHandler
