@@ -5,7 +5,7 @@ package com.facebook.desktop.control.api
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 
-	public class GetUser
+	public class GetUser implements ICommand
 	{
 		public var userId:String;
 		
@@ -17,7 +17,7 @@ package com.facebook.desktop.control.api
 			this.userId = userId;
 		}  // GetUser
 		
-		public function execute(callback:Function = null, passThroughVariables:Object = null):void
+		public function execute(args:Object = null, callback:Function = null, passThroughVariables:Object = null):void
 		{
 			log.info("Retrieving user object with ID " + userId);
 			
@@ -41,11 +41,11 @@ package com.facebook.desktop.control.api
 			
 			function getObjectHandler(result:Object, fail:Object, passThroughArgs:Object):void
 			{
-				if (callback != null)
+				if (callback != null && callback is Function)
 				{
 					log.info("Placing user object with ID " + userId + " in user cache");
 					userCache.put(userId, result);
-					callback(result, passThroughVariables);
+					callback(result, fail, passThroughVariables);
 				}  // if statement
 			}  // getObjectHandler
 		}  // execute
