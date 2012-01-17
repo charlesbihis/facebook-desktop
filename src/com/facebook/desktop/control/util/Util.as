@@ -2,10 +2,6 @@ package com.facebook.desktop.control.util
 {
 	public class Util
 	{
-		public function Util()
-		{
-		}
-		
 		/**
 		 * The Facebook Graph API returns dates in the format of the RFC3339
 		 * specification.  This utility function will convert those dates
