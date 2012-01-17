@@ -5,39 +5,40 @@ package com.facebook.desktop.control.api
 	
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import mx.utils.ObjectUtil;
 
-	public class MarkNotificationsRead
+	public class MarkNotificationsRead implements ICommand
 	{
-		private static const API_CALL:String = "notifications.markRead";
+		private static const API:String = "notifications.markRead";
 		
-		private static var model:Model = Model.instance;
-		private static var logger:ILogger = Log.getLogger("com.facebook.desktop.control.api.MarkNotificationsRead");
+		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.MarkNotificationsRead");
 		
-		public var notificationIds:String;
-		
-		public function execute(callback:Function = null):void
+		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
 		{
-			var args:Object = new Object();
-			args.notification_ids = notificationIds;
+			FacebookDesktop.callRestAPI(API, moreNotificationsReadHandler, args);
 			
-			FacebookDesktop.callRestAPI(API_CALL, handler, args);
-			
-			function handler(success:Object, fail:Object):void
+			function moreNotificationsReadHandler(success:Object, fail:Object):void
 			{
 				if (success as Boolean)
 				{
-					logger.info("Marked notifications [{0}] as read", notificationIds.toString());
+					log.info("Marked notifications as read");
 				}  // if statement
 				else
 				{
-					logger.error("Error marking notifications [{0}] as read.  Error: " + fail.toString());
+					log.error("Error marking notifications as read.  Error object: " + ObjectUtil.toString(fail));
 				}  // else statement
 				
 				if (callback != null)
 				{
 					callback(success, fail);
 				}  // if statement
-			}  // handler
+				
+				// make sure we call the callback
+				if (callback != null && callback is Function)
+				{
+					callback(success, fail, passThroughArgs);
+				}  // if statement
+			}  // moreNotificationsReadHandler
 		}  // execute
-	}
-}
+	}  // class declaration
+}  // package
