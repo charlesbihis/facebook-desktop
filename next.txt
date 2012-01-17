@@ -6,11 +6,22 @@ TO DO FOR v1.0.0
 -detect online/offline status
 -fix bug where last-check time doesn't reset when user goes offline
 -create interface and/or parent class for system-icon control classes (one for windows and linux, one for mac - really one for system-tray support and another for dock support)
--add birthdays feature
 -add notification count to dock/system-tray icon
 -get rid of controller class
 -fix about page to link to my homepage, www.whoischarles.com
+-add birthdays feature
 -fix website so that there is a clear download link
+-stop throwing errors and just log them
+-test new versioning scheme - see if it will detect as new
+-repost old release notes - USE NEW VERSIONING SCHEME!!!
+	-v0.80 (0.8.0) - https://www.facebook.com/note.php?note_id=146636975378580
+	-v0.81 (0.8.3) - https://www.facebook.com/note.php?note_id=150497421659202
+	-v0.82 (0.8.6) - https://www.facebook.com/note.php?note_id=151177694924508
+	-v0.83 (0.9.0) - https://www.facebook.com/note.php?note_id=156905451018399
+	-v0.84 (0.9.5) - https://www.facebook.com/note.php?note_id=201676706541273
+	-v0.85 (1.0.0) - UPCOMING RELEASE!
+-move all old pictures to new facebook page
+  
 
 PREFERENCES
 -Application Settings
@@ -72,6 +83,7 @@ PRESENTATION AND ORGANIZATION
 
 
 WOULD BE NICE
+	
 	-theming
 	-write on friends wall
 	-send message to friend
