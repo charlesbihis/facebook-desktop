@@ -9,15 +9,13 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.facebook.desktop.control.api.GetActivityNotifications;
+			import com.charlesbihis.engine.notification.NotificationConst;
+			import com.charlesbihis.engine.notification.NotificationManager;
+			import com.facebook.desktop.FacebookDesktopConst;
 			import com.facebook.desktop.control.api.GetAdditionalNotifications;
 			import com.facebook.desktop.control.api.GetNewsFeed;
 			import com.facebook.desktop.control.api.GetNotifications;
-			import com.facebook.desktop.control.api.GetProfileNotifications;
-			import com.facebook.desktop.control.api.GetStartupNotifications;
-			import com.facebook.desktop.control.api.GetStreamUpdates;
 			import com.facebook.desktop.control.logging.Logging;
-			import com.facebook.desktop.control.notification.ToastManager;
 			import com.facebook.desktop.control.preferences.PreferencesManager;
 			import com.facebook.desktop.control.system.SystemIcons;
 			import com.facebook.desktop.control.updates.UpdateManager;
@@ -31,14 +29,10 @@
 			import mx.utils.ObjectUtil;
 			
 			private static const POLL_DELAY:uint = 60000;	// poll every minute
-			private static const IDLE_TIME:int = 15;		// idle starts after 15 seconds
 			
-			[Bindable] private var model:Model = Model.instance;
-			[Bindable] private var connected:Boolean;
-			[Bindable] private var paused:Boolean;
-			
+			private var model:Model = Model.instance;
+			private var notificationManager:NotificationManager = NotificationManager.instance;
 			private var log:ILogger = Log.getLogger(className);
-			
 			private var pollTimer:Timer = new Timer(POLL_DELAY);
 			
 			private function init():void
@@ -52,11 +46,8 @@
 				PreferencesManager.loadPreferences();
 				
 				// set up application to start on user-login
-				if(!flash.system.Capabilities.isDebugger)
-				{
-					log.info("Setting app to start on user-login");
-					NativeApplication.nativeApplication.startAtLogin = model.preferences.startAtLogin;
-				}  // if statement
+				log.info("Setting app to start on user-login");
+				NativeApplication.nativeApplication.startAtLogin = model.preferences.startAtLogin;
 				
 				// determine OS
 				var os:String = flash.system.Capabilities.os.substr(0, 3);
@@ -67,6 +58,7 @@
 				else if (os.indexOf("Mac") >= 0)
 				{
 					model.operatingSystem = "Mac";
+					NotificationManager.notificationDisplayLocation = NotificationConst.DISPLAY_LOCATION_TOP_RIGHT;
 					
 					// Unfortunately, Hindi characters don't render correctly using
 					// the Spark component namespace on Mac, so instead of removing
@@ -86,12 +78,6 @@
 				// init tray/dock icon
 				SystemIcons.init();
 				
-				// init user-presence logic
-				log.info("Initializing user-presence logic");
-				NativeApplication.nativeApplication.idleThreshold = IDLE_TIME;
-				NativeApplication.nativeApplication.addEventListener(Event.USER_IDLE, onIdle);
-				NativeApplication.nativeApplication.addEventListener(Event.USER_PRESENT, onPresence);
-
 				// check for updates
 				log.info("Checking for updates");
 				UpdateManager.checkForUpdates();
@@ -112,16 +98,19 @@
 							// tell the model
 							model.connected = true;
 							
+							// store the user
+							model.currentUser = session.user;
+							
 							// adjust icon and menus
 							SystemIcons.changeIcon(true);
 							SystemIcons.changedLoggedInMenuState(true);
 							
 							// show login popup
-							ToastManager.show(resourceManager.getString("resources", "toast.welcome"), null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
-							model.latestFiveUpdates.removeAll();
+							notificationManager.show(resourceManager.getString("resources", "toast.welcome"), "", FacebookDesktop.getImageUrl(session.user.id), FacebookDesktopConst.FACEBOOK_DESKTOP_PAGE);
+							notificationManager.clearLatestFiveUpdates();
 							
 							// get latest update so that we can start receiving pop-ups for *new* updates
-							FacebookDesktop.api("/me/home", getStreamHandler, {limit:1});
+							FacebookDesktop.api("/me/home", getNewsFeedHandler, {limit:1});
 						}  // if statement
 						else if (!triedLogin)
 						{
@@ -140,14 +129,14 @@
 					}  // else statement
 				}  // loginHandler
 				
-				function getStreamHandler(result:Object, fail:Object):void
+				function getNewsFeedHandler(result:Object, fail:Object):void
 				{
-					if (!fail && result is Array && (result as Array).length > 0)
+					if (fail == null && result != null && result is Array && (result as Array).length > 0)
 					{
 						// set latest-story-update time
-						var latestStreamUpdate:Date = Util.RFC3339toDate(result[0].created_time);
-						log.info("Setting latest wall feed update time to " + latestStreamUpdate.toString());
-						model.latestStreamUpdate = (latestStreamUpdate.time / 1000).toString();
+						var latestNewsFeedUpdate:Date = Util.RFC3339toDate(result[0].created_time);
+						log.info("Setting latest news feed update time to " + latestNewsFeedUpdate.toString());
+						model.latestNewsFeedUpdate = (latestNewsFeedUpdate.time / 1000).toString();
 						
 						startTheShow();
 					}  // if statement
@@ -155,20 +144,8 @@
 					{
 						log.error("Request to get latest update has failed!  Error object: " + fail);
 					}  // else statement
-				}  // getStreamHandler
+				}  // getNewsFeedHandler
 			}  // init
-			
-			private function onIdle(event:Event):void
-			{
-				log.info("Idling...");
-				ToastManager.pauseExpiration();
-			}  // onIdle
-			
-			private function onPresence(event:Event):void
-			{
-				log.info("Resuming...");
-				ToastManager.resumeExpiration();
-			}  // onPresence
 			
 			private function startTheShow():void
 			{
@@ -183,24 +160,25 @@
 				
 				// messages, pokes, shares, friend-requests, group-invites, and event-invites
 				var getAdditionalNotificationsCommand:GetAdditionalNotifications = new GetAdditionalNotifications();
-				getAdditionalNotificationsCommand.execute(null, true);
+				getAdditionalNotificationsCommand.execute(null, null, {isStartup:true});
 				
 				// finally, start the poller
 				log.info("Starting the poller");
 				pollTimer.addEventListener(TimerEvent.TIMER, poll);
 				pollTimer.start();
 				
-				function poll():void
+				function poll(event:TimerEvent = null):void
 				{
-					if (connected && !paused)
+					if (model.connected && !model.paused)
 					{
 						log.info("Polling!");
 						
 						// check for news feed updates
 						var getNewsFeedCommand:GetNewsFeed = new GetNewsFeed();
+						getNewsFeedCommand.execute({since:model.latestNewsFeedUpdate});
 						
 						// check for new likes, comments, and group posts
-						getNotificationsCommand.execute();
+						getNotificationsCommand.execute({since:model.latestNotificationUpdate});
 						
 						// check for new messages, pokes, shares, friend-requests, group-invites, and event-invites
 						getAdditionalNotificationsCommand.execute();
@@ -215,8 +193,5 @@
 	</fx:Metadata>
 	
 	<fx:Style source="/com/facebook/desktop/view/style/style.css" />
-	
-	<fx:Binding source="model.connected" destination="connected" />
-	<fx:Binding source="model.paused" destination="paused" />
 	
 </s:WindowedApplication>
