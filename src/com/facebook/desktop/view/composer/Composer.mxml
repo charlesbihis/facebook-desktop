@@ -20,10 +20,11 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.charlesbihis.engine.notification.NotificationManager;
+			import com.facebook.desktop.FacebookDesktopConst;
 			import com.facebook.desktop.control.Controller;
-			import com.facebook.desktop.control.api.GetStreamUpdates;
+			import com.facebook.desktop.control.api.GetNewsFeed;
 			import com.facebook.desktop.control.api.UpdateStatus;
-			import com.facebook.desktop.control.notification.ToastManager;
 			import com.facebook.desktop.model.Model;
 			
 			import mx.logging.ILogger;
@@ -33,8 +34,9 @@
 			private static const TOP_MARGIN:int = 5;
 			private static const DEFAULT_HEIGHT:int = 107;
 			
-			private static var logger:ILogger = Log.getLogger("com.facebook.composer.Composer");
 			private static var model:Model = Model.instance;
+			private static var notificationManager:NotificationManager = NotificationManager.instance;
+			private static var logger:ILogger = Log.getLogger("com.facebook.composer.Composer");
 			private static var controller:Controller = Controller.instance;
 
 			public override function open(openWindowActive:Boolean = true):void
@@ -95,8 +97,7 @@
 				shareButton.enabled = false;
 				
 				var updateStatusCommand:UpdateStatus = new UpdateStatus();
-				updateStatusCommand.message = composerInput.text;
-				updateStatusCommand.execute(updateStatusHandler);
+				updateStatusCommand.execute({message: composerInput.text}, updateStatusHandler);
 				
 				function updateStatusHandler(result:Object, fail:Object):void
 				{
@@ -109,12 +110,10 @@
 						composerInput.editable = true;
 						shareButton.enabled = true;
 						
-						var getStreamUpdatesCommand:GetStreamUpdates = new GetStreamUpdates();
-						getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
-						getStreamUpdatesCommand.execute();
+						notificationManager.show(resourceManager.getString("resources", "action.statusUpdate.success"), "", model.currentUser.link, FacebookDesktopConst.FACEBOOK_WALL_POST_ICON, true, false, false);
 						
-						ToastManager.queueToast(resourceManager.getString("resources", "action.statusUpdate.success"), "", "http://www.facebook.com/profile.php", "/assets/images/toast/wall-post.png", true);
-						ToastManager.showAll();
+						var getNewsFeedCommand:GetNewsFeed = new GetNewsFeed();
+						getNewsFeedCommand.execute({since:model.latestNewsFeedUpdate});
 					}  // if statement
 					
 					hide();
