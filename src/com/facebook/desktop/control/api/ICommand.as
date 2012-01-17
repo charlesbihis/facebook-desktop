@@ -4,6 +4,6 @@ package com.facebook.desktop.control.api
 
 	public interface ICommand
 	{
-		function execute(args:Object, passThroughArgs:Object):void;
+		function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void;
 	}
 }
