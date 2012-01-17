@@ -6,22 +6,15 @@ package com.facebook.desktop.control.api
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 
-	public class GetObject
+	public class GetObject implements ICommand
 	{
-		public var objectId:String;
-		
 		private static var logger:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetObject");
 		
-		public function GetObject(objectId:String)
+		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
 		{
-			this.objectId = objectId;
-		}  // GetObject
-		
-		public function execute(callback:Function = null):void
-		{
-			if (objectId)
+			if (args != null && args is String)
 			{
-				FacebookDesktop.api(objectId, getObjectHandler, {include_read:true});
+				FacebookDesktop.api(args as String, getObjectHandler, {include_read:true});
 			}  // if statement
 			else
 			{
@@ -30,9 +23,10 @@ package com.facebook.desktop.control.api
 			
 			function getObjectHandler(result:Object, fail:Object):void
 			{
-				if (callback != null)
+				// make sure we call the callback
+				if (callback != null && callback is Function)
 				{
-					callback(result);
+					callback(result, fail, passThroughArgs);
 				}  // if statement
 			}  // getObjectHandler
 		}  // execute

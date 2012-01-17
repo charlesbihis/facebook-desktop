@@ -31,8 +31,8 @@ package com.facebook.desktop.control.api
 				}  // if statement
 				else
 				{
-					var getObjectCommand:GetObject = new GetObject(applicationId);
-					getObjectCommand.execute(getObjectHandler);
+					var getObjectCommand:GetObject = new GetObject();
+					getObjectCommand.execute(applicationId, getObjectHandler);
 				}  // else statement
 			}  // if statement
 			else
@@ -40,7 +40,7 @@ package com.facebook.desktop.control.api
 				throw new Error("Error fetching application.  Application ID is null.");
 			}  // else statement
 			
-			function getObjectHandler(result:Object):void
+			function getObjectHandler(result:Object, fail:Object, passThroughArgs:Object):void
 			{
 				if (callback != null)
 				{

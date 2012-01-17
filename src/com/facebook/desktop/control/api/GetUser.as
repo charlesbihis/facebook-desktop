@@ -30,8 +30,8 @@ package com.facebook.desktop.control.api
 				}  // if statement
 				else
 				{
-					var getObjectCommand:GetObject = new GetObject(userId);
-					getObjectCommand.execute(getObjectHandler);
+					var getObjectCommand:GetObject = new GetObject();
+					getObjectCommand.execute(userId, getObjectHandler);
 				}  // else statement
 			}  // if statement
 			else
@@ -39,7 +39,7 @@ package com.facebook.desktop.control.api
 				throw new Error("Error fetching user.  User ID is null.");
 			}  // else statement
 			
-			function getObjectHandler(result:Object):void
+			function getObjectHandler(result:Object, fail:Object, passThroughArgs:Object):void
 			{
 				if (callback != null)
 				{
