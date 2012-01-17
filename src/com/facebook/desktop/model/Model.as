@@ -35,16 +35,13 @@ package com.facebook.desktop.model
 		public var preferences:Object;
 		public var operatingSystem:String;
 		
+		public var latestNewsFeedUpdate:String;
 		public var latestNotificationUpdate:String;
 		public var latestMessageUpdate:String;
 		public var latestPokeUpdate:String;
 		public var latestShareUpdate:String;
 		
-
-		public var latestStreamUpdate:String;
-		public var latestActivityUpdate:String;
-		public var latestFiveUpdates:ArrayCollection;
-		public var activeToasts:ArrayCollection;
+		public var currentUser:Object;
 		
 		private static var _instance:Model = new Model(SingletonLock);
 		
@@ -54,9 +51,6 @@ package com.facebook.desktop.model
 			{
 				throw new Error("Invalid singleton access.  User Model.instance instead.");
 			}  // if statement
-			
-			latestFiveUpdates = new ArrayCollection();
-			activeToasts = new ArrayCollection();
 		}  // Model
 		
 		public static function get instance():Model
