@@ -6,28 +6,25 @@ package com.facebook.desktop.control.api
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.resources.ResourceManager;
+	import mx.utils.ObjectUtil;
 
 	public class UpdateStatus
 	{
-		private static var logger:ILogger = Log.getLogger("com.facebook.desktop.control.api.UpdateStatus");
+		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.UpdateStatus");
 		
-		public var message:String;
-		
-		public function execute(callback:Function = null):void
+		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
 		{
-			logger.info("Updating status: '" + message + "'");
-			
-			FacebookDesktop.api("/me/feed", handler, {message: message}, "POST");
+			FacebookDesktop.api("/me/feed", handler, args, "POST");
 			
 			function handler(result:Object, fail:Object):void
 			{
-				if (!fail)
+				if (fail == null)
 				{
-					logger.info("Status update successful, published with id: " + result.id);
+					log.info("Status update successful, published with id: " + result.id);
 				}  // if statement
 				else
 				{
-					logger.error("Error updating status!  Error: " + fail);
+					log.error("Error updating status!  Error object: " + ObjectUtil.toString(fail));
 					
 					var messageWindow:MessageWindow = new MessageWindow();
 					messageWindow.windowTitle = ResourceManager.getInstance().getString("resources", "action.error");
@@ -36,9 +33,10 @@ package com.facebook.desktop.control.api
 					messageWindow.open();
 				}  // else statement
 				
-				if (callback != null)
+				// make sure we call the callback
+				if (callback != null && callback is Function)
 				{
-					callback(result, fail);
+					callback(result, fail, passThroughArgs);
 				}  // if statement
 			}  // handler
 		}  // execute
