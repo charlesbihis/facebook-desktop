@@ -1,9 +1,11 @@
 package com.facebook.desktop.control.system
 {
+	import com.charlesbihis.engine.notification.NotificationManager;
+	import com.facebook.desktop.FacebookDesktopConst;
 	import com.facebook.desktop.control.Controller;
-	import com.facebook.desktop.control.api.GetActivityNotifications;
-	import com.facebook.desktop.control.api.GetStreamUpdates;
-	import com.facebook.desktop.control.notification.ToastManager;
+	import com.facebook.desktop.control.api.GetAdditionalNotifications;
+	import com.facebook.desktop.control.api.GetNewsFeed;
+	import com.facebook.desktop.control.api.GetNotifications;
 	import com.facebook.desktop.control.util.Util;
 	import com.facebook.desktop.model.Model;
 	import com.facebook.desktop.model.cache.UserCache;
@@ -18,11 +20,8 @@ package com.facebook.desktop.control.system
 	import flash.events.Event;
 	import flash.events.InvokeEvent;
 	import flash.events.MouseEvent;
-	import flash.net.SharedObject;
 	import flash.net.URLRequest;
 	
-	import mx.binding.utils.ChangeWatcher;
-	import mx.charts.AreaChart;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.resources.ResourceManager;
@@ -53,6 +52,7 @@ package com.facebook.desktop.control.system
 		private static var bottomSeparator:NativeMenuItem = new NativeMenuItem("", true);
 		
 		private static var model:Model = Model.instance;
+		private static var notificationManager:NotificationManager = NotificationManager.instance;
 		private static var controller:Controller = Controller.instance;
 		private static var userCache:UserCache = UserCache.instance;
 		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.system.SystemIcons");
@@ -114,6 +114,7 @@ package com.facebook.desktop.control.system
 			function iconClick(event:Event):void
 			{
 				updateStatusHandler();
+				// TODO: add this to settings
 //				flash.net.navigateToURL(new URLRequest("http://www.facebook.com/"));
 			}  // iconClick
 			
@@ -457,8 +458,8 @@ package com.facebook.desktop.control.system
 					SystemIcons.changedLoggedInMenuState(true);
 					
 					// show login popup
-					ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.welcome"), null, "http://www.facebook.com/apps/application.php?id=95615112563", FacebookDesktop.getImageUrl(session.user.id));
-					model.latestFiveUpdates.removeAll();
+					notificationManager.show(ResourceManager.getInstance().getString("resources", "toast.welcome"), "", FacebookDesktop.getImageUrl(session.user.id), FacebookDesktopConst.FACEBOOK_DESKTOP_PAGE);
+					notificationManager.clearLatestFiveUpdates();
 					
 					// get latest update so that we can start receiving pop-ups for *new* updates
 					FacebookDesktop.api("/me/home", getStreamHandler, {limit:1});
@@ -472,7 +473,7 @@ package com.facebook.desktop.control.system
 					// set latest-story-update time
 					var latestStreamUpdate:Date = Util.RFC3339toDate(result[0].created_time);
 					log.info("Setting latest update time to " + latestStreamUpdate.toString());
-					model.latestStreamUpdate = (latestStreamUpdate.time / 1000).toString();
+					model.latestNewsFeedUpdate = (latestStreamUpdate.time / 1000).toString();
 				}  // if statement
 				else
 				{
@@ -486,11 +487,12 @@ package com.facebook.desktop.control.system
 			log.info("Logging out! Goodbye!");
 			
 			changeIcon(false);
-			ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.goodbye"), "");
+			notificationManager.show(ResourceManager.getInstance().getString("resources", "toast.goodbye"), "", FacebookDesktopConst.FACEBOOK_NOTIFICATION_DEFAULT_IMAGE);
 			
 			// clear toast-history
-			model.latestFiveUpdates.removeAll();
+			notificationManager.clearLatestFiveUpdates();
 			model.connected = false;
+			model.currentUser = null;
 			
 			FacebookDesktop.logout();
 			
@@ -526,44 +528,76 @@ package com.facebook.desktop.control.system
 			
 			var totalUpdates:int = 0;
 			
-			// stream-updates
-			var getStreamUpdatesCommand:GetStreamUpdates = new GetStreamUpdates();
-			getStreamUpdatesCommand.previousUpdateTime = model.latestStreamUpdate;
-			getStreamUpdatesCommand.execute(getStreamUpdatesHandler);
+			// news feed updates
+			var getNewsFeedCommand:GetNewsFeed = new GetNewsFeed();
+			getNewsFeedCommand.execute({since:model.latestNewsFeedUpdate}, getNewsFeedHandler);
 			
-			function getStreamUpdatesHandler(updates:Object, fail:Object):void
+			// TODO: incorporate preferences in this
+			function getNewsFeedHandler(result:Object, fail:Object, passThroughArgs:Object = null):void
 			{
-				if (fail == null && updates != null && updates is Array)
-				{
-					totalUpdates += (updates as Array).length;
-				}  // if statement
-				
-				// likes and comments
-				var getActivityNotificationsCommand:GetActivityNotifications = new GetActivityNotifications();
-				getActivityNotificationsCommand.includeRead = "0";
-				getActivityNotificationsCommand.startTime = model.latestActivityUpdate;
-				getActivityNotificationsCommand.execute(getActivityNotificationsHandler);
-			}  // getStreamUpdatesHandler
-			
-			function getActivityNotificationsHandler(result:Object, fail:Object):void
-			{
-				if (fail == null && result != null && result is Array)
+				if (fail == null && result != null && result is Array && (result as Array).length > 0)
 				{
 					totalUpdates += (result as Array).length;
 				}  // if statement
 				
-				if (totalUpdates == 0)
+				// likes, comments, and group posts
+				var getNotificationsCommand:GetNotifications = new GetNotifications();
+				getNotificationsCommand.execute({since:model.latestNotificationUpdate}, getNotificationsHandler);
+			}  // getNewsFeedHandler
+			
+			function getNotificationsHandler(result:Object, fail:Object, passThroughArgs:Object = null):void
+			{
+				if (fail == null && result != null && result is Array && (result as Array).length > 0)
 				{
-					log.info("No new updates to show");
-					ToastManager.show(ResourceManager.getInstance().getString("resources", "toast.noNewUpdates"), "");
+					totalUpdates += (result as Array).length;
 				}  // if statement
-			}  // getActivityNotificationsHandler
+				
+				// messages, pokes, shares, friend-requests, group-invites, and event-invites
+				var getAdditionalNotificationsCommand:GetAdditionalNotifications = new GetAdditionalNotifications();
+				getAdditionalNotificationsCommand.execute(null, getAdditionalNotificationsHandler);
+			}  // getNotificationsHandler
+			
+			function getAdditionalNotificationsHandler(result:Object, fail:Object, passThroughArgs:Object = null):void
+			{
+				if (fail == null && result != null)
+				{
+					// Note: We are ignoring event invites, friend requests, and group invites because of the
+					//       way they are returned from the Facebook REST APIs.  They only return a count, which
+					//       doesn't tell us if there are any *new* event invites, friend requests, or group
+					//       invites.  Hopefully, they fix this when they convert this to the Graph APIs.
+					
+					// messages
+					if (model.preferences.showMessages && result.messages != null && result.messages.most_recent > model.latestMessageUpdate)
+					{
+						totalUpdates += result.messages.unread;
+					}  // if statement
+					
+					// pokes
+					if (model.preferences.showPokes && result.pokes != null && result.pokes.most_recent > model.latestPokeUpdate)
+					{
+						totalUpdates += result.pokes.unread;
+					}  // if statement
+					
+					// shares
+					if (model.preferences.showShares && result.shares != null && result.shares.most_recent > model.latestShareUpdate)
+					{
+						totalUpdates += result.shares.unread;
+					}  // if statement
+					
+					// if there were no updates, let the user know we checked
+					if (totalUpdates == 0)
+					{
+						log.info("No new updates to show");
+						notificationManager.show(ResourceManager.getInstance().getString("resources", "toast.noNewUpdates"), "", "/assets/images/toast/icon50.png", null, false, false, false);
+					}  // if statement
+				}  // if statement
+			}  // getAdditionalNotificationsHandler
 		}  // checkForUpdatesHandler
 		
 		private static function replayLatestFiveUpdatesHandler(event:Event = null):void
 		{
 			log.info("Displaying latest 5 updates");
-			ToastManager.showLatestFiveUpdates();
+			notificationManager.replayLatestFiveUpdates();
 		}  // replayLatestFiveUpdatesHandler
 		
 		private static function exitHandler(event:Event = null):void
@@ -575,37 +609,37 @@ package com.facebook.desktop.control.system
 		private static function eventInvitesHandler(event:Event):void
 		{
 			log.info("Context menu click - viewing event invites");
-			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/events/"));
+			flash.net.navigateToURL(new URLRequest(FacebookDesktopConst.FACEBOOK_EVENT_INVITES_URL));
 		}  // eventInvitesHandler
 		
 		private static function friendRequestsHandler(event:Event):void
 		{
 			log.info("Context menu click - viewing friend requests");
-			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/friends/edit/?sk=requests"));
+			flash.net.navigateToURL(new URLRequest(FacebookDesktopConst.FACEBOOK_FRIEND_REQUESTS_URL));
 		}  // friendRequestsHandler
 		
 		private static function groupInvitesHandler(event:Event):void
 		{
 			log.info("Context menu click - viewing group invites");
-			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/bookmarks/groups/"));
+			flash.net.navigateToURL(new URLRequest(FacebookDesktopConst.FACEBOOK_GROUP_INVITES_URL));
 		}  // groupInvitesHandler
 		
 		private static function unreadMessagesHandler(event:Event):void
 		{
 			log.info("Context menu click - viewing unread messages");
-			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/messages/"));
+			flash.net.navigateToURL(new URLRequest(FacebookDesktopConst.FACEBOOK_MESSAGES_URL));
 		}  // unreadMessagesHandler
 		
 		private static function newPokesHandler(event:Event):void
 		{
 			log.info("Context menu click - viewing new pokes");
-			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/notifications/"));
+			flash.net.navigateToURL(new URLRequest(FacebookDesktopConst.FACEBOOK_POKES_URL));
 		}  // newPokesHandler
 		
 		private static function newSharesHandler(event:Event):void
 		{
 			log.info("Context menu click - viewing new shares");
-			flash.net.navigateToURL(new URLRequest("http://www.facebook.com/notifications/"));
+			flash.net.navigateToURL(new URLRequest(FacebookDesktopConst.FACEBOOK_SHARES_URL));
 		}  // newSharesHandler
 	}  // class declaration
 }  // package
