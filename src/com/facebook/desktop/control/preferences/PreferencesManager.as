@@ -1,5 +1,6 @@
 package com.facebook.desktop.control.preferences
 {
+	import com.charlesbihis.engine.notification.NotificationConst;
 	import com.facebook.desktop.model.Model;
 	
 	import flash.net.SharedObject;
@@ -28,23 +29,33 @@ package com.facebook.desktop.control.preferences
 				{
 					ResourceManager.getInstance().localeChain = [model.locales[model.preferences.language].locale];
 				}  // if statement
+				
+				// convert previous version user preferences to new user preferences
+				if (model.preferences.showStoryUpdates || model.preferences.showStoryActivity)
+				{
+					model.preferences.showNewsFeedUpdates = model.preferences.showStoryUpdates;
+					model.preferences.showActivityUpdates = model.preferences.showStoryActivity;
+					model.preferences.notificationDisplayLength = NotificationConst.DISPLAY_LENGTH_MEDIUM;
+				}  // if statement
 			}  // if statement
 			else
 			{
 				logger.info("No preferences saved. Creating them now.");
 				
 				var preferences:Object = new Object();
-				preferences.startAtLogin = true;
 				preferences.language = 0;		// defaults to en_US which is index 0 in model.locales - must remember to change this if we ever put in another language before en_US
-				preferences.showStoryUpdates = true;
-				preferences.showStoryActivity = true;
-				preferences.showFriendRequests = true;
+				preferences.startAtLogin = true;
+				preferences.showNewsFeedUpdates = true;
+				preferences.showActivityUpdates = true;
 				preferences.showMessages = true;
-				preferences.showPokes = true;
+				preferences.showFriendRequests = true;
 				preferences.showShares = true;
 				preferences.showGroupInvites = true;
 				preferences.showEventInvites = true;
+				preferences.showPokes = true;
+				preferences.notificationDisplayLength = NotificationConst.DISPLAY_LENGTH_MEDIUM;
 				preferences.markNotificationsAsRead = false;
+				preferences.playNotificationSound = false;
 				
 				// not yet implemented
 				preferences.playSound = false;

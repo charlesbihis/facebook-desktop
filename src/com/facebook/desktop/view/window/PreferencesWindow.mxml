@@ -18,6 +18,8 @@
 
 	<fx:Script>
 		<![CDATA[
+			import com.charlesbihis.engine.notification.NotificationConst;
+			import com.charlesbihis.engine.notification.NotificationManager;
 			import com.facebook.desktop.control.Controller;
 			import com.facebook.desktop.control.preferences.PreferencesManager;
 			import com.facebook.desktop.model.Model;
@@ -29,8 +31,10 @@
 			import mx.logging.Log;
 			import mx.managers.ToolTipManager;
 			
-			private static var logger:ILogger = Log.getLogger("com.facebook.preferences.PreferencesWindow");
 			private static var controller:Controller = Controller.instance;
+			private static var notificationManager:NotificationManager = NotificationManager.instance;
+			private static var log:ILogger = Log.getLogger("com.facebook.preferences.PreferencesWindow");
+			
 			
 			[Bindable]
 			private var model:Model = Model.instance;
@@ -49,15 +53,17 @@
 				// now load up the preferences
 				localeComboBox.selectedIndex = model.preferences.language;
 				startAtLoginCheckbox.selected = model.preferences.startAtLogin;
-				showStoriesCheckBox.selected = model.preferences.showStoryUpdates;
-				showStoryActivityCheckBox.selected = model.preferences.showStoryActivity;
-				friendRequestCheckBox.selected = model.preferences.showFriendRequests;
-				messageCheckBox.selected = model.preferences.showMessages;
-				pokeCheckBox.selected = model.preferences.showPokes;
-				shareCheckBox.selected = model.preferences.showShares;
-				groupInviteCheckBox.selected = model.preferences.showGroupInvites;
-				eventInviteCheckBox.selected = model.preferences.showEventInvites;
+				showNewsFeedUpdates.selected = model.preferences.showNewsFeedUpdates;
+				showActivityUpdates.selected = model.preferences.showActivityUpdates;
+				showNewMessages.selected = model.preferences.showMessages;
+				showFriendRequests.selected = model.preferences.showFriendRequests;
+				showShares.selected = model.preferences.showShares;
+				showGroupInvites.selected = model.preferences.showGroupInvites;
+				showEventInvites.selected = model.preferences.showEventInvites;
+				showPokes.selected = model.preferences.showPokes;
+				notificationDisplayLength.value = model.preferences.notificationDisplayLength;
 				markAsReadCheckBox.selected = model.preferences.markNotificationsAsRead;
+				playNotificationSound.selected = model.preferences.playNotificationSound;
 				
 				// for some reason, combo-box won't drop down on first click unless it's given focus
 				localeComboBox.setFocus();
@@ -67,17 +73,24 @@
 			
 			private function saveSettings():void
 			{
+				// application settings
 				model.preferences.language = localeComboBox.selectedIndex;
 				model.preferences.startAtLogin = startAtLoginCheckbox.selected;
-				model.preferences.showStoryUpdates = showStoriesCheckBox.selected;
-				model.preferences.showStoryActivity = showStoryActivityCheckBox.selected;
-				model.preferences.showFriendRequests = friendRequestCheckBox.selected;
-				model.preferences.showMessages = messageCheckBox.selected;
-				model.preferences.showPokes = pokeCheckBox.selected;
-				model.preferences.showShares = shareCheckBox.selected;
-				model.preferences.showGroupInvites = groupInviteCheckBox.selected;
-				model.preferences.showEventInvites = eventInviteCheckBox.selected;
+				
+				// notification settings
+				model.preferences.showNewsFeedUpdates = showNewsFeedUpdates.selected;
+				model.preferences.showActivityUpdates = showActivityUpdates.selected;
+				model.preferences.showMessages = showNewMessages.selected;
+				model.preferences.showFriendRequests = showFriendRequests.selected;
+				model.preferences.showShares = showShares.selected;
+				model.preferences.showGroupInvites = showGroupInvites.selected;
+				model.preferences.showEventInvites = showEventInvites.selected;
+				model.preferences.showPokes = showPokes.selected;
+				
+				// advanced settings
+				model.preferences.notificationDisplayLength = notificationDisplayLength.value;
 				model.preferences.markNotificationsAsRead = markAsReadCheckBox.selected;
+				model.preferences.playNotificationSound
 				
 				PreferencesManager.savePreferences();
 			}  // saveSettings
@@ -130,24 +143,18 @@
 					languageToolTip.visible = false;
 				}  // if statement
 			}  // hideToolTip
+			
+			private function notificationDisplayLengthFormatter(value:String):String
+			{
+				return value + " seconds";
+			}  // notificationDisplayLengthFormatter
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
-		<mx:Fade id="fadein"
-				 target="{this}"
-				 alphaFrom="0"
-				 alphaTo="1"
-				 duration="300" />
-		<mx:Fade id="fadeout"
-				 target="{this}"
-				 alphaFrom="1"
-				 alphaTo="0"
-				 duration="300"
-				 effectEnd="doClose()" />
+		<mx:Fade id="fadein" target="{this}" alphaFrom="0" alphaTo="1" duration="300" />
+		<mx:Fade id="fadeout" target="{this}" alphaFrom="1" alphaTo="0" duration="300" effectEnd="doClose()" />
 	</fx:Declarations>
-	
-	<fx:Style source="/com/facebook/desktop/view/style/style.css" />
 	
 	<mx:VBox cornerRadius="8" backgroundColor="black" backgroundAlpha="0.4" width="{mainCanvas.width + 25}" height="{mainCanvas.height + 25}" verticalAlign="middle" paddingTop="12" paddingBottom="12" paddingLeft="12" paddingRight="12">
 		<mx:VBox id="mainCanvas" minWidth="525" minHeight="500" backgroundColor="white">
@@ -156,80 +163,96 @@
 			</mx:VBox>
 			<mx:HBox minHeight="410" width="100%">
 				<mx:VBox paddingLeft="15" paddingRight="15" paddingTop="15" paddingBottom="15" width="100%">
+					
+					<!-- application settings - header -->
 					<mx:HBox verticalAlign="middle">
 						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.header')}" fontWeight="bold" />
 					</mx:HBox>
-					
 					<mx:HRule width="100%" />
 					
+					<!-- application settings - options -->
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.option.language')}" />
 						<mx:Spacer width="100%" />
-						<mx:ComboBox id="localeComboBox" itemRollOver="showToolTip(event)" itemRollOut="hideToolTip()" rollOut="hideToolTip()" dataProvider="{model.locales}" change="saveSettings();changeLanguage();logger.info('Changing \'Language\' setting to {0}',localeComboBox.selectedItem.label)"/>
+						<mx:ComboBox id="localeComboBox" itemRollOver="showToolTip(event)" itemRollOut="hideToolTip()" rollOut="hideToolTip()" dataProvider="{model.locales}" change="saveSettings();changeLanguage();log.info('Changing \'Language\' setting to {0}',localeComboBox.selectedItem.label)"/>
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.applicationSettings.option.runOnStartup')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="startAtLoginCheckbox" change="saveSettings();setStartAtLogin();logger.info('Changing \'Run on startup\' setting to {0}',startAtLoginCheckbox.selected)" />
+						<s:CheckBox id="startAtLoginCheckbox" change="saveSettings();setStartAtLogin();log.info('Changing \'Run on startup\' setting to {0}',startAtLoginCheckbox.selected)" />
 					</mx:HBox>
-					
 					<mx:Spacer height="15" />
+					
+					<!-- notification settings - header -->
 					<mx:HBox verticalAlign="middle">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.header')}" fontWeight="bold" />
 					</mx:HBox>
 					<mx:HRule width="100%" />
 					
+					<!-- notification settings - options -->
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyNewStories')}" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyNewsFeed')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showStoriesCheckBox" change="saveSettings();logger.info('Changing \'Notify me when new stories are posted to my stream\' setting to {0}',showStoriesCheckBox.selected)" />
+						<s:CheckBox id="showNewsFeedUpdates" change="saveSettings();log.info('Changing \'Notify me when new stories are posted to my news feed\' setting to {0}', showNewsFeedUpdates.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyActivity')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showStoryActivityCheckBox" change="saveSettings();logger.info('Changing \'Notify me when there is activity in a post that I am in or have participated in\' setting to {0}',showStoriesCheckBox.selected)" />
-					</mx:HBox>
-					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyFriendRequest')}" />
-						<mx:Spacer width="100%" />
-						<s:CheckBox id="friendRequestCheckBox" change="saveSettings();logger.info('Changing \'Notify me when I get a new friend request\' setting to {0}',friendRequestCheckBox.selected)" />
+						<s:CheckBox id="showActivityUpdates" change="saveSettings();log.info('Changing \'Notify me when there is activity in a post that I am involved in\' setting to {0}', showActivityUpdates.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyMessage')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="messageCheckBox" change="saveSettings();logger.info('Changing \'Notify me when someone sends me a message\' setting to {0}',messageCheckBox.selected)" />
+						<s:CheckBox id="showNewMessages" change="saveSettings();log.info('Changing \'Notify me when someone sends me a message\' setting to {0}', showNewMessages.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyPoke')}" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyFriendRequest')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="pokeCheckBox" change="saveSettings();logger.info('Changing \'Notify me when someone pokes me\' setting to {0}',pokeCheckBox.selected)" />
+						<s:CheckBox id="showFriendRequests" change="saveSettings();log.info('Changing \'Notify me when I get a new friend request\' setting to {0}', showFriendRequests.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyShare')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="shareCheckBox" change="saveSettings();logger.info('Changing \'Notify me when someone shares something with me\' setting to {0}',shareCheckBox.selected)" />
+						<s:CheckBox id="showShares" change="saveSettings();log.info('Changing \'Notify me when someone shares something with me\' setting to {0}', showShares.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyGroupInvite')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="groupInviteCheckBox" change="saveSettings();logger.info('Changing \'Notify me when I get a group invite\' setting to {0}',groupInviteCheckBox.selected)" />
+						<s:CheckBox id="showGroupInvites" change="saveSettings();log.info('Changing \'Notify me when I get a group invite\' setting to {0}', showGroupInvites.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyEventInvite')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="eventInviteCheckBox" change="saveSettings();logger.info('Changing \'Notify me when I get an event invite\' setting to {0}',eventInviteCheckBox.selected)" />
+						<s:CheckBox id="showEventInvites" change="saveSettings();log.info('Changing \'Notify me when I get an event invite\' setting to {0}',showEventInvites.selected)" />
 					</mx:HBox>
-					
+					<mx:HBox verticalAlign="middle" width="100%">
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyPoke')}" />
+						<mx:Spacer width="100%" />
+						<s:CheckBox id="showPokes" change="saveSettings();log.info('Changing \'Notify me when someone pokes me\' setting to {0}', showPokes.selected)" />
+					</mx:HBox>
 					<mx:Spacer height="15" />
+					
+					<!-- advanced settings - header -->
 					<mx:HBox verticalAlign="middle">
-						<s:Label text="{resourceManager.getString('resources','preferences.profileSettings.header')}" fontWeight="bold" />
+						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.header')}" fontWeight="bold" />
 					</mx:HBox>
 					<mx:HRule width="100%" />
 					
+					<!-- advanced settings - options -->
 					<mx:HBox verticalAlign="middle" width="100%">
-						<s:Label text="{resourceManager.getString('resources','preferences.profileSettings.option.markNotificationsRead')}" />
+						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.notificationDisplayLength')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="markAsReadCheckBox" change="saveSettings();logger.info('Changing \'Mark notifications as read when they appear on my screen\' setting to {0}',markAsReadCheckBox.selected)" />
+						<mx:HSlider id="notificationDisplayLength" minimum="4" maximum="12" snapInterval="2" tickInterval="2" value="8" labels="[short,medium,long]" dataTipFormatFunction="notificationDisplayLengthFormatter" change="saveSettings();log.info('Changing \'Notification display length\' setting to {0}', notificationDisplayLength.value);NotificationManager.notificationDisplayLength=notificationDisplayLength.value" />
+					</mx:HBox>
+					<mx:HBox verticalAlign="middle" width="100%">
+						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.markNotificationsRead')}" />
+						<mx:Spacer width="100%" />
+						<s:CheckBox id="markAsReadCheckBox" change="saveSettings();log.info('Changing \'Mark notifications as read when they appear on my screen\' setting to {0}', markAsReadCheckBox.selected)" />
+					</mx:HBox>
+					<mx:HBox verticalAlign="middle" width="100%">
+						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.playNotificationSound')}" />
+						<mx:Spacer width="100%" />
+						<s:CheckBox id="playNotificationSound" change="saveSettings();log.info('Changing \'Play notification sound\' setting to {0}', playNotificationSound.selected)" />
 					</mx:HBox>
 				</mx:VBox>
 			</mx:HBox>
