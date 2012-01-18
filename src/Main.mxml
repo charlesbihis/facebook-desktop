@@ -46,8 +46,16 @@
 				PreferencesManager.loadPreferences();
 				
 				// set up application to start on user-login
-				log.info("Setting app to start on user-login");
+				log.info("Setting app to start on user-login: {0}", model.preferences.startAtLogin);
 				NativeApplication.nativeApplication.startAtLogin = model.preferences.startAtLogin;
+				
+				// setting default notification length
+				log.info("Configuring preferred notification display length: {0}", model.preferences.startAtLogin);
+				NotificationManager.notificationDisplayLength = model.preferences.notificationDisplayLength;
+				
+				// configuring notification sound
+				model.notificationSound = new Sound(new URLRequest("/assets/sounds/drop.mp3"));
+				model.notificationSound.addEventListener(Event.COMPLETE, loadSoundHandler);
 				
 				// determine OS
 				var os:String = flash.system.Capabilities.os.substr(0, 3);
@@ -145,6 +153,11 @@
 						log.error("Request to get latest update has failed!  Error object: " + fail);
 					}  // else statement
 				}  // getNewsFeedHandler
+				
+				function loadSoundHandler(event:Event):void
+				{
+					log.info("Notification sound loaded");
+				}  // loadSoundHandler
 			}  // init
 			
 			private function startTheShow():void

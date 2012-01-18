@@ -57,9 +57,6 @@ package com.facebook.desktop.control.preferences
 				preferences.markNotificationsAsRead = false;
 				preferences.playNotificationSound = false;
 				
-				// not yet implemented
-				preferences.playSound = false;
-				
 				model.preferences = preferences;
 				sharedObject.data["preferences"] = preferences;
 			}  // else statement

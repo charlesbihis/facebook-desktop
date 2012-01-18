@@ -77,9 +77,9 @@ package com.facebook.desktop.control.api
 			
 			function getApplicationHandler(result:Object, fail:Object, passThrough:Object):void
 			{
-				// show notification
 				log.info("Notification update! - " + passThrough.title);
 
+				// show notification
 				var notification:Notification = new Notification();
 				notification.notificationTitle = passThrough.title;
 				notification.notificationMessage = "";
@@ -87,6 +87,13 @@ package com.facebook.desktop.control.api
 				notification.notificationLink = passThrough.link;
 				notification.isCompact = true;
 				notificationManager.showNotification(notification);
+				
+				// play sound
+				if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
+				{
+					model.notificationSound.play();
+					model.latestNotificationSound = new Date().time;
+				}  // if statement
 			}  // getApplicationHandler
 		}  // execute
 	}  // class declaration

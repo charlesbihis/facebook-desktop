@@ -9,7 +9,8 @@ package com.facebook.desktop.model
 	{
 		public static const APPLICATION_ID:String = "95615112563";
 		public static const REQUIRED_PERMISSIONS:Array = ["manage_notifications", "user_about_me", "friends_birthday", "read_stream", "read_mailbox", "read_requests", "read_insights", "publish_stream", "publish_checkins", "user_events", "user_groups", "offline_access", "user_checkins"];
-		public static const MAX_ACTIVE_TOASTS:int = 5;
+		public static const MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS:int = 10000;	// 10 seconds
+		
 		
 		[Bindable] public var connected:Boolean;
 		[Bindable] public var paused:Boolean;
@@ -38,6 +39,7 @@ package com.facebook.desktop.model
 		public var preferences:Object;
 		public var operatingSystem:String;
 		public var notificationSound:Sound;
+		public var latestNotificationSound:Number;
 		
 		public var latestNewsFeedUpdate:String;
 		public var latestNotificationUpdate:String;
@@ -53,6 +55,8 @@ package com.facebook.desktop.model
 			{
 				throw new Error("Invalid singleton access.  User Model.instance instead.");
 			}  // if statement
+			
+			latestNotificationSound = 0;
 		}  // Model
 		
 		public static function get instance():Model

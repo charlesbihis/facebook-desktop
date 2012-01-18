@@ -100,6 +100,13 @@ package com.facebook.desktop.control.api
 							notification.notificationImage = FacebookDesktopConst.FACEBOOK_GRAPH_API_ENDPOINT + story.from.id + "/picture";
 							notification.notificationLink = linkString;
 							notificationManager.showNotification(notification);
+							
+							// play sound
+							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
+							{
+								model.notificationSound.play();
+								model.latestNotificationSound = new Date().time;
+							}  // if statement
 						}  // for loop
 					}  // if statement
 				}  // if statement

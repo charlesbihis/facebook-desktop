@@ -45,6 +45,13 @@ package com.facebook.desktop.control.api
 							eventInviteNotification.notificationLink = FacebookDesktopConst.FACEBOOK_EVENT_INVITES_URL;
 							eventInviteNotification.isCompact = true;
 							notificationManager.showNotification(eventInviteNotification);
+							
+							// play sound
+							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
+							{
+								model.notificationSound.play();
+								model.latestNotificationSound = new Date().time;
+							}  // if statement
 						}  // if statement
 					}  // if statement
 					
@@ -64,6 +71,13 @@ package com.facebook.desktop.control.api
 							friendRequestsNotification.notificationLink = FacebookDesktopConst.FACEBOOK_FRIEND_REQUESTS_URL;
 							friendRequestsNotification.isCompact = true;
 							notificationManager.showNotification(friendRequestsNotification);
+							
+							// play sound
+							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
+							{
+								model.notificationSound.play();
+								model.latestNotificationSound = new Date().time;
+							}  // if statement
 						}  // if statement
 					}  // if statement
 					
@@ -83,6 +97,13 @@ package com.facebook.desktop.control.api
 							groupInvitesNotification.notificationLink = FacebookDesktopConst.FACEBOOK_GROUP_INVITES_URL;
 							groupInvitesNotification.isCompact = true;
 							notificationManager.showNotification(groupInvitesNotification);
+							
+							// play sound
+							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
+							{
+								model.notificationSound.play();
+								model.latestNotificationSound = new Date().time;
+							}  // if statement
 						}  // if statement
 					}  // if statement
 					
@@ -90,12 +111,12 @@ package com.facebook.desktop.control.api
 					var messages:Object = result.messages;
 					if (model.preferences.showMessages && messages != null && messages.most_recent > model.latestMessageUpdate)
 					{
-						// show notification
 						if (messages.unread > 0)
 						{
 							var newMessagesMessage:String = messages.unseen == 1 ? ResourceManager.getInstance().getString("resources", "notification.newMessage") : ResourceManager.getInstance().getString("resources", "notification.newMessages");
 							log.info("Notification update! - {0}", newMessagesMessage);
 							
+							// show notification
 							var newMessagesNotification:Notification = new Notification();
 							newMessagesNotification.notificationTitle = newMessagesMessage;
 							newMessagesNotification.notificationMessage = "";
@@ -103,6 +124,13 @@ package com.facebook.desktop.control.api
 							newMessagesNotification.notificationLink = FacebookDesktopConst.FACEBOOK_MESSAGES_URL;
 							newMessagesNotification.isCompact = true;
 							notificationManager.showNotification(newMessagesNotification);
+							
+							// play sound
+							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
+							{
+								model.notificationSound.play();
+								model.latestNotificationSound = new Date().time;
+							}  // if statement
 						}  // if statement
 						
 						// update model
@@ -114,12 +142,12 @@ package com.facebook.desktop.control.api
 					var pokes:Object = result.pokes;
 					if (model.preferences.showPokes && pokes != null && pokes.most_recent > model.latestPokeUpdate)
 					{
-						// show notification
 						if (pokes.unread > 0)
 						{
 							var newPokeMessage:String = ResourceManager.getInstance().getString("resources", "notification.poked");
 							log.info("Notification update! - {0}", newPokeMessage);
 							
+							// show notification
 							var pokeNotification:Notification = new Notification();
 							pokeNotification.notificationTitle = newPokeMessage;
 							pokeNotification.notificationMessage = "";
@@ -127,6 +155,13 @@ package com.facebook.desktop.control.api
 							pokeNotification.notificationLink = FacebookDesktopConst.FACEBOOK_POKES_URL;
 							pokeNotification.isCompact = true;
 							notificationManager.showNotification(pokeNotification);
+							
+							// play sound
+							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
+							{
+								model.notificationSound.play();
+								model.latestNotificationSound = new Date().time;
+							}  // if statement
 						}  // if statement
 						
 						// update model
@@ -138,12 +173,12 @@ package com.facebook.desktop.control.api
 					var shares:Object = result.shares;
 					if (model.preferences.showShares && shares != null && shares.most_recent > model.latestShareUpdate)
 					{
-						// show notification
 						if (shares.unread > 0)
 						{
 							var newShareMessage:String = ResourceManager.getInstance().getString("resources", "notification.poked");
 							log.info("Notification update! - {0}", newShareMessage);
 							
+							// show notification
 							var shareNotification:Notification = new Notification();
 							shareNotification.notificationTitle = newShareMessage;
 							shareNotification.notificationMessage = "";
@@ -151,6 +186,13 @@ package com.facebook.desktop.control.api
 							shareNotification.notificationLink = FacebookDesktopConst.FACEBOOK_SHARES_URL;
 							shareNotification.isCompact = true;
 							notificationManager.showNotification(shareNotification);
+							
+							// play sound
+							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
+							{
+								model.notificationSound.play();
+								model.latestNotificationSound = new Date().time;
+							}  // if statement
 						}  // if statement
 						
 						// update model

@@ -35,7 +35,6 @@
 			private static var notificationManager:NotificationManager = NotificationManager.instance;
 			private static var log:ILogger = Log.getLogger("com.facebook.preferences.PreferencesWindow");
 			
-			
 			[Bindable]
 			private var model:Model = Model.instance;
 			
@@ -90,7 +89,7 @@
 				// advanced settings
 				model.preferences.notificationDisplayLength = notificationDisplayLength.value;
 				model.preferences.markNotificationsAsRead = markAsReadCheckBox.selected;
-				model.preferences.playNotificationSound
+				model.preferences.playNotificationSound = playNotificationSound.selected;
 				
 				PreferencesManager.savePreferences();
 			}  // saveSettings
