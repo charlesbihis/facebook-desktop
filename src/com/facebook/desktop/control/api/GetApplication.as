@@ -20,7 +20,10 @@ package com.facebook.desktop.control.api
 				if (applicationCache.contains(args as String))
 				{
 					log.info("Application object with ID " + args + " found in application cache.  Returning cached object instead.");
-					callback(applicationCache.get(args as String), passThroughVariables);
+					if (callback != null && callback is Function)
+					{
+						callback(applicationCache.get(args as String), null, passThroughVariables);
+					}  // if statement
 				}  // if statement
 				else
 				{
@@ -35,7 +38,7 @@ package com.facebook.desktop.control.api
 			
 			function getObjectHandler(result:Object, fail:Object, passThroughArgs:Object):void
 			{
-				if (callback != null)
+				if (callback != null && callback is Function)
 				{
 					log.info("Placing application object with ID " + args + " in application cache");
 					applicationCache.put(args as String, result);
