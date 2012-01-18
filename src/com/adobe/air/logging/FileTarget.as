@@ -49,6 +49,8 @@ package com.adobe.air.logging
 			fileStream.open(log, FileMode.APPEND);
 			fileStream.writeUTFBytes(message + File.lineEnding);
 			fileStream.close();
+			
+			trace(message);
 		}  // write
 		
 		public function clear():void
