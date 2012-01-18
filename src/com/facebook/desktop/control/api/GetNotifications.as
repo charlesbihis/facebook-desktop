@@ -22,9 +22,11 @@ package com.facebook.desktop.control.api
 		
 		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
 		{
-			FacebookDesktop.api(API, getNotificationsHandler, args);
+			if (model.preferences.showActivityUpdates)
+			{
+				FacebookDesktop.api(API, getNotificationsHandler, args);
+			}  // if statement
 			
-			// TODO: add control over this in the preferences
 			function getNotificationsHandler(result:Object, fail:Object):void
 			{
 				var notificationIds:Array = new Array();

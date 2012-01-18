@@ -25,9 +25,11 @@ package com.facebook.desktop.control.api
 		
 		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
 		{
-			FacebookDesktop.api(API, getNewsFeedHandler, args);
+			if (model.preferences.showNewsFeedUpdates)
+			{
+				FacebookDesktop.api(API, getNewsFeedHandler, args);
+			}  // if statement
 			
-			// TODO: add control over this in the preferences
 			function getNewsFeedHandler(result:Object, fail:Object):void
 			{
 				if (fail == null)
