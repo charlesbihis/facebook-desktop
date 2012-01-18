@@ -453,6 +453,9 @@ package com.facebook.desktop.control.system
 					// tell the model
 					model.connected = true;
 					
+					// store the user
+					model.currentUser = session.user;
+					
 					// adjust icon and menus
 					SystemIcons.changeIcon(true);
 					SystemIcons.changedLoggedInMenuState(true);
