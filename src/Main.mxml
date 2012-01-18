@@ -9,6 +9,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import air.net.URLMonitor;
+			
 			import com.charlesbihis.engine.notification.NotificationConst;
 			import com.charlesbihis.engine.notification.NotificationManager;
 			import com.facebook.desktop.FacebookDesktopConst;
@@ -49,6 +51,13 @@
 				log.info("Setting app to start on user-login: {0}", model.preferences.startAtLogin);
 				NativeApplication.nativeApplication.startAtLogin = model.preferences.startAtLogin;
 				
+				// check online/offline status
+				var urlRequest:URLRequest = new URLRequest("http://www.facebook.com/");
+				urlRequest.method = "HEAD";
+				var urlMonitor:URLMonitor = new URLMonitor(urlRequest);
+				urlMonitor.addEventListener(StatusEvent.STATUS, connectionMonitorHandler);
+				urlMonitor.start();
+				
 				// configuring notification sound
 				model.notificationSound = new Sound(new URLRequest("/assets/sounds/drop.mp3"));
 				model.notificationSound.addEventListener(Event.COMPLETE, loadSoundHandler);
@@ -79,7 +88,7 @@
 				}  // else statement
 				log.info("OS set to {0}", model.operatingSystem);
 				
-				// init tray/dock icon
+				// initialize tray/dock icon
 				SystemIcons.init();
 				
 				// check for updates
@@ -98,9 +107,6 @@
 						if (session != null)
 						{
 							log.info("Connected and all permissions granted! We are fully authorized!");
-							
-							// tell the model
-							model.connected = true;
 							
 							// store the user
 							model.currentUser = session.user;
@@ -150,6 +156,21 @@
 					}  // else statement
 				}  // getNewsFeedHandler
 				
+				function connectionMonitorHandler(event:Event):void
+				{
+					model.connected = urlMonitor.available;
+					
+					// TODO: change system-tray/dock icon and context menus
+					if (!urlMonitor.available)
+					{
+						SystemIcons.changeApplicationToolTip(resourceManager.getString("resources", "application.toolTip.disconnected"));
+					}  // if statement
+					else
+					{
+						SystemIcons.changeApplicationToolTip(resourceManager.getString("resources", "application.name"));
+					}  // else statement
+				}  // connectionMonitorHandler
+				
 				function loadSoundHandler(event:Event):void
 				{
 					log.info("Notification sound loaded");
@@ -178,7 +199,7 @@
 				
 				function poll(event:TimerEvent = null):void
 				{
-					if (model.connected && !model.paused)
+					if (model.connected && model.currentUser != null && !model.paused)
 					{
 						log.info("Polling!");
 						

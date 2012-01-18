@@ -132,6 +132,11 @@ package com.facebook.desktop.control.system
 			}  // changeLanguage
 		}  // init
 		
+		public static function changeApplicationToolTip(toolTip:String):void
+		{
+			systemTrayIcon.tooltip = toolTip;
+		}  // changeApplicationToolTip
+		
 		public static function changedLoggedInMenuState(loggedIn:Boolean):void
 		{
 			log.info("Changing menus to " + (loggedIn ? "logged-in" : "logged-out") + " set of menus");
@@ -449,9 +454,6 @@ package com.facebook.desktop.control.system
 				if (session != null)
 				{
 					log.info("Login from system-tray successful");
-					
-					// tell the model
-					model.connected = true;
 					
 					// store the user
 					model.currentUser = session.user;
