@@ -49,10 +49,6 @@
 				log.info("Setting app to start on user-login: {0}", model.preferences.startAtLogin);
 				NativeApplication.nativeApplication.startAtLogin = model.preferences.startAtLogin;
 				
-				// setting default notification length
-				log.info("Configuring preferred notification display length: {0}", model.preferences.startAtLogin);
-				NotificationManager.notificationDisplayLength = model.preferences.notificationDisplayLength;
-				
 				// configuring notification sound
 				model.notificationSound = new Sound(new URLRequest("/assets/sounds/drop.mp3"));
 				model.notificationSound.addEventListener(Event.COMPLETE, loadSoundHandler);

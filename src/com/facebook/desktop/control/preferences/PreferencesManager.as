@@ -1,6 +1,7 @@
 package com.facebook.desktop.control.preferences
 {
 	import com.charlesbihis.engine.notification.NotificationConst;
+	import com.charlesbihis.engine.notification.NotificationManager;
 	import com.facebook.desktop.model.Model;
 	
 	import flash.net.SharedObject;
@@ -12,7 +13,7 @@ package com.facebook.desktop.control.preferences
 	public class PreferencesManager
 	{
 		private static var model:Model = Model.instance;
-		private static var logger:ILogger = Log.getLogger("com.facebook.desktop.control.preferences.PreferencesManager");
+		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.preferences.PreferencesManager");
 		private static var sharedObject:SharedObject;
 		
 		public static function loadPreferences():void
@@ -21,7 +22,7 @@ package com.facebook.desktop.control.preferences
 			
 			if (sharedObject.data["preferences"])
 			{
-				logger.info("Loading previously saved preferences");
+				log.info("Loading previously saved preferences");
 				model.preferences = sharedObject.data["preferences"];
 				
 				// load up the previously used language, if there is one
@@ -29,6 +30,10 @@ package com.facebook.desktop.control.preferences
 				{
 					ResourceManager.getInstance().localeChain = [model.locales[model.preferences.language].locale];
 				}  // if statement
+				
+				// setting default notification length
+				log.info("Configuring preferred notification display length: {0}", model.preferences.notificationDisplayLength);
+				NotificationManager.notificationDisplayLength = model.preferences.notificationDisplayLength;
 				
 				// convert previous version user preferences to new user preferences
 				if (model.preferences.showStoryUpdates || model.preferences.showStoryActivity)
@@ -40,7 +45,7 @@ package com.facebook.desktop.control.preferences
 			}  // if statement
 			else
 			{
-				logger.info("No preferences saved. Creating them now.");
+				log.info("No preferences saved. Creating them now.");
 				
 				var preferences:Object = new Object();
 				preferences.language = 0;		// defaults to en_US which is index 0 in model.locales - must remember to change this if we ever put in another language before en_US
@@ -64,7 +69,7 @@ package com.facebook.desktop.control.preferences
 		
 		public static function savePreferences():void
 		{
-			logger.info("Saving preferences");
+			log.info("Saving preferences");
 			sharedObject.data["preferences"] = model.preferences;
 			
 			// force to write object immediately
@@ -73,13 +78,13 @@ package com.facebook.desktop.control.preferences
 		
 		public static function getPreference(key:String):Object
 		{
-			logger.info("Retrieving preferences");
+			log.info("Retrieving preferences");
 			return sharedObject.data["preferences"][key];
 		}  // getPreferences
 		
 		public static function setPreferences(key:String, value:Object):void
 		{
-			logger.info("Setting preferences setting {0} = {1}", key, value.toString());
+			log.info("Setting preferences setting {0} = {1}", key, value.toString());
 			model.preferences[key] = value;
 			sharedObject.data["preferences"][key] = value;
 		}  // setPreferences
