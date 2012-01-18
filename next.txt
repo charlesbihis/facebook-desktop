@@ -1,8 +1,4 @@
 TO DO FOR v1.0.0
--add new settings
-	-modifiable-length toasts
-	-optional sound
-	-make some notifications sticky
 -detect online/offline status
 -fix bug where last-check time doesn't reset when user goes offline
 -create interface and/or parent class for system-icon control classes (one for windows and linux, one for mac - really one for system-tray support and another for dock support)
@@ -10,6 +6,7 @@ TO DO FOR v1.0.0
 -get rid of controller class
 -grab latest facebook-actionscript-api code and drop into project
 -fix about page to link to my homepage, www.whoischarles.com
+-fix issue with preferences window being too wide
 -add birthdays feature
 -fix website so that there is a clear download link
 -stop throwing errors and just log them
@@ -22,6 +19,8 @@ TO DO FOR v1.0.0
 	-v0.84 (0.9.5) - https://www.facebook.com/note.php?note_id=201676706541273
 	-v0.85 (1.0.0) - UPCOMING RELEASE!
 -move all old pictures to new facebook page
+-ask for support on facebook
+  -Hey everyone, I created a Facebook app.  We just had a new release, so check it out here...
   
 
 PREFERENCES
