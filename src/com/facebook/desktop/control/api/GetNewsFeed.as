@@ -69,6 +69,10 @@ package com.facebook.desktop.control.api
 									{
 										messageString = story.message;
 									}  // else-if statement
+									else
+									{
+										messageString = "has posted a story to Facebook";
+									}  // else statement
 									break;
 								case "photo":
 								case "status":
