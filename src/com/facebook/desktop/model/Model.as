@@ -1,5 +1,7 @@
 package com.facebook.desktop.model
 {
+	import flash.media.Sound;
+	
 	import mx.collections.ArrayCollection;
 	import mx.resources.ResourceManager;
 
@@ -32,16 +34,16 @@ package com.facebook.desktop.model
 											   {label:ResourceManager.getInstance().getString('resources','language.persian').toString(), locale:"fa_IR", toolTip:"Persian"},
 											   {label:ResourceManager.getInstance().getString('resources','language.hindi').toString(), locale:"hi_IN", toolTip:"Hindi"}];
 		
+		public var currentUser:Object;
 		public var preferences:Object;
 		public var operatingSystem:String;
+		public var notificationSound:Sound;
 		
 		public var latestNewsFeedUpdate:String;
 		public var latestNotificationUpdate:String;
 		public var latestMessageUpdate:String;
 		public var latestPokeUpdate:String;
 		public var latestShareUpdate:String;
-		
-		public var currentUser:Object;
 		
 		private static var _instance:Model = new Model(SingletonLock);
 		
