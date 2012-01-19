@@ -3,7 +3,7 @@ package com.facebook.desktop.control.api
 	import com.charlesbihis.engine.notification.NotificationManager;
 	import com.charlesbihis.engine.notification.ui.Notification;
 	import com.facebook.desktop.FacebookDesktopConst;
-	import com.facebook.desktop.control.system.SystemIcons;
+	import com.facebook.desktop.control.system.SystemInteractionManager;
 	import com.facebook.desktop.control.util.Util;
 	import com.facebook.desktop.model.Model;
 	import com.facebook.graph.FacebookDesktop;
@@ -17,9 +17,10 @@ package com.facebook.desktop.control.api
 	{
 		private static const API:String = "notifications.get";
 		
-		private static var model:Model = Model.instance;
-		private static var notificationManager:NotificationManager = NotificationManager.instance;
-		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetAdditionalNotifications");
+		private var model:Model = Model.instance;
+		private var notificationManager:NotificationManager = NotificationManager.instance;
+		private var systemInteractionManager:SystemInteractionManager = SystemInteractionManager.instance;
+		private var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetAdditionalNotifications");
 		
 		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
 		{
@@ -200,7 +201,7 @@ package com.facebook.desktop.control.api
 						model.latestShareUpdate = shares.most_recent;
 					}  // if statement
 					
-					SystemIcons.addAdditionalNotificationsToMenu(result);
+					systemInteractionManager.addAdditionalNotificationsToMenu(result);
 				}  // if statement
 				else if (fail != null)
 				{

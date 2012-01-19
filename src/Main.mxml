@@ -19,7 +19,8 @@
 			import com.facebook.desktop.control.api.GetNotifications;
 			import com.facebook.desktop.control.logging.Logging;
 			import com.facebook.desktop.control.preferences.PreferencesManager;
-			import com.facebook.desktop.control.system.SystemIcons;
+			import com.facebook.desktop.control.system.SystemInteractionManager;
+			import com.facebook.desktop.control.system.SystemState;
 			import com.facebook.desktop.control.updates.UpdateManager;
 			import com.facebook.desktop.control.util.Util;
 			import com.facebook.desktop.model.Model;
@@ -33,6 +34,7 @@
 			private static const POLL_DELAY:uint = 60000;	// poll every minute
 			
 			private var model:Model = Model.instance;
+			private var systemInteractionManager:SystemInteractionManager = SystemInteractionManager.instance;
 			private var notificationManager:NotificationManager = NotificationManager.instance;
 			private var log:ILogger = Log.getLogger(className);
 			private var pollTimer:Timer = new Timer(POLL_DELAY);
@@ -50,6 +52,9 @@
 				// set up application to start on user-login
 				log.info("Setting app to start on user-login: {0}", model.preferences.startAtLogin);
 				NativeApplication.nativeApplication.startAtLogin = model.preferences.startAtLogin;
+				
+				// change to OFFLINE mode
+				systemInteractionManager.changeApplicationState(SystemState.OFFLINE);
 				
 				// check online/offline status
 				var urlRequest:URLRequest = new URLRequest("http://www.facebook.com/");
@@ -88,9 +93,6 @@
 				}  // else statement
 				log.info("OS set to {0}", model.operatingSystem);
 				
-				// initialize tray/dock icon
-				SystemIcons.init();
-				
 				// check for updates
 				log.info("Checking for updates");
 				UpdateManager.checkForUpdates();
@@ -112,8 +114,7 @@
 							model.currentUser = session.user;
 							
 							// adjust icon and menus
-							SystemIcons.changeIcon(true);
-							SystemIcons.changedLoggedInMenuState(true);
+							systemInteractionManager.changeApplicationState(SystemState.ONLINE);
 							
 							// show login popup
 							notificationManager.show(resourceManager.getString("resources", "toast.welcome"), "", FacebookDesktop.getImageUrl(session.user.id), FacebookDesktopConst.FACEBOOK_DESKTOP_PAGE);
@@ -163,11 +164,18 @@
 					// TODO: change system-tray/dock icon and context menus
 					if (!urlMonitor.available)
 					{
-						SystemIcons.changeApplicationToolTip(resourceManager.getString("resources", "application.toolTip.disconnected"));
+						systemInteractionManager.changeApplicationState(SystemState.DISCONNECTED);
 					}  // if statement
 					else
 					{
-						SystemIcons.changeApplicationToolTip(resourceManager.getString("resources", "application.name"));
+						if (model.currentUser != null)
+						{
+							systemInteractionManager.changeApplicationState(SystemState.ONLINE);
+						}  // if statement
+						else
+						{
+							systemInteractionManager.changeApplicationState(SystemState.OFFLINE);
+						}  // else statement
 					}  // else statement
 				}  // connectionMonitorHandler
 				

@@ -33,5 +33,17 @@ package com.facebook.desktop
 		
 		// wall post
 		public static const FACEBOOK_WALL_POST_ICON:String = "/assets/images/toast/wall-post.png";
-	}
-}
+		
+		// tray icons
+		public static const FACEBOOK_DESKTOP_ONLINE_TRAY_ICON:String = "/assets/icons/icon16.png";
+		public static const FACEBOOK_DESKTOP_OFFLINE_TRAY_ICON:String = "/assets/icons/iconOffline16.png";
+		public static const FACEBOOK_DESKTOP_DISCONNECTED_TRAY_ICON:String = "/assets/icons/iconDisconnected16.png";
+		public static const FACEBOOK_DESKTOP_PAUSED_TRAY_ICON:String = "/assets/icons/iconPaused16.png";
+		
+		// dock icons
+		public static const FACEBOOK_DESKTOP_ONLINE_DOCK_ICON:String = "/assets/icons/icon128.png";
+		public static const FACEBOOK_DESKTOP_OFFLINE_DOCK_ICON:String = "/assets/icons/iconOffline128.png";
+		public static const FACEBOOK_DESKTOP_DISCONNECTED_DOCK_ICON:String = "/assets/icons/iconDisconnected128.png";
+		public static const FACEBOOK_DESKTOP_PAUSED_DOCK_ICON:String = "/assets/icons/iconPaused128.png";
+	}  // class declaration
+}  // package
