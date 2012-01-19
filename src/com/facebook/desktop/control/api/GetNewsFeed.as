@@ -81,6 +81,7 @@ package com.facebook.desktop.control.api
 									{
 										messageString = "has posted a photo to Facebook";
 									}  // else statement
+									break;
 								case "status":
 									if (story.message != null && story.message is String && (story.message as String).length > 0)
 									{
@@ -90,6 +91,7 @@ package com.facebook.desktop.control.api
 									{
 										messageString = "has posted a story to Facebook";
 									}  // else statement
+									break;
 								case "video":
 									if (story.message != null && story.message is String && (story.message as String).length > 0)
 									{
@@ -99,6 +101,7 @@ package com.facebook.desktop.control.api
 									{
 										messageString = "has posted a video to Facebook";
 									}  // else statement
+									break;
 								default:
 									messageString = "has posted a story to Facebook";
 									break;
