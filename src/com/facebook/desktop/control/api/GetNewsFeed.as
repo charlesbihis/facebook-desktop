@@ -7,13 +7,11 @@ package com.facebook.desktop.control.api
 	import com.facebook.desktop.model.Model;
 	import com.facebook.graph.FacebookDesktop;
 	
-	import flash.events.EventDispatcher;
-	
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 	import mx.utils.ObjectUtil;
 
-	public class GetNewsFeed extends EventDispatcher implements ICommand
+	public class GetNewsFeed implements ICommand
 	{
 		private static const API:String = "/me/home";
 		
