@@ -92,8 +92,11 @@
 				log.info("OS set to {0}", model.operatingSystem);
 				
 				// check for updates
-				log.info("Checking for updates");
-				UpdateManager.checkForUpdates();
+				if(!flash.system.Capabilities.isDebugger)
+				{
+					log.info("Checking for updates");
+					UpdateManager.checkForUpdates();
+				}  // if statement
 				
 				// initialize our Facebook session
 				FacebookDesktop.init(Model.APPLICATION_ID, loginHandler);
