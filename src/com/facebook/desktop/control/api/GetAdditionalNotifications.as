@@ -4,7 +4,6 @@ package com.facebook.desktop.control.api
 	import com.charlesbihis.engine.notification.ui.Notification;
 	import com.facebook.desktop.FacebookDesktopConst;
 	import com.facebook.desktop.control.system.SystemInteractionManager;
-	import com.facebook.desktop.control.util.Util;
 	import com.facebook.desktop.model.Model;
 	import com.facebook.graph.FacebookDesktop;
 	
