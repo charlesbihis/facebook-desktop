@@ -38,7 +38,7 @@ package com.facebook.desktop.control.api
 						
 						// update model
 						var latestNotificationUpdate:Date = Util.RFC3339toDate(notifications[0].created_time);
-						log.info("Setting latest notification time to " + latestNotificationUpdate.toString());
+						log.info("Setting latest notification time to " + (latestNotificationUpdate.time / 1000));
 						model.latestNotificationUpdate = (latestNotificationUpdate.time / 1000).toString();
 						
 						// get application objects so we can use the icons in the notification window
