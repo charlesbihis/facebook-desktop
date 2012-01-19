@@ -36,7 +36,7 @@ package com.facebook.desktop.control.api
 			}  // if statement
 			else
 			{
-				throw new Error("Error fetching user.  User ID is null.");
+				log.error("Error fetching user.  User ID is null.");
 			}  // else statement
 			
 			function getObjectHandler(result:Object, fail:Object, passThroughArgs:Object):void

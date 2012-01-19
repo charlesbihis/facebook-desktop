@@ -8,7 +8,7 @@ package com.facebook.desktop.control.api
 
 	public class GetObject implements ICommand
 	{
-		private static var logger:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetObject");
+		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetObject");
 		
 		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
 		{
@@ -18,7 +18,7 @@ package com.facebook.desktop.control.api
 			}  // if statement
 			else
 			{
-				throw new Error("Error fetching object.  Object ID is null.");
+				log.error("Error fetching object.  Object ID is null.");
 			}  // else statement
 			
 			function getObjectHandler(result:Object, fail:Object):void

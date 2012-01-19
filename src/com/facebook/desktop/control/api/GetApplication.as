@@ -33,7 +33,7 @@ package com.facebook.desktop.control.api
 			}  // if statement
 			else
 			{
-				throw new Error("Error fetching application.  Application ID is null.");
+				log.error("Error fetching application.  Application ID is null.");
 			}  // else statement
 			
 			function getObjectHandler(result:Object, fail:Object, passThroughArgs:Object):void
