@@ -3,7 +3,6 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
-	xmlns:composer="com.facebook.desktop.view.composer.*"
 	creationComplete="init()"
 	visible="false">
 	
@@ -58,14 +57,14 @@
 				systemInteractionManager.changeApplicationState(SystemState.OFFLINE);
 				
 				// check online/offline status
-				var urlRequest:URLRequest = new URLRequest("http://www.facebook.com/");
+				var urlRequest:URLRequest = new URLRequest(FacebookDesktopConst.FACEBOOK_HOMEPAGE);
 				urlRequest.method = "HEAD";
 				var urlMonitor:URLMonitor = new URLMonitor(urlRequest);
 				urlMonitor.addEventListener(StatusEvent.STATUS, connectionMonitorHandler);
 				urlMonitor.start();
 				
 				// configuring notification sound
-				model.notificationSound = new Sound(new URLRequest("/assets/sounds/drop.mp3"));
+				model.notificationSound = new Sound(new URLRequest(FacebookDesktopConst.FACEBOOK_NOTIFICATION_SOUND));
 				model.notificationSound.addEventListener(Event.COMPLETE, loadSoundHandler);
 				
 				// determine OS
@@ -133,10 +132,24 @@
 					else
 					{
 						log.error("Error logging in.  Error object: " + ObjectUtil.toString(fail));
+						
 						var messageWindow:MessageWindow = new MessageWindow();
 						messageWindow.windowTitle = "Login Error";
-						messageWindow.windowMessage = fail.error.type + ": " + fail.error.message;
-						messageWindow.showOkayButton = true;
+						if (fail is IOErrorEvent)
+						{
+							messageWindow.windowMessage = "Error #" + (fail as IOErrorEvent).errorID + ": Please check your network connection.";
+							messageWindow.showOkayButton = true;
+						}  // if statement
+						else if (fail.error != null && fail.error.type != null && fail.error.message != null)
+						{
+							messageWindow.windowMessage = fail.error.type + ": " + fail.error.message;
+							messageWindow.showOkayButton = true;
+						}  // else-if statement
+						else
+						{
+							messageWindow.windowMessage = "Sorry, an unknown error occurred while trying to log you in.  Please try again later.";
+							messageWindow.showOkayButton = true;
+						}  // else stateement
 						messageWindow.open();
 					}  // else statement
 				}  // loginHandler
@@ -171,7 +184,17 @@
 						if (model.currentUser != null)
 						{
 							systemInteractionManager.changeApplicationState(SystemState.ONLINE);
-							FacebookDesktop.api("/me/home", getNewsFeedAgainHandler, {limit:1});
+							
+							var now:Number = Math.floor((new Date().time) / 1000);
+							if (now - parseInt(model.latestNewsFeedUpdate) > TIME_TO_LOOK_BACK)
+							{
+								log.info("Setting latest news feed update time to " + (now - TIME_TO_LOOK_BACK));
+								model.latestNewsFeedUpdate = (now - TIME_TO_LOOK_BACK) + "";
+							}  // if statement
+							else
+							{
+								log.info("Been offline for {0} minutes.  Not resetting latestNewsFeedUpdate time", Math.floor((now - parseInt(model.latestNewsFeedUpdate)) / 60));
+							}  // else statement
 						}  // if statement
 						else
 						{
@@ -179,35 +202,6 @@
 						}  // else statement
 					}  // else statement
 				}  // connectionMonitorHandler
-				
-				function getNewsFeedAgainHandler(result:Object, fail:Object):void
-				{
-					if (fail == null && result != null && result is Array && (result as Array).length > 0)
-					{
-						// if we go offline and back online again, we should reset the latestNewsFeedUpdate time to a reasonable value
-						if (model.latestNewsFeedUpdate != null && parseInt(model.latestNewsFeedUpdate) > 0)
-						{
-							// If latestNewsFeedUpdate is less than 10 minutes ago,
-							// then keep it.  Otherwise, reset it to 10 minutes ago.
-							var now:Number = (new Date().time) / 1000;
-							var latestNewsFeedUpdate:Number = Util.RFC3339toDate(result[0].created_time).time / 1000;
-							if (now - latestNewsFeedUpdate > TIME_TO_LOOK_BACK)
-							{
-								log.info("Setting latest news feed update time to " + (now - TIME_TO_LOOK_BACK));
-								model.latestNewsFeedUpdate = (now - TIME_TO_LOOK_BACK) + "";
-							}  // if statement
-							else
-							{
-								log.info("Been offline for {0} seconds.  Not resetting latestNewsFeedUpdate time", now - latestNewsFeedUpdate);
-							}  // else statement
-						}  // if statement
-						// set latest-story-update time
-					}  // if statement
-					else
-					{
-						log.error("Request to get latest update has failed!  Error object: " + fail);
-					}  // else statement
-				}  // getNewsFeedAgainHandler
 				
 				function loadSoundHandler(event:Event):void
 				{
