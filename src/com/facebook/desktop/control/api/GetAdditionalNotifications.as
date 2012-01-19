@@ -27,7 +27,7 @@ package com.facebook.desktop.control.api
 			
 			function getAdditionalNotificationsHandler(result:Object, fail:Object):void
 			{
-				if (fail == null && result != null)
+				if (fail == null && result != null && result.error_code == null)
 				{
 					// event invites
 					if (model.preferences.showEventInvites && result.event_invites != null && result.event_invites is Array && result.event_invites.length > 0)
@@ -202,6 +202,10 @@ package com.facebook.desktop.control.api
 					
 					systemInteractionManager.addAdditionalNotificationsToMenu(result);
 				}  // if statement
+				else if (result.error_code != null)
+				{
+					log.error("Request to get latest additional notifications has failed!  Error object: " + ObjectUtil.toString(result));
+				}  // else-if statement
 				else if (fail != null)
 				{
 					log.error("Request to get latest additional notifications has failed!  Error object: " + ObjectUtil.toString(fail));

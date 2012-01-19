@@ -54,6 +54,10 @@ package com.facebook.desktop.control.api
 						}  // if statement
 					}  // for loop
 				}  // if statement
+				else if (result.error_code != null)
+				{
+					log.error("Request to get friends birthdays has failed!  Error object: " + ObjectUtil.toString(result));
+				}  // else-if statement
 				else if (fail != null)
 				{
 					log.error("Request to get friends birthdays has failed!  Error object: " + ObjectUtil.toString(fail));
