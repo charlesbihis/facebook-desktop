@@ -360,7 +360,7 @@ package com.facebook.desktop.control.system
 				{
 					// set latest-story-update time
 					var latestNewsFeedUpdate:Date = Util.RFC3339toDate(result[0].created_time);
-					log.info("Setting latest news feed update time to " + latestNewsFeedUpdate.toString());
+					log.info("Setting latest news feed update time to " + (latestNewsFeedUpdate.time / 1000));
 					model.latestNewsFeedUpdate = (latestNewsFeedUpdate.time / 1000).toString();
 					
 					// likes, comments, and group posts
