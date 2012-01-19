@@ -44,6 +44,7 @@ package com.facebook.desktop.control.api
 							eventInviteNotification.notificationImage = FacebookDesktopConst.FACEBOOK_EVENT_INVITES_ICON;
 							eventInviteNotification.notificationLink = FacebookDesktopConst.FACEBOOK_EVENT_INVITES_URL;
 							eventInviteNotification.isCompact = true;
+							eventInviteNotification.isSticky = model.preferences.showEventInvitesSticky;
 							notificationManager.showNotification(eventInviteNotification);
 							
 							// play sound
@@ -70,6 +71,7 @@ package com.facebook.desktop.control.api
 							friendRequestsNotification.notificationImage = FacebookDesktopConst.FACEBOOK_FRIEND_REQUESTS_ICON;
 							friendRequestsNotification.notificationLink = FacebookDesktopConst.FACEBOOK_FRIEND_REQUESTS_URL;
 							friendRequestsNotification.isCompact = true;
+							friendRequestsNotification.isSticky = model.preferences.showFriendRequestsSticky;
 							notificationManager.showNotification(friendRequestsNotification);
 							
 							// play sound
@@ -96,6 +98,7 @@ package com.facebook.desktop.control.api
 							groupInvitesNotification.notificationImage = FacebookDesktopConst.FACEBOOK_GROUP_INVITES_ICON;
 							groupInvitesNotification.notificationLink = FacebookDesktopConst.FACEBOOK_GROUP_INVITES_URL;
 							groupInvitesNotification.isCompact = true;
+							groupInvitesNotification.isSticky = model.preferences.showGroupInvitesSticky;
 							notificationManager.showNotification(groupInvitesNotification);
 							
 							// play sound
@@ -123,6 +126,7 @@ package com.facebook.desktop.control.api
 							newMessagesNotification.notificationImage = FacebookDesktopConst.FACEBOOK_MESSAGES_ICON;
 							newMessagesNotification.notificationLink = FacebookDesktopConst.FACEBOOK_MESSAGES_URL;
 							newMessagesNotification.isCompact = true;
+							newMessagesNotification.isSticky = model.preferences.showMessagesSticky;
 							notificationManager.showNotification(newMessagesNotification);
 							
 							// play sound
@@ -154,6 +158,7 @@ package com.facebook.desktop.control.api
 							pokeNotification.notificationImage = FacebookDesktopConst.FACEBOOK_POKES_ICON;
 							pokeNotification.notificationLink = FacebookDesktopConst.FACEBOOK_POKES_URL;
 							pokeNotification.isCompact = true;
+							pokeNotification.isSticky = model.preferences.showPokesSticky;
 							notificationManager.showNotification(pokeNotification);
 							
 							// play sound
@@ -185,6 +190,7 @@ package com.facebook.desktop.control.api
 							shareNotification.notificationImage = FacebookDesktopConst.FACEBOOK_SHARES_ICON;
 							shareNotification.notificationLink = FacebookDesktopConst.FACEBOOK_SHARES_URL;
 							shareNotification.isCompact = true;
+							shareNotification.isSticky = model.preferences.showSharesSticky;
 							notificationManager.showNotification(shareNotification);
 							
 							// play sound

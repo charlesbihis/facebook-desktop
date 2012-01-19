@@ -86,6 +86,7 @@ package com.facebook.desktop.control.api
 				notification.notificationImage = result.icon_url;
 				notification.notificationLink = passThrough.link;
 				notification.isCompact = true;
+				notification.isSticky = model.preferences.showActivityUpdatesSticky;
 				notificationManager.showNotification(notification);
 				
 				// play sound

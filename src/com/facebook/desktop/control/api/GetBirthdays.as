@@ -25,8 +25,7 @@ package com.facebook.desktop.control.api
 			var thisMonthNumber:Number = today.month + 1;
 			var thisMonthString:String = (thisMonthNumber <= 9) ? "0" + thisMonthNumber : thisMonthNumber + "";
 			var thisDateString:String = (today.date <= 9) ? "0" + today.date : today.date + "";
-//			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + thisMonthString + "/" + today.date + "' IN birthday_date";
-			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '06/21' IN birthday_date";
+			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + thisMonthString + "/" + today.date + "' IN birthday_date";
 			
 			FacebookDesktop.callRestAPI(API, getBirthdaysHandler, {query:fql});
 			
@@ -43,7 +42,7 @@ package com.facebook.desktop.control.api
 						birthdayNotification.notificationImage = FacebookDesktopConst.FACEBOOK_BIRTHDAY_ICON;
 						birthdayNotification.notificationLink = FacebookDesktopConst.FACEBOOK_HOMEPAGE + birthdays[i].uid;
 						birthdayNotification.isCompact = true;
-						birthdayNotification.isSticky = true;
+						birthdayNotification.isSticky = model.preferences.showBirthdaysSticky;
 						notificationManager.showNotification(birthdayNotification);
 						
 						// play sound

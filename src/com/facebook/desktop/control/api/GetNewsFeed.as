@@ -128,6 +128,7 @@ package com.facebook.desktop.control.api
 							notification.notificationMessage = messageString;
 							notification.notificationImage = FacebookDesktopConst.FACEBOOK_GRAPH_API_ENDPOINT + story.from.id + "/picture";
 							notification.notificationLink = linkString;
+							notification.isSticky = model.preferences.showNewsFeedUpdatesSticky;
 							notificationManager.showNotification(notification);
 							
 							// play sound
