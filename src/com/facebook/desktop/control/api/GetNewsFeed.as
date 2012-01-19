@@ -71,14 +71,38 @@ package com.facebook.desktop.control.api
 									}  // else-if statement
 									else
 									{
-										messageString = "has posted a story to Facebook";
+										messageString = "has posted a link to Facebook";
 									}  // else statement
 									break;
 								case "photo":
+									if (story.message != null && story.message is String && (story.message as String).length > 0)
+									{
+										messageString = story.message;
+									}  // if statement
+									else
+									{
+										messageString = "has posted a photo to Facebook";
+									}  // else statement
 								case "status":
+									if (story.message != null && story.message is String && (story.message as String).length > 0)
+									{
+										messageString = story.message;
+									}  // if statement
+									else
+									{
+										messageString = "has posted a story to Facebook";
+									}  // else statement
 								case "video":
+									if (story.message != null && story.message is String && (story.message as String).length > 0)
+									{
+										messageString = story.message;
+									}  // if statement
+									else
+									{
+										messageString = "has posted a video to Facebook";
+									}  // else statement
 								default:
-									messageString = story.message;
+									messageString = "has posted a story to Facebook";
 									break;
 							}  // switch statement
 							
