@@ -35,12 +35,102 @@ package com.facebook.desktop.control.preferences
 				log.info("Configuring preferred notification display length: {0}", model.preferences.notificationDisplayLength);
 				NotificationManager.notificationDisplayLength = model.preferences.notificationDisplayLength;
 				
-				// convert previous version user preferences to new user preferences
-				if (model.preferences.showStoryUpdates || model.preferences.showStoryActivity)
+				// set defaults for new preference properties
+				if (model.preferences.language == null)
 				{
-					model.preferences.showNewsFeedUpdates = model.preferences.showStoryUpdates;
-					model.preferences.showActivityUpdates = model.preferences.showStoryActivity;
+					model.preferences.language = 0;
+				}  // if statement
+				if (model.preferences.startAtLogin == null)
+				{
+					model.preferences.startAtLogin = true;
+				}  // if statement
+				if (model.preferences.showNewsFeedUpdates == null)
+				{
+					model.preferences.showNewsFeedUpdates = true;
+				}  // if statement
+				if (model.preferences.showActivityUpdates == null)
+				{
+					model.preferences.showActivityUpdates = true;
+				}  // if statement
+				if (model.preferences.showMessages == null)
+				{
+					model.preferences.showMessages = true;
+				}  // if statement
+				if (model.preferences.showFriendRequests == null)
+				{
+					model.preferences.showFriendRequests = true;
+				}  // if statement
+				if (model.preferences.showShares == null)
+				{
+					model.preferences.showShares = true;
+				}  // if statement
+				if (model.preferences.showGroupInvites == null)
+				{
+					model.preferences.showGroupInvites = true;
+				}  // if statement
+				if (model.preferences.showEventInvites == null)
+				{
+					model.preferences.showEventInvites = true;
+				}  // if statement
+				if (model.preferences.showPokes == null)
+				{
+					model.preferences.showPokes = true;
+				}  // if statement
+				if (model.preferences.showBirthdays == null)
+				{
+					model.preferences.showBirthdays = true;
+				}  // if statement
+				if (model.preferences.showNewsFeedUpdatesSticky == null)
+				{
+					model.preferences.showNewsFeedUpdatesSticky = false;
+				}  // if statement
+				if (model.preferences.showActivityUpdatesSticky == null)
+				{
+					model.preferences.showActivityUpdatesSticky = false;
+				}  // if statement
+				if (model.preferences.showMessagesSticky == null)
+				{
+					model.preferences.showMessagesSticky = true;
+				}  // if statement
+				if (model.preferences.showFriendRequestsSticky == null)
+				{
+					model.preferences.showFriendRequestsSticky = true;
+				}  // if statement
+				if (model.preferences.showSharesSticky == null)
+				{
+					model.preferences.showSharesSticky = true;
+				}  // if statement
+				if (model.preferences.showGroupInvitesSticky == null)
+				{
+					model.preferences.showGroupInvitesSticky = true;
+				}  // if statement
+				if (model.preferences.showEventInvitesSticky == null)
+				{
+					model.preferences.showEventInvitesSticky = true;
+				}  // if statement
+				if (model.preferences.showPokesSticky == null)
+				{
+					model.preferences.showPokesSticky = true;
+				}  // if statement
+				if (model.preferences.showBirthdaysSticky == null)
+				{
+					model.preferences.showBirthdaysSticky = true;
+				}  // if statement
+				if (model.preferences.notificationDisplayLength == null)
+				{
 					model.preferences.notificationDisplayLength = NotificationConst.DISPLAY_LENGTH_MEDIUM;
+				}  // if statement
+				if (model.preferences.iconClickAction == null)
+				{
+					model.preferences.iconClickAction = 0;
+				}  // if statement
+				if (model.preferences.markNotificationsAsRead == null)
+				{
+					model.preferences.markNotificationsAsRead = false;
+				}  // if statement
+				if (model.preferences.playNotificationSound == null)
+				{
+					model.preferences.playNotificationSound = false;
 				}  // if statement
 			}  // if statement
 			else
@@ -48,8 +138,12 @@ package com.facebook.desktop.control.preferences
 				log.info("No preferences saved. Creating them now.");
 				
 				var preferences:Object = new Object();
+				
+				// application settings
 				preferences.language = 0;			// defaults to en_US which is index 0 in model.locales - must remember to change this if we ever put in another language before en_US
 				preferences.startAtLogin = true;
+				
+				// notification settings
 				preferences.showNewsFeedUpdates = true;
 				preferences.showActivityUpdates = true;
 				preferences.showMessages = true;
@@ -58,8 +152,20 @@ package com.facebook.desktop.control.preferences
 				preferences.showGroupInvites = true;
 				preferences.showEventInvites = true;
 				preferences.showPokes = true;
+				preferences.showBirthdays = true;
+				preferences.showNewsFeedUpdatesSticky = false;
+				preferences.showActivityUpdatesSticky = false;
+				preferences.showMessagesSticky = true;
+				preferences.showFriendRequestsSticky = true;
+				preferences.showSharesSticky = true;
+				preferences.showGroupInvitesSticky = true;
+				preferences.showEventInvitesSticky = true;
+				preferences.showPokesSticky = true;
+				preferences.showBirthdaysSticky = true;
+				
+				// advanced settings
 				preferences.notificationDisplayLength = NotificationConst.DISPLAY_LENGTH_MEDIUM;
-				preferences.iconClickAction = 0;	// defaults to opening the status update window
+				preferences.iconClickAction = 0;	// defaults to opening the status update window which is index 0 in model.clickActions
 				preferences.markNotificationsAsRead = false;
 				preferences.playNotificationSound = false;
 				

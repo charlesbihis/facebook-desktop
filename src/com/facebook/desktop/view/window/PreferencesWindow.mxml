@@ -50,8 +50,12 @@
 				nativeWindow.y = (Capabilities.screenResolutionY - nativeWindow.height) / 2;
 				
 				// now load up the preferences
+				
+				// application settings
 				localeComboBox.selectedIndex = model.preferences.language;
 				startAtLoginCheckbox.selected = model.preferences.startAtLogin;
+				
+				// notification settings
 				showNewsFeedUpdates.selected = model.preferences.showNewsFeedUpdates;
 				showActivityUpdates.selected = model.preferences.showActivityUpdates;
 				showNewMessages.selected = model.preferences.showMessages;
@@ -60,6 +64,18 @@
 				showGroupInvites.selected = model.preferences.showGroupInvites;
 				showEventInvites.selected = model.preferences.showEventInvites;
 				showPokes.selected = model.preferences.showPokes;
+				showBirthdays.selected = model.preferences.showBirthdays;
+				showNewsFeedUpdatesSticky.selected = model.preferences.showNewsFeedUpdatesSticky;
+				showActivityUpdatesSticky.selected = model.preferences.showActivityUpdatesSticky;
+				showNewMessagesSticky.selected = model.preferences.showMessagesSticky;
+				showFriendRequestsSticky.selected = model.preferences.showFriendRequestsSticky;
+				showSharesSticky.selected = model.preferences.showSharesSticky;
+				showGroupInvitesSticky.selected = model.preferences.showGroupInvitesSticky;
+				showEventInvitesSticky.selected = model.preferences.showEventInvitesSticky;
+				showPokesSticky.selected = model.preferences.showPokesSticky;
+				showBirthdaysSticky.selected = model.preferences.showBirthdaysSticky;
+				
+				// advanced settings
 				notificationDisplayLength.value = model.preferences.notificationDisplayLength;
 				clickActionComboBox.selectedIndex = model.preferences.iconClickAction;
 				markAsReadCheckBox.selected = model.preferences.markNotificationsAsRead;
@@ -86,6 +102,16 @@
 				model.preferences.showGroupInvites = showGroupInvites.selected;
 				model.preferences.showEventInvites = showEventInvites.selected;
 				model.preferences.showPokes = showPokes.selected;
+				model.preferences.showBirthdays = showBirthdays.selected;
+				model.preferences.showNewsFeedUpdatesSticky = showNewsFeedUpdatesSticky.selected;
+				model.preferences.showActivityUpdatesSticky = showActivityUpdatesSticky.selected;
+				model.preferences.showMessagesSticky = showNewMessagesSticky.selected;
+				model.preferences.showFriendRequestsSticky = showFriendRequestsSticky.selected;
+				model.preferences.showSharesSticky = showSharesSticky.selected;
+				model.preferences.showGroupInvitesSticky = showGroupInvitesSticky.selected;
+				model.preferences.showEventInvitesSticky = showEventInvitesSticky.selected;
+				model.preferences.showPokesSticky = showPokesSticky.selected;
+				model.preferences.showBirthdaysSticky = showBirthdaysSticky.selected;
 				
 				// advanced settings
 				model.preferences.notificationDisplayLength = notificationDisplayLength.value;
@@ -191,45 +217,63 @@
 					<mx:HRule width="100%" />
 					
 					<!-- notification settings - options -->
+					<mx:HBox verticalAlign="middle" width="100%" horizontalAlign="right">
+						<s:Label text="show" fontSize="9" toolTip="{resourceManager.getString('resources','preferences.notificationSettings.option.notificationToolTip')}" />
+						<s:Label text="sticky" fontSize="9" toolTip="{resourceManager.getString('resources','preferences.notificationSettings.option.notificationStickyToolTip')}" />
+					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyNewsFeed')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="showNewsFeedUpdates" change="saveSettings();log.info('Changing \'Notify me when new stories are posted to my news feed\' setting to {0}', showNewsFeedUpdates.selected)" />
+						<s:CheckBox id="showNewsFeedUpdatesSticky" enabled="{showNewsFeedUpdates.selected}" change="saveSettings();log.info('Changing \'Notify me when new stories are posted to my news feed\' sticky setting to {0}', showNewsFeedUpdatesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyActivity')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="showActivityUpdates" change="saveSettings();log.info('Changing \'Notify me when there is activity in a post that I am involved in\' setting to {0}', showActivityUpdates.selected)" />
+						<s:CheckBox id="showActivityUpdatesSticky" enabled="{showActivityUpdates.selected}" change="saveSettings();log.info('Changing \'Notify me when there is activity in a post that I am involved in\' sticky setting to {0}', showActivityUpdatesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyMessage')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="showNewMessages" change="saveSettings();log.info('Changing \'Notify me when someone sends me a message\' setting to {0}', showNewMessages.selected)" />
+						<s:CheckBox id="showNewMessagesSticky" enabled="{showNewMessages.selected}" change="saveSettings();log.info('Changing \'Notify me when someone sends me a message\' sticky setting to {0}', showNewMessagesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyFriendRequest')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="showFriendRequests" change="saveSettings();log.info('Changing \'Notify me when I get a new friend request\' setting to {0}', showFriendRequests.selected)" />
+						<s:CheckBox id="showFriendRequestsSticky" enabled="{showFriendRequests.selected}" change="saveSettings();log.info('Changing \'Notify me when I get a new friend request\' sticky setting to {0}', showFriendRequestsSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyShare')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="showShares" change="saveSettings();log.info('Changing \'Notify me when someone shares something with me\' setting to {0}', showShares.selected)" />
+						<s:CheckBox id="showSharesSticky" enabled="{showShares.selected}" change="saveSettings();log.info('Changing \'Notify me when someone shares something with me\' sticky setting to {0}', showSharesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyGroupInvite')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="showGroupInvites" change="saveSettings();log.info('Changing \'Notify me when I get a group invite\' setting to {0}', showGroupInvites.selected)" />
+						<s:CheckBox id="showGroupInvitesSticky" enabled="{showGroupInvites.selected}" change="saveSettings();log.info('Changing \'Notify me when I get a group invite\' sticky setting to {0}', showGroupInvitesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyEventInvite')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="showEventInvites" change="saveSettings();log.info('Changing \'Notify me when I get an event invite\' setting to {0}',showEventInvites.selected)" />
+						<s:CheckBox id="showEventInvitesSticky" enabled="{showEventInvites.selected}" change="saveSettings();log.info('Changing \'Notify me when I get an event invite\' sticky setting to {0}', showEventInvitesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyPoke')}" />
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="showPokes" change="saveSettings();log.info('Changing \'Notify me when someone pokes me\' setting to {0}', showPokes.selected)" />
+						<s:CheckBox id="showPokesSticky" enabled="{showPokes.selected}" change="saveSettings();log.info('Changing \'Notify me when someone pokes me\' sticky setting to {0}', showPokesSticky.selected)" />
+					</mx:HBox>
+					<mx:HBox verticalAlign="middle" width="100%">
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyBirthdays')}" />
+						<mx:Spacer width="100%" />
+						<s:CheckBox id="showBirthdays" change="saveSettings();log.info('Changing \'Notify me when my friends have birthdays\' setting to {0}', showBirthdays.selected)" />
+						<s:CheckBox id="showBirthdaysSticky" enabled="{showBirthdays.selected}" change="saveSettings();log.info('Changing \'Notify me when my friends have birthdays\' sticky setting to {0}', showBirthdaysSticky.selected)" />
 					</mx:HBox>
 					<mx:Spacer height="15" />
 					
@@ -248,7 +292,7 @@
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.clickAction.' + model.operatingSystem.toLowerCase())}" />
 						<mx:Spacer width="100%" />
-						<mx:ComboBox id="clickActionComboBox" dataProvider="{model.clickActions}" change="saveSettings();log.info('Changing \'Default icon click action to \' setting to {0}',clickActionComboBox.selectedLabel)"/>
+						<mx:ComboBox id="clickActionComboBox" dataProvider="{model.clickActions}" change="saveSettings();log.info('Changing \'Default icon click action to \' setting to {0}', clickActionComboBox.selectedLabel)"/>
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.markNotificationsRead')}" />
