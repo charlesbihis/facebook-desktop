@@ -61,6 +61,7 @@
 				showEventInvites.selected = model.preferences.showEventInvites;
 				showPokes.selected = model.preferences.showPokes;
 				notificationDisplayLength.value = model.preferences.notificationDisplayLength;
+				clickActionComboBox.selectedIndex = model.preferences.iconClickAction;
 				markAsReadCheckBox.selected = model.preferences.markNotificationsAsRead;
 				playNotificationSound.selected = model.preferences.playNotificationSound;
 				
@@ -88,6 +89,7 @@
 				
 				// advanced settings
 				model.preferences.notificationDisplayLength = notificationDisplayLength.value;
+				model.preferences.iconClickAction = clickActionComboBox.selectedIndex;
 				model.preferences.markNotificationsAsRead = markAsReadCheckBox.selected;
 				model.preferences.playNotificationSound = playNotificationSound.selected;
 				
@@ -241,7 +243,12 @@
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.notificationDisplayLength')}" />
 						<mx:Spacer width="100%" />
-						<mx:HSlider id="notificationDisplayLength" minimum="4" maximum="12" snapInterval="2" tickInterval="2" value="8" labels="[short,medium,long]" dataTipFormatFunction="notificationDisplayLengthFormatter" change="saveSettings();log.info('Changing \'Notification display length\' setting to {0}', notificationDisplayLength.value);NotificationManager.notificationDisplayLength=notificationDisplayLength.value" />
+						<mx:HSlider id="notificationDisplayLength" minimum="4" maximum="12" snapInterval="2" tickInterval="2" value="8" labelStyleName="displayLengthSliderLabel" labels="[short,medium,long]" dataTipFormatFunction="notificationDisplayLengthFormatter" change="saveSettings();log.info('Changing \'Notification display length\' setting to {0}', notificationDisplayLength.value);NotificationManager.notificationDisplayLength=notificationDisplayLength.value" />
+					</mx:HBox>
+					<mx:HBox verticalAlign="middle" width="100%">
+						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.clickAction.' + model.operatingSystem.toLowerCase())}" />
+						<mx:Spacer width="100%" />
+						<mx:ComboBox id="clickActionComboBox" dataProvider="{model.clickActions}" change="saveSettings();log.info('Changing \'Default icon click action to \' setting to {0}',clickActionComboBox.selectedLabel)"/>
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.markNotificationsRead')}" />

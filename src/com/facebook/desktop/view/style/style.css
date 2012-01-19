@@ -34,6 +34,10 @@ mx|ToolTip {
 	paddingTop: 4; 
 }
 
+.displayLengthSliderLabel {
+	fontSize: 9;
+}
+
 .bodyText {
 	color: #f7f7f7;
 	font-size: 11;
