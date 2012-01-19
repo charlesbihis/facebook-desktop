@@ -22,7 +22,10 @@ package com.facebook.desktop.control.api
 		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
 		{
 			var today:Date = new Date();
-//			var fql:String = "SELECT name, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + today.month + "/" + today.date + "' IN birthday_date";
+			var thisMonthNumber:Number = today.month + 1;
+			var thisMonthString:String = (thisMonthNumber <= 9) ? "0" + thisMonthNumber : thisMonthNumber + "";
+			var thisDateString:String = (today.date <= 9) ? "0" + today.date : today.date + "";
+//			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + thisMonthString + "/" + today.date + "' IN birthday_date";
 			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '06/21' IN birthday_date";
 			
 			FacebookDesktop.callRestAPI(API, getBirthdaysHandler, {query:fql});
