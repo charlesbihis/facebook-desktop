@@ -48,7 +48,7 @@ package com.facebook.desktop.control.preferences
 				log.info("No preferences saved. Creating them now.");
 				
 				var preferences:Object = new Object();
-				preferences.language = 0;		// defaults to en_US which is index 0 in model.locales - must remember to change this if we ever put in another language before en_US
+				preferences.language = 0;			// defaults to en_US which is index 0 in model.locales - must remember to change this if we ever put in another language before en_US
 				preferences.startAtLogin = true;
 				preferences.showNewsFeedUpdates = true;
 				preferences.showActivityUpdates = true;
@@ -59,6 +59,7 @@ package com.facebook.desktop.control.preferences
 				preferences.showEventInvites = true;
 				preferences.showPokes = true;
 				preferences.notificationDisplayLength = NotificationConst.DISPLAY_LENGTH_MEDIUM;
+				preferences.iconClickAction = 0;	// defaults to opening the status update window
 				preferences.markNotificationsAsRead = false;
 				preferences.playNotificationSound = false;
 				

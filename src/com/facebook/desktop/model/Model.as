@@ -12,6 +12,9 @@ package com.facebook.desktop.model
 		
 		[Bindable] public var connected:Boolean;
 		[Bindable] public var paused:Boolean;
+		[Bindable] public var operatingSystem:String;
+		[Bindable] public var clickActions:Array = [{label:ResourceManager.getInstance().getString('resources','preferences.advancedSettings.option.clickAction.openComposer').toString()},
+													{label:ResourceManager.getInstance().getString('resources','preferences.advancedSettings.option.clickAction.openFacebook').toString()}];
 		[Bindable] public var locales:Array = [{label:ResourceManager.getInstance().getString('resources','language.english').toString(), locale:"en_US", toolTip:"English"},
 											   {label:ResourceManager.getInstance().getString('resources','language.malay').toString(), locale:"ms_MY", toolTip:"Malay"},
 											   {label:ResourceManager.getInstance().getString('resources','language.bosnian').toString(), locale:"bs_BA", toolTip:"Bosnian"},
@@ -35,7 +38,6 @@ package com.facebook.desktop.model
 		
 		public var currentUser:Object;
 		public var preferences:Object;
-		public var operatingSystem:String;
 		public var notificationSound:Sound;
 		public var latestNotificationSound:Number;
 		

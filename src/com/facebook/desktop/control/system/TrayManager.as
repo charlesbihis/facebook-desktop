@@ -109,15 +109,22 @@ package com.facebook.desktop.control.system
 		
 		private function iconClick(event:Event):void
 		{
-			// only show update-window if we're connected
-			if (model.connected && model.currentUser != null)
+			if (model.preferences.iconClickAction == 0)
 			{
-				log.info("Attempting to show/hide status-update window");
-				controller.openStatusUpdateWindow();
+				// only show update-window if we're connected
+				if (model.connected && model.currentUser != null)
+				{
+					log.info("Attempting to show/hide status-update window");
+					controller.openStatusUpdateWindow();
+				}  // if statement
+				else
+				{
+					log.info("System-tray/dock icon clicked but user not logged in. Suppressing display of status-update window.");
+				}  // else statement
 			}  // if statement
 			else
 			{
-				log.info("System-tray/dock icon clicked but user not logged in. Suppressing display of status-update window.");
+				flash.net.navigateToURL(new URLRequest(FacebookDesktopConst.FACEBOOK_HOMEPAGE));
 			}  // else statement
 		}  // iconClick
 	}  // class declaration
