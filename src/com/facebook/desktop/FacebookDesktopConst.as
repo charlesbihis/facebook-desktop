@@ -32,6 +32,9 @@ package com.facebook.desktop
 		public static const FACEBOOK_SHARES_URL:String = "http://www.facebook.com/notifications/";
 		public static const FACEBOOK_SHARES_ICON:String = "/assets/images/toast/link.png";
 		
+		// birthday
+		public static const FACEBOOK_BIRTHDAY_ICON:String = "/assets/images/toast/birthday.png";
+		
 		// wall post
 		public static const FACEBOOK_WALL_POST_ICON:String = "/assets/images/toast/wall-post.png";
 		
