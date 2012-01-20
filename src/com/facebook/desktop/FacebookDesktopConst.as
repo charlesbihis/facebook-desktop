@@ -7,6 +7,7 @@ package com.facebook.desktop
 		public static const FACEBOOK_HOMEPAGE:String = "http://www.facebook.com/";
 		public static const FACEBOOK_DESKTOP_PAGE:String = "http://www.facebook.com/pages/Desktop/345575142138778";
 		public static const FACEBOOK_NOTIFICATION_DEFAULT_IMAGE:String = "/assets/images/toast/icon50.png";
+		public static const FACEBOOK_STATUS_UPDATE_WINDOW_TITLE:String = "Status Update Window";
 		
 		// event invites
 		public static const FACEBOOK_EVENT_INVITES_URL:String = "http://www.facebook.com/events/";

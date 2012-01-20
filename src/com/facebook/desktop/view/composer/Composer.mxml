@@ -5,7 +5,7 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:composer="com.facebook.desktop.view.composer.*"
 	xmlns:component="com.facebook.desktop.view.component.*"
-	title="Status Update Window"
+	title="{FacebookDesktopConst.FACEBOOK_STATUS_UPDATE_WINDOW_TITLE}"
 	width="400" height="132"
 	transparent="true"
 	systemChrome="none"

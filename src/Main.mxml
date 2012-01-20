@@ -63,6 +63,7 @@
 				
 				// configuring notification properties
 				NotificationManager.defaultNotificationImage = FacebookDesktopConst.FACEBOOK_NOTIFICATION_DEFAULT_IMAGE;
+				NotificationManager.otherWindowsToAvoid.push(FacebookDesktopConst.FACEBOOK_STATUS_UPDATE_WINDOW_TITLE);
 				model.notificationSound = new Sound(new URLRequest(FacebookDesktopConst.FACEBOOK_NOTIFICATION_SOUND));
 				model.notificationSound.addEventListener(Event.COMPLETE, loadSoundHandler);
 				
