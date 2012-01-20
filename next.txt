@@ -1,46 +1,16 @@
-TO DO FOR v1.0.0
--detect online/offline status
--fix bug where last-check time doesn't reset when user goes offline
--create interface and/or parent class for system-icon control classes (one for windows and linux, one for mac - really one for system-tray support and another for dock support)
--add notification count to dock/system-tray icon
--get rid of controller class
--grab latest facebook-actionscript-api code and drop into project
--fix about page to link to my homepage, www.whoischarles.com
--fix issue with preferences window being too wide
--add birthdays feature
+TO DO FOR v0.85
+-experiment with packaging as a native installer
 -fix website so that there is a clear download link
--stop throwing errors and just log them
--test new versioning scheme - see if it will detect as new
--repost old release notes - USE NEW VERSIONING SCHEME!!!
-	-v0.80 (0.8.0) - https://www.facebook.com/note.php?note_id=146636975378580
-	-v0.81 (0.8.3) - https://www.facebook.com/note.php?note_id=150497421659202
-	-v0.82 (0.8.6) - https://www.facebook.com/note.php?note_id=151177694924508
-	-v0.83 (0.9.0) - https://www.facebook.com/note.php?note_id=156905451018399
-	-v0.84 (0.9.5) - https://www.facebook.com/note.php?note_id=201676706541273
-	-v0.85 (1.0.0) - UPCOMING RELEASE!
+-repost old release notes
+	-v0.80 - https://www.facebook.com/note.php?note_id=146636975378580
+	-v0.81 - https://www.facebook.com/note.php?note_id=150497421659202
+	-v0.82 - https://www.facebook.com/note.php?note_id=151177694924508
+	-v0.83 - https://www.facebook.com/note.php?note_id=156905451018399
+	-v0.84 - https://www.facebook.com/note.php?note_id=201676706541273
+	-v0.85 - UPCOMING RELEASE!
 -move all old pictures to new facebook page
 -ask for support on facebook
   -Hey everyone, I created a Facebook app.  We just had a new release, so check it out here...
-  
-
-PREFERENCES
--Application Settings
-	-Language
-	-Run on startup
--Notification Settings
-	-Notify me when new stories are posted to my news feed					STICKY
-	-Notify me when there is activity in a post I am involved in			STICKY
-	-Notify me when someone sends me a message								STICKY
-	-Notify me when I get a new friend request								STICKY
-	-Notify me when someone pokes me										STICKY
-	-Notify me when someone shares something with me						STICKY
-	-Notify me when I get a group invite									STICKY
-	-Notify me when I get an event invite									STICKY
-	-Notify me when it is a friend's birthday
--Advanced Settings
-	-Notification display length
-	-Mark notifications as read when they appear on my screen
-	-Play notification sound
 
 
 PRESENTATION AND ORGANIZATION
@@ -80,19 +50,8 @@ PRESENTATION AND ORGANIZATION
   -post about open-sourcing of notification engine used in facebookdesktop
   -post some more articles, maybe puzzler(s)
   -post about open-sourcing of entire facebook desktop project
-
+  
 
 WOULD BE NICE
-	
 	-theming
-	-write on friends wall
-	-send message to friend
 	-chat
-
-
-RELEASE NOTES WILL HIGHLIGHT EVERYTHING
-	-1.0.0 release!
-	-better notifications (we use Graph API so we don't miss a thing) <- don't know if this is release-notes-worthy :\
-		-includes page updates
-	-ability to view unread, friend-requests, etc
-	-get message notifications in real-time
