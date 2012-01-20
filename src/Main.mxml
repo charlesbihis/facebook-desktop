@@ -61,7 +61,8 @@
 				urlMonitor.addEventListener(StatusEvent.STATUS, connectionMonitorHandler);
 				urlMonitor.start();
 				
-				// configuring notification sound
+				// configuring notification properties
+				NotificationManager.defaultNotificationImage = FacebookDesktopConst.FACEBOOK_NOTIFICATION_DEFAULT_IMAGE;
 				model.notificationSound = new Sound(new URLRequest(FacebookDesktopConst.FACEBOOK_NOTIFICATION_SOUND));
 				model.notificationSound.addEventListener(Event.COMPLETE, loadSoundHandler);
 				
@@ -92,11 +93,8 @@
 				log.info("OS set to {0}", model.operatingSystem);
 				
 				// check for updates
-				if(!flash.system.Capabilities.isDebugger)
-				{
-					log.info("Checking for updates");
-					UpdateManager.checkForUpdates();
-				}  // if statement
+				log.info("Checking for updates");
+				UpdateManager.checkForUpdates();
 				
 				// initialize our Facebook session
 				FacebookDesktop.init(Model.APPLICATION_ID, loginHandler);
