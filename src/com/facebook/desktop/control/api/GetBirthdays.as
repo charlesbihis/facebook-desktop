@@ -18,16 +18,18 @@ package com.facebook.desktop.control.api
 		private var notificationManager:NotificationManager = NotificationManager.instance;
 		private var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetBirthdays");
 		
-		// TODO: add settings for this
 		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
 		{
 			var today:Date = new Date();
 			var thisMonthNumber:Number = today.month + 1;
 			var thisMonthString:String = (thisMonthNumber <= 9) ? "0" + thisMonthNumber : thisMonthNumber + "";
 			var thisDateString:String = (today.date <= 9) ? "0" + today.date : today.date + "";
-			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + thisMonthString + "/" + today.date + "' IN birthday_date";
+			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + thisMonthString + "/" + thisDateString + "' IN birthday_date";
 			
-			FacebookDesktop.callRestAPI(API, getBirthdaysHandler, {query:fql});
+			if (model.preferences.showBirthdays)
+			{
+				FacebookDesktop.callRestAPI(API, getBirthdaysHandler, {query:fql});
+			}  // if statement
 			
 			function getBirthdaysHandler(result:Object, fail:Object):void
 			{
