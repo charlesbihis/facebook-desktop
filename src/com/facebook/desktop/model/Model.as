@@ -46,6 +46,7 @@ package com.facebook.desktop.model
 		public var latestMessageUpdate:String;
 		public var latestPokeUpdate:String;
 		public var latestShareUpdate:String;
+		public var latestBirthdayString:String;
 		
 		private static var _instance:Model = new Model(SingletonLock);
 		

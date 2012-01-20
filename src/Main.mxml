@@ -243,6 +243,9 @@
 						var getNewsFeedCommand:GetNewsFeed = new GetNewsFeed();
 						getNewsFeedCommand.execute({since:model.latestNewsFeedUpdate});
 						
+						// check for birthdays (don't worry, the command only runs once a day, even if we execute it multiple times)
+						getBirthdays.execute();
+						
 						// check for new likes, comments, and group posts
 						if (model.latestNotificationUpdate != null)
 						{
