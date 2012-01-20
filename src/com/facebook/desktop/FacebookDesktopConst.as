@@ -5,7 +5,7 @@ package com.facebook.desktop
 		// general
 		public static const FACEBOOK_GRAPH_API_ENDPOINT:String = "http://graph.facebook.com/";
 		public static const FACEBOOK_HOMEPAGE:String = "http://www.facebook.com/";
-		public static const FACEBOOK_DESKTOP_PAGE:String = "https://www.facebook.com/pages/Desktop/345575142138778";
+		public static const FACEBOOK_DESKTOP_PAGE:String = "http://www.facebook.com/pages/Desktop/345575142138778";
 		public static const FACEBOOK_NOTIFICATION_DEFAULT_IMAGE:String = "/assets/images/toast/icon50.png";
 		
 		// event invites
