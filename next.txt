@@ -1,16 +1,25 @@
 TO DO FOR v0.85
--experiment with packaging as a native installer
--fix website so that there is a clear download link
+-add icon for when there are notifications waiting
+-fix icons for PAUSED state
+-add section in context menu for birthdays
+-fix language files
 -repost old release notes
-	-v0.80 - https://www.facebook.com/note.php?note_id=146636975378580
-	-v0.81 - https://www.facebook.com/note.php?note_id=150497421659202
-	-v0.82 - https://www.facebook.com/note.php?note_id=151177694924508
-	-v0.83 - https://www.facebook.com/note.php?note_id=156905451018399
-	-v0.84 - https://www.facebook.com/note.php?note_id=201676706541273
-	-v0.85 - UPCOMING RELEASE!
 -move all old pictures to new facebook page
 -ask for support on facebook
-  -Hey everyone, I created a Facebook app.  We just had a new release, so check it out here...
+  -Hey everyone, I created a Facebook app.  We just had a new release, so check it out!
+
+  
+RELEASE NOTES FOR v0.85
+-things to highlight
+	-more settings
+		-modifiable notification display length
+		-choice when clicking the system-tray/dock icon
+		-optional notification sounds
+	-birthday reminders
+	-even smarter notifications
+		-option to make certain posts sticky
+		-display and positioning logic is much enhanced as well (resets when moused over, resets when returning from idle, auto-repositions)
+	-smarter system-tray/dock icons
 
 
 PRESENTATION AND ORGANIZATION
