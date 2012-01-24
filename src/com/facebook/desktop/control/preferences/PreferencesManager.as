@@ -54,7 +54,7 @@ package com.facebook.desktop.control.preferences
 				}  // if statement
 				if (model.preferences.showMessages == null)
 				{
-					model.preferences.showMessages = true;
+					model.preferences.showMessages = false;
 				}  // if statement
 				if (model.preferences.showFriendRequests == null)
 				{
