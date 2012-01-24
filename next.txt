@@ -65,11 +65,11 @@ TIMELINE
   (done) post on Facebook page link to Facebook Desktop promo
   (done) post on Facebookk page about release of v0.80
   (done) post on Facebook page about release of v0.81
-  -post on Facebook page old pictures
   -post on Facebook page about release of v0.82
+  -post on Facebook page old pictures
   -post on Facebook page about release of v0.83
-  -post on Facebook page link to Facebook Desktop extended promo
   -post on Facebook page about release of v0.84
+  -post on Facebook page link to Facebook Desktop extended promo
   -post on Facebook page about release of v0.85
   -post on Adobe blog about release of v0.85
   -post on Adobe blog some content (maybe puzzler or OAuth2 library)
