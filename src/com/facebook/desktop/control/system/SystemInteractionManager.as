@@ -212,25 +212,29 @@ package com.facebook.desktop.control.system
 			return _disconnectedMenu;
 		}  // disconnectedMenu
 		
-		private function clearMenus():void
-		{
-			_onlineMenu.removeAllItems();
-			_offlineMenu.removeAllItems();
-			_disconnectedMenu.removeAllItems();
-			_customOnlineMenu.removeAllItems();
-		}  // clearMenus
-		
 		public function changeApplicationState(state:String):void
 		{
 			trayDockManager.changeState(state);
 		}  // changeApplicationState
 		
+		public function addBirthdaysToMenu(birthdayNotifications:Array):void
+		{
+			this.birthdayNotifications = birthdayNotifications;
+			addCustomItemsToMenu();
+		}  // addBirthdaysToMenu
+		
+		public function addAdditionalNotificationsToMenu(additionalNotifications:Object):void
+		{
+			this.additionalNotifications = additionalNotifications;
+			addCustomItemsToMenu();
+		}  // addAdditionalNotificationsToMenu
+		
 		private function addCustomItemsToMenu():void
 		{
-			setCustomMenuCommandLabels();
-			
 			var notificationCount:int = 0;
+			
 			clearMenus();
+			setCustomMenuCommandLabels();
 			
 			// re-build bottom menu items
 			_customOnlineMenu.addItem(aboutCommand);
@@ -320,6 +324,14 @@ package com.facebook.desktop.control.system
 			}  // if statement
 		}  // addCustomItemsToMenu
 		
+		private function clearMenus():void
+		{
+			_onlineMenu.removeAllItems();
+			_offlineMenu.removeAllItems();
+			_disconnectedMenu.removeAllItems();
+			_customOnlineMenu.removeAllItems();
+		}  // clearMenus
+		
 		private function setCustomMenuCommandLabels():void
 		{
 			// set birthdays-command label
@@ -364,18 +376,6 @@ package com.facebook.desktop.control.system
 			}  // if statement
 		}  // setCustomMenuCommandLabels
 
-		public function addBirthdaysToMenu(birthdayNotifications:Array):void
-		{
-			this.birthdayNotifications = birthdayNotifications;
-			addCustomItemsToMenu();
-		}  // addBirthdaysToMenu
-		
-		public function addAdditionalNotificationsToMenu(additionalNotifications:Object):void
-		{
-			this.additionalNotifications = additionalNotifications;
-			addCustomItemsToMenu();
-		}  // addAdditionalNotificationsToMenu
-		
 		private function aboutHandler(event:Event = null):void
 		{
 			controller.openAboutWindow();
