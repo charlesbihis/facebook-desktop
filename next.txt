@@ -1,7 +1,8 @@
 TO DO FOR v0.85
--test update mechanism using hosts file and actual Facebook Desktop v0.84 install
--fix language files
 -test on Mac!
+-fix language files
+-change version to 0.85
+-RELEASE!
 -ask for support on facebook
 	-Hey everyone, I created a Facebook app.  We just had a new release, so check it out!
 
