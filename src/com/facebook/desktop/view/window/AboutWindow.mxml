@@ -30,7 +30,7 @@
 				
 				var applicationDescriptor:XML = NativeApplication.nativeApplication.applicationDescriptor;
 				var air:Namespace = applicationDescriptor.namespaceDeclarations()[0];	// define the Namespace (there is only one by default in the application descriptor file)
-				version = "(v" + applicationDescriptor.air::version + ")";
+				version = "(" + applicationDescriptor.air::versionLabel + ")";
 				
 				fadein.play();
 			}  // open
