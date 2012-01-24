@@ -27,7 +27,6 @@ package com.facebook.desktop.control.api
 			var thisMonthString:String = (thisMonthNumber <= 9) ? "0" + thisMonthNumber : thisMonthNumber + "";
 			var thisDateString:String = (today.date <= 9) ? "0" + today.date : today.date + "";
 			var birthdayString:String = thisMonthString + "/" + thisDateString;
-			birthdayString = "06/21";
 			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + birthdayString + "' IN birthday_date";
 			
 			if (model.preferences.showBirthdays && (model.latestBirthdayString != birthdayString || (passThroughArgs != null && passThroughArgs.contextMenuClick == true)))
