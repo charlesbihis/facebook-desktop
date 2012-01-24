@@ -4,6 +4,7 @@ package com.facebook.desktop.control.system
 	import com.facebook.desktop.FacebookDesktopConst;
 	import com.facebook.desktop.control.Controller;
 	import com.facebook.desktop.control.api.GetAdditionalNotifications;
+	import com.facebook.desktop.control.api.GetBirthdays;
 	import com.facebook.desktop.control.api.GetNewsFeed;
 	import com.facebook.desktop.control.api.GetNotifications;
 	import com.facebook.desktop.control.util.Util;
@@ -33,6 +34,7 @@ package com.facebook.desktop.control.system
 		private var loginCommand:NativeMenuItem;
 		private var logoutCommand:NativeMenuItem;
 		private var exitCommand:NativeMenuItem;
+		private var birthdaysCommand:NativeMenuItem;
 		private var eventInvitesCommand:NativeMenuItem;
 		private var friendRequestsCommand:NativeMenuItem;
 		private var groupInvitesCommand:NativeMenuItem;
@@ -48,6 +50,7 @@ package com.facebook.desktop.control.system
 		private var supportsDock:Boolean;
 		private var trayDockManager:ITrayDockManager;
 		private var additionalNotifications:Object;
+		private var birthdayNotifications:Array;
 		private var model:Model = Model.instance;
 		private var userCache:UserCache = UserCache.instance;
 		private var controller:Controller = Controller.instance;
@@ -102,6 +105,7 @@ package com.facebook.desktop.control.system
 			loginCommand = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.login"));
 			logoutCommand = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.logout"));
 			exitCommand = new NativeMenuItem(ResourceManager.getInstance().getString("resources", "contextMenu.exit"));
+			birthdaysCommand = new NativeMenuItem("");
 			eventInvitesCommand = new NativeMenuItem("");
 			friendRequestsCommand = new NativeMenuItem("");
 			groupInvitesCommand = new NativeMenuItem("");
@@ -122,6 +126,7 @@ package com.facebook.desktop.control.system
 			logoutCommand.addEventListener(Event.SELECT, logoutHandler);
 			loginCommand.addEventListener(Event.SELECT, loginHandler);
 			exitCommand.addEventListener(Event.SELECT, exitHandler);
+			birthdaysCommand.addEventListener(Event.SELECT, birthdaysHandler);
 			eventInvitesCommand.addEventListener(Event.SELECT, eventInvitesHandler);
 			friendRequestsCommand.addEventListener(Event.SELECT, friendRequestsHandler);
 			groupInvitesCommand.addEventListener(Event.SELECT, groupInvitesHandler);
@@ -201,7 +206,6 @@ package com.facebook.desktop.control.system
 			
 			// initialize the disconnected state menus
 			_disconnectedMenu.addItem(aboutCommand);
-			// TODO: add menu item to "Check network availability"
 			_disconnectedMenu.addItem(topSeparator);
 			_disconnectedMenu.addItem(exitCommand);
 			
@@ -221,16 +225,9 @@ package com.facebook.desktop.control.system
 			trayDockManager.changeState(state);
 		}  // changeApplicationState
 		
-		public function addAdditionalNotificationsToMenu(additionalNotifications:Object):void
+		private function addCustomItemsToMenu():void
 		{
-			this.additionalNotifications = additionalNotifications;
-			
-			eventInvitesCommand.label = (additionalNotifications.event_invites != null && additionalNotifications.event_invites.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.eventInvitation") : ResourceManager.getInstance().getString("resources", "notification.eventInvitationsBegin") + " " + additionalNotifications.event_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.eventInvitationsEnd");
-			friendRequestsCommand.label = (additionalNotifications.friend_requests != null && additionalNotifications.friend_requests.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.friendRequest") : ResourceManager.getInstance().getString("resources", "notification.friendRequestsBegin") + " " + additionalNotifications.friend_requests.length + " " + ResourceManager.getInstance().getString("resources", "notification.friendRequestsEnd");
-			groupInvitesCommand.label = (additionalNotifications.group_invites != null && additionalNotifications.group_invites.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.groupInvitation") : ResourceManager.getInstance().getString("resources", "notification.groupInvitationsBegin") + " " + additionalNotifications.group_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.groupInvitationsEnd");
-			unreadMessagesCommand.label = (additionalNotifications.messages != null && additionalNotifications.messages.unread == 1) ? ResourceManager.getInstance().getString("resources", "notification.unreadMessage") : ResourceManager.getInstance().getString("resources", "notification.unreadMessagesBegin") + " " + additionalNotifications.messages.unread + " " + ResourceManager.getInstance().getString("resources", "notification.unreadMessagesEnd");
-			newPokesCommand.label = ResourceManager.getInstance().getString("resources", "notification.poked");
-			newSharesCommand.label = ResourceManager.getInstance().getString("resources", "notification.sharedLink");
+			setCustomMenuCommandLabels();
 			
 			var notificationCount:int = 0;
 			clearMenus();
@@ -244,48 +241,58 @@ package com.facebook.desktop.control.system
 			_customOnlineMenu.addItem(pausePlayCommand);
 			
 			// insert middle menu items
-			if (additionalNotifications.event_invites.length > 0 || additionalNotifications.friend_requests.length > 0 || additionalNotifications.group_invites.length > 0 ||
-				additionalNotifications.messages.unread > 0 || additionalNotifications.pokes.unread > 0 || additionalNotifications.shares.unread > 0)
+			if ((birthdayNotifications != null && birthdayNotifications.length > 0) || 
+				(additionalNotifications != null && (additionalNotifications.event_invites.length > 0 || additionalNotifications.friend_requests.length > 0 || additionalNotifications.group_invites.length > 0 ||
+				additionalNotifications.messages.unread > 0 || additionalNotifications.pokes.unread > 0 || additionalNotifications.shares.unread > 0)))
 			{
 				_customOnlineMenu.addItem(middleSeparator);
 				
+				// birthdays
+				if (birthdayNotifications != null && birthdayNotifications is Array && birthdayNotifications.length > 0)
+				{
+					// Note: We are *not* changing the icon to notification-waiting for birthdays because
+					//       we don't want users icons to be forever in the notification-waiting state
+					//       whenever they have a friend whose birthday is today.
+					_customOnlineMenu.addItem(birthdaysCommand);
+				}  // if statement
+				
 				// event invites
-				if (additionalNotifications.event_invites.length > 0)
+				if (additionalNotifications.event_invites != null && additionalNotifications.event_invites.length > 0)
 				{
 					_customOnlineMenu.addItem(eventInvitesCommand);
 					notificationCount += additionalNotifications.event_invites.length;
 				}  // if statement
 				
 				// friend requests
-				if (additionalNotifications.friend_requests.length > 0)
+				if (additionalNotifications.friend_requests != null && additionalNotifications.friend_requests.length > 0)
 				{
 					_customOnlineMenu.addItem(friendRequestsCommand);
 					notificationCount += additionalNotifications.event_invites.length;
 				}  // if statement
 				
 				// group invites
-				if (additionalNotifications.group_invites.length > 0)
+				if (additionalNotifications.group_invites != null && additionalNotifications.group_invites.length > 0)
 				{
 					_customOnlineMenu.addItem(groupInvitesCommand);
 					notificationCount += additionalNotifications.group_invites.length;
 				}  // if statement
 				
 				// unread messages
-				if (additionalNotifications.messages.unread > 0)
+				if (additionalNotifications.messages != null && additionalNotifications.messages.unread > 0)
 				{
 					_customOnlineMenu.addItem(unreadMessagesCommand);
 					notificationCount += additionalNotifications.messages.unread;
 				}  // if statement
 				
 				// pokes
-				if (additionalNotifications.pokes.unread > 0)
+				if (additionalNotifications.pokes != null && additionalNotifications.pokes.unread > 0)
 				{
 					_customOnlineMenu.addItem(newPokesCommand);
 					notificationCount += additionalNotifications.pokes.unread;
 				}  // if statement
 				
 				// shares
-				if (additionalNotifications.shares.unread > 0)
+				if (additionalNotifications.shares != null && additionalNotifications.shares.unread > 0)
 				{
 					_customOnlineMenu.addItem(newSharesCommand);
 					notificationCount += additionalNotifications.shares.unread;
@@ -305,9 +312,69 @@ package com.facebook.desktop.control.system
 			
 			trayDockManager.changeMenu(_customOnlineMenu);
 			
-			// TODO: change icon based on notificationCount
-		}  // addAdditionalNotificationsToMenu
+			// change icon to show that there are notifications waiting
+			if (notificationCount > 0)
+			{
+				// TODO: change icon to actually show notificationCount
+				trayDockManager.changeIcon(supportsSystemTray ? FacebookDesktopConst.FACEBOOK_DESKTOP_NOTIFICATION_WAITING_TRAY_ICON : FacebookDesktopConst.FACEBOOK_DESKTOP_NOTIFICATION_WAITING_DOCK_ICON);
+			}  // if statement
+		}  // addCustomItemsToMenu
 		
+		private function setCustomMenuCommandLabels():void
+		{
+			// set birthdays-command label
+			if (birthdayNotifications != null && birthdayNotifications.length > 0)
+			{
+				birthdaysCommand.label = (birthdayNotifications.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.birthday") : ResourceManager.getInstance().getString("resources", "notification.birthdaysBegin") + " " + birthdayNotifications.length + " " + ResourceManager.getInstance().getString("resources", "notification.birthdaysEnd"));
+			}  // if statement
+			
+			// set event-invites-command label
+			if (additionalNotifications.event_invites != null && additionalNotifications.event_invites.length > 0)
+			{
+				eventInvitesCommand.label = (additionalNotifications.event_invites.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.eventInvitation") : ResourceManager.getInstance().getString("resources", "notification.eventInvitationsBegin") + " " + additionalNotifications.event_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.eventInvitationsEnd");
+			}  // if statement
+			
+			// set friend-requests-command label
+			if (additionalNotifications.friend_requests != null && additionalNotifications.friend_requests.length > 0)
+			{
+				friendRequestsCommand.label = (additionalNotifications.friend_requests.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.friendRequest") : ResourceManager.getInstance().getString("resources", "notification.friendRequestsBegin") + " " + additionalNotifications.friend_requests.length + " " + ResourceManager.getInstance().getString("resources", "notification.friendRequestsEnd");
+			}  // if statement
+			
+			// set group-invites-command label
+			if (additionalNotifications.group_invites != null && additionalNotifications.group_invites.length > 0)
+			{
+				groupInvitesCommand.label = (additionalNotifications.group_invites.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.groupInvitation") : ResourceManager.getInstance().getString("resources", "notification.groupInvitationsBegin") + " " + additionalNotifications.group_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.groupInvitationsEnd");
+			}  // if statement
+			
+			// set unread-messages-command label
+			if (additionalNotifications.messages != null && additionalNotifications.messages.unread > 0)
+			{
+				unreadMessagesCommand.label = (additionalNotifications.messages.unread == 1) ? ResourceManager.getInstance().getString("resources", "notification.unreadMessage") : ResourceManager.getInstance().getString("resources", "notification.unreadMessagesBegin") + " " + additionalNotifications.messages.unread + " " + ResourceManager.getInstance().getString("resources", "notification.unreadMessagesEnd");
+			}  // if statement
+			
+			// set pokes-command label
+			if (additionalNotifications.pokes != null && additionalNotifications.pokes.unread > 0)
+			{
+				newPokesCommand.label = ResourceManager.getInstance().getString("resources", "notification.poked");
+			}  // if statement
+			
+			if (additionalNotifications.shares != null && additionalNotifications.shares.unread > 0)
+			{
+				newSharesCommand.label = ResourceManager.getInstance().getString("resources", "notification.sharedLink");
+			}  // if statement
+		}  // setCustomMenuCommandLabels
+
+		public function addBirthdaysToMenu(birthdayNotifications:Array):void
+		{
+			this.birthdayNotifications = birthdayNotifications;
+			addCustomItemsToMenu();
+		}  // addBirthdaysToMenu
+		
+		public function addAdditionalNotificationsToMenu(additionalNotifications:Object):void
+		{
+			this.additionalNotifications = additionalNotifications;
+			addCustomItemsToMenu();
+		}  // addAdditionalNotificationsToMenu
 		
 		private function aboutHandler(event:Event = null):void
 		{
@@ -493,6 +560,13 @@ package com.facebook.desktop.control.system
 			log.info("Exiting the application.");
 			NativeApplication.nativeApplication.exit();
 		}  // exitHandler
+		
+		private function birthdaysHandler(event:Event):void
+		{
+			log.info("Context menu click - showing birthday's again");
+			var getBirthdays:GetBirthdays = new GetBirthdays();
+			getBirthdays.execute(null, null, {contextMenuClick:true});
+		}  // birthdaysHandler
 		
 		private function eventInvitesHandler(event:Event):void
 		{

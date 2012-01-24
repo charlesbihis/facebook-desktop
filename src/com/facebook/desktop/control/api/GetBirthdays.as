@@ -3,6 +3,7 @@ package com.facebook.desktop.control.api
 	import com.charlesbihis.engine.notification.NotificationManager;
 	import com.charlesbihis.engine.notification.ui.Notification;
 	import com.facebook.desktop.FacebookDesktopConst;
+	import com.facebook.desktop.control.system.SystemInteractionManager;
 	import com.facebook.desktop.model.Model;
 	import com.facebook.graph.FacebookDesktop;
 	
@@ -16,6 +17,7 @@ package com.facebook.desktop.control.api
 		
 		private var model:Model = Model.instance;
 		private var notificationManager:NotificationManager = NotificationManager.instance;
+		private var systemInteractionManager:SystemInteractionManager = SystemInteractionManager.instance;
 		private var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetBirthdays");
 		
 		public function execute(args:Object = null, callback:Function = null, passThroughArgs:Object = null):void
@@ -25,9 +27,10 @@ package com.facebook.desktop.control.api
 			var thisMonthString:String = (thisMonthNumber <= 9) ? "0" + thisMonthNumber : thisMonthNumber + "";
 			var thisDateString:String = (today.date <= 9) ? "0" + today.date : today.date + "";
 			var birthdayString:String = thisMonthString + "/" + thisDateString;
+			birthdayString = "06/21";
 			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + birthdayString + "' IN birthday_date";
 			
-			if (model.preferences.showBirthdays && model.latestBirthdayString != birthdayString)
+			if (model.preferences.showBirthdays && (model.latestBirthdayString != birthdayString || (passThroughArgs != null && passThroughArgs.contextMenuClick == true)))
 			{
 				FacebookDesktop.callRestAPI(API, getBirthdaysHandler, {query:fql});
 				model.latestBirthdayString = birthdayString;
@@ -56,6 +59,8 @@ package com.facebook.desktop.control.api
 							model.latestNotificationSound = new Date().time;
 						}  // if statement
 					}  // for loop
+					
+					systemInteractionManager.addBirthdaysToMenu(birthdays);
 				}  // if statement
 				else if (result.error_code != null)
 				{
