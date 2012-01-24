@@ -1,14 +1,11 @@
 TO DO FOR v0.85
--add icon for when there are notifications waiting
--fix icons for PAUSED state
--add section in context menu for birthdays
+-test update mechanism using hosts file and actual Facebook Desktop v0.84 install
 -fix language files
--repost old release notes
--move all old pictures to new facebook page
+-test on Mac!
 -ask for support on facebook
-  -Hey everyone, I created a Facebook app.  We just had a new release, so check it out!
+	-Hey everyone, I created a Facebook app.  We just had a new release, so check it out!
 
-  
+
 RELEASE NOTES FOR v0.85
 -things to highlight
 	-more settings
@@ -23,15 +20,6 @@ RELEASE NOTES FOR v0.85
 
 
 PRESENTATION AND ORGANIZATION
--general
-  -www.charlesbihis.com forwards to www.whoischarles.com
-  -[MAYBE] have www.whoischarles.com stop forwarding to blogs.adobe.com/charles and instead host a list of all my relevant contact points
-    -facebook
-	-twitter
-	-blog
-	-github
-  -[EVENTUALLY] when I have enough projects, create a page (like www.whoischarles.com/projects or code.charlesbihis.com) that hosts all of my projects with links to more information
-    -like this -> http://code.quirkey.com/
 -on GitHub
   -create project page for actionscript-notification-engine
     -http://pages.github.com/
@@ -41,48 +29,30 @@ PRESENTATION AND ORGANIZATION
 	-use http://visionmedia.github.com/mini/ too
 	-and this too -> http://joehewitt.github.com/scrollability/
 	-follow guidelines on http://thechangelog.com/post/3032074343/top-ten-reasons-why-i-wont-use-your-open-source-project
+  -create project page for facebook-desktop
+    -use resources mentioned above too
   -change all custom project namespaces to com.charlesbihis
   -put license info in all projects
     -like this -> https://github.com/JakeWharton/ActionBarSherlock
 	-and like this -> https://github.com/joehewitt/nerve
--on Dreamhost
-  -clean up all domains
-  -delete all old domains
-  -delete all unused DBs
-  -remove unecessary redirects
-  -make sure I'm using the minimum services in all instances
-    -make sure that all domains have the same settings for those using hosting/Gmail/etc
--on Adobe blog
-  -post about open-source OAuth 2.0 library
-  -post about release of facebook desktop v0.85
-  -post some puzzler(s)
-  -post about open-sourcing of notification engine used in facebookdesktop
-  -post some more articles, maybe puzzler(s)
-  -post about open-sourcing of entire facebook desktop project
 
 
 TIMELINE
-  (done) post on Facebook page link to Facebook Desktop promo
-  (done) post on Facebookk page about release of v0.80
-  (done) post on Facebook page about release of v0.81
-  -post on Facebook page about release of v0.82
-  -post on Facebook page old pictures
-  -post on Facebook page about release of v0.83
-  -post on Facebook page about release of v0.84
-  -post on Facebook page link to Facebook Desktop extended promo
-  -post on Facebook page about release of v0.85
-  -post on Adobe blog about release of v0.85
-  -post on Adobe blog some content (maybe puzzler or OAuth2 library)
-  -create GitHub page for notification engine
-  -post on Adobe blog about open-sourcing of notification engine
-  -link on Facebook page the Adobe blog post about open-sourcing notification engine
-  -post on Adobe blog some content (maybe puzzler or OAuth2 library)
-  -create GitHub page for Facebook Desktop
-  -post on Facebook page about release of v1.0.0 -> make this a large post looking at the history of Facebook Desktop
-  -post on Adobe blog about open-sourcing all of Facebook Desktop
-  -link on Facebook page the Adobe blog post about open-sourcing entire Facebook Desktop application
-  
-
-WOULD BE NICE
-	-theming
-	-chat
+	(done) post on Facebook page link to Facebook Desktop promo
+	(done) post on Facebook page about release of v0.80
+	(done) post on Facebook page about release of v0.81
+	(done) post on Facebook page about release of v0.82
+	-post on Facebook page about release of v0.83
+	-post on Facebook page about release of v0.84
+	-post on Facebook page link to Facebook Desktop extended promo
+	-post on Facebook page about release of v0.85
+	-post on Adobe blog about release of v0.85
+	-post on Adobe blog some content (maybe puzzler or OAuth2 library)
+	-create GitHub page for notification engine
+	-post on Adobe blog about open-sourcing of notification engine
+	-link on Facebook page the Adobe blog post about open-sourcing notification engine
+	-post on Adobe blog some content (maybe puzzler or OAuth2 library)
+	-create GitHub page for Facebook Desktop
+	-post on Facebook page about release of v1.0.0 -> make this a large post looking at the history of Facebook Desktop
+	-post on Adobe blog about open-sourcing all of Facebook Desktop
+	-link on Facebook page the Adobe blog post about open-sourcing entire Facebook Desktop application
