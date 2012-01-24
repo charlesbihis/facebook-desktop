@@ -497,7 +497,14 @@ package com.facebook.desktop.control.system
 				
 				// likes, comments, and group posts
 				var getNotificationsCommand:GetNotifications = new GetNotifications();
-				getNotificationsCommand.execute({since:model.latestNotificationUpdate}, getNotificationsHandler);
+				if (model.latestNotificationUpdate != null)
+				{
+					getNotificationsCommand.execute({since:model.latestNotificationUpdate}, getNotificationsHandler);
+				}  // it statement
+				else
+				{
+					getNotificationsCommand.execute(null, getNotificationsHandler);
+				}  // else statement
 			}  // getNewsFeedHandler
 			
 			function getNotificationsHandler(result:Object, fail:Object, passThroughArgs:Object = null):void
