@@ -9,6 +9,7 @@ package com.facebook.desktop.control.system
 	import flash.display.Loader;
 	import flash.display.NativeMenu;
 	import flash.events.Event;
+	import flash.events.InvokeEvent;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	
@@ -31,8 +32,8 @@ package com.facebook.desktop.control.system
 			iconLoader = new Loader();
 			
 			// attach appropriate event listeners
-			icon.addEventListener(MouseEvent.CLICK, iconClick);
 			iconLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, iconLoadComplete);
+			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, iconClick);
 		}  // DockManager
 		
 		public function changeState(state:String):void
@@ -107,7 +108,7 @@ package com.facebook.desktop.control.system
 			NativeApplication.nativeApplication.icon.bitmaps = [event.target.content.bitmapData];
 		}  // iconLoadComplete
 		
-		private function iconClick(event:Event):void
+		private function iconClick(event:InvokeEvent):void
 		{
 			if (model.preferences.iconClickAction == 0)
 			{
