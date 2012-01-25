@@ -29,7 +29,7 @@ package com.facebook.desktop.control.api
 			var birthdayString:String = thisMonthString + "/" + thisDateString;
 			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + birthdayString + "' IN birthday_date";
 			
-			if (model.preferences.showBirthdays && (model.latestBirthdayString != birthdayString || (passThroughArgs != null && passThroughArgs.contextMenuClick == true)))
+			if (model.preferences.showBirthdays && (model.latestBirthdayString != birthdayString || (passThroughArgs != null && passThroughArgs.isStartup == true) || (passThroughArgs != null && passThroughArgs.contextMenuClick == true)))
 			{
 				FacebookDesktop.callRestAPI(API, getBirthdaysHandler, {query:fql});
 				model.latestBirthdayString = birthdayString;
