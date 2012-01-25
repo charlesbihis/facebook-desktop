@@ -7,6 +7,7 @@ package com.facebook.desktop.control.system
 	import com.facebook.desktop.control.api.GetBirthdays;
 	import com.facebook.desktop.control.api.GetNewsFeed;
 	import com.facebook.desktop.control.api.GetNotifications;
+	import com.facebook.desktop.control.event.FacebookDesktopEvent;
 	import com.facebook.desktop.control.util.Util;
 	import com.facebook.desktop.model.Model;
 	import com.facebook.desktop.model.cache.UserCache;
@@ -405,59 +406,17 @@ package com.facebook.desktop.control.system
 				if (session != null)
 				{
 					log.info("Login from system-tray successful");
-					
-					// store the user
 					model.currentUser = session.user;
-					
-					// adjust icon and menus
-					trayDockManager.changeState(SystemState.ONLINE);
-					
-					// show login popup
-					notificationManager.show(ResourceManager.getInstance().getString("resources", "toast.welcome"), "", FacebookDesktop.getImageUrl(session.user.id), FacebookDesktopConst.FACEBOOK_DESKTOP_PAGE);
-					notificationManager.clearLatestFiveUpdates();
-					
-					// get latest update so that we can start receiving pop-ups for *new* updates
-					FacebookDesktop.api("/me/home", getNewsFeedHandler, {limit:1});
+					model.dispatchEvent(new FacebookDesktopEvent(FacebookDesktopEvent.USER_LOGGED_IN));
 				}  // if statement
 			}  // loginHandler
-			
-			function getNewsFeedHandler(result:Object, fail:Object):void
-			{
-				if (fail == null && result != null && result is Array && (result as Array).length > 0)
-				{
-					// set latest-story-update time
-					var latestNewsFeedUpdate:Date = Util.RFC3339toDate(result[0].created_time);
-					log.info("Setting latest news feed update time to " + (latestNewsFeedUpdate.time / 1000));
-					model.latestNewsFeedUpdate = (latestNewsFeedUpdate.time / 1000).toString();
-					
-					// likes, comments, and group posts
-					var getNotificationsCommand:GetNotifications = new GetNotifications();
-					getNotificationsCommand.execute();
-					
-					// messages, pokes, shares, friend-requests, group-invites, and event-invites
-					var getAdditionalNotificationsCommand:GetAdditionalNotifications = new GetAdditionalNotifications();
-					getAdditionalNotificationsCommand.execute(null, null, {isStartup:true});
-				}  // if statement
-				else
-				{
-					log.error("Request to get latest update has failed!  Error object: " + fail);
-				}  // else statement
-			}  // getNewsFeedHandler
 		}  // loginHandler
 		
 		private function logoutHandler(event:Event = null):void
 		{
-			log.info("Logging out! Goodbye!");
-			
-			trayDockManager.changeState(SystemState.OFFLINE);
-			notificationManager.show(ResourceManager.getInstance().getString("resources", "toast.goodbye"), "", FacebookDesktopConst.FACEBOOK_NOTIFICATION_DEFAULT_IMAGE);
-			
-			// clear toast-history
-			notificationManager.clearLatestFiveUpdates();
-			model.currentUser = null;
 			additionalNotifications = null;
-			
-			FacebookDesktop.logout();
+			birthdayNotifications = null;
+			model.dispatchEvent(new FacebookDesktopEvent(FacebookDesktopEvent.USER_LOGGED_OUT));
 		}  // logoutHandler
 		
 		private function settingsHandler(event:Event = null):void

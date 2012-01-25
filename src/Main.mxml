@@ -17,6 +17,7 @@
 			import com.facebook.desktop.control.api.GetBirthdays;
 			import com.facebook.desktop.control.api.GetNewsFeed;
 			import com.facebook.desktop.control.api.GetNotifications;
+			import com.facebook.desktop.control.event.FacebookDesktopEvent;
 			import com.facebook.desktop.control.logging.Logging;
 			import com.facebook.desktop.control.preferences.PreferencesManager;
 			import com.facebook.desktop.control.system.SystemInteractionManager;
@@ -42,6 +43,10 @@
 			
 			private function init():void
 			{
+				// listen for important events
+				model.addEventListener(FacebookDesktopEvent.USER_LOGGED_IN, userLoginHandler);
+				model.addEventListener(FacebookDesktopEvent.USER_LOGGED_OUT, userLogoutHandler);
+				
 				// set up logging
 				Logging.init();
 				log.info("\n********* starting new session *********\n");
@@ -103,33 +108,18 @@
 				var triedLogin:Boolean = false;
 				function loginHandler(session:Object, fail:Object):void
 				{
-					if (fail == null)
+					// if we have a session, restore it
+					if (session != null)
 					{
-						// if we have a session, restore it
-						if (session != null)
-						{
-							log.info("Connected and all permissions granted! We are fully authorized!");
-							
-							// store the user
-							model.currentUser = session.user;
-							
-							// adjust icon and menus
-							systemInteractionManager.changeApplicationState(SystemState.ONLINE);
-							
-							// show login popup
-							notificationManager.show(resourceManager.getString("resources", "toast.welcome"), "", FacebookDesktop.getImageUrl(session.user.id), FacebookDesktopConst.FACEBOOK_DESKTOP_PAGE);
-							notificationManager.clearLatestFiveUpdates();
-							
-							// get latest update so that we can start receiving pop-ups for *new* updates
-							FacebookDesktop.api("/me/home", getNewsFeedHandler, {limit:1});
-						}  // if statement
-						else if (!triedLogin)
-						{
-							FacebookDesktop.login(loginHandler, Model.REQUIRED_PERMISSIONS);
-							triedLogin = true;
-						}  // else-if statement
+						model.currentUser = session.user;
+						model.dispatchEvent(new FacebookDesktopEvent(FacebookDesktopEvent.USER_LOGGED_IN));
 					}  // if statement
-					else
+					else if (!triedLogin)
+					{
+						FacebookDesktop.login(loginHandler, Model.REQUIRED_PERMISSIONS);
+						triedLogin = true;
+					}  // else-if statement
+					else if (fail != null)
 					{
 						log.error("Error logging in.  Error object: " + ObjectUtil.toString(fail));
 						
@@ -151,25 +141,8 @@
 							messageWindow.showOkayButton = true;
 						}  // else stateement
 						messageWindow.open();
-					}  // else statement
+					}  // else-if statement
 				}  // loginHandler
-				
-				function getNewsFeedHandler(result:Object, fail:Object):void
-				{
-					if (fail == null && result != null && result is Array && (result as Array).length > 0)
-					{
-						// set latest-story-update time
-						var latestNewsFeedUpdate:Date = Util.RFC3339toDate(result[0].created_time);
-						log.info("Setting latest news feed update time to " + (latestNewsFeedUpdate.time / 1000));
-						model.latestNewsFeedUpdate = (latestNewsFeedUpdate.time / 1000).toString();
-						
-						startTheShow();
-					}  // if statement
-					else
-					{
-						log.error("Request to get latest update has failed!  Error object: " + fail);
-					}  // else statement
-				}  // getNewsFeedHandler
 				
 				function connectionMonitorHandler(event:Event):void
 				{
@@ -209,6 +182,59 @@
 				}  // loadSoundHandler
 			}  // init
 			
+			private function userLoginHandler(event:FacebookDesktopEvent):void
+			{
+				log.info("Connected and all permissions granted! We are fully authorized!");
+				
+				// adjust icon and menus
+				systemInteractionManager.changeApplicationState(SystemState.ONLINE);
+				
+				// show login popup
+				notificationManager.show(resourceManager.getString("resources", "toast.welcome"), "", FacebookDesktop.getImageUrl(model.currentUser.id), FacebookDesktopConst.FACEBOOK_DESKTOP_PAGE);
+				notificationManager.clearLatestFiveUpdates();
+				
+				// get latest update so that we can start receiving pop-ups for *new* updates
+				FacebookDesktop.api("/me/home", getNewsFeedHandler, {limit:1});
+				
+				function getNewsFeedHandler(result:Object, fail:Object):void
+				{
+					if (fail == null && result != null && result is Array && (result as Array).length > 0)
+					{
+						// set latest-story-update time
+						var latestNewsFeedUpdate:Date = Util.RFC3339toDate(result[0].created_time);
+						log.info("Setting latest news feed update time to " + (latestNewsFeedUpdate.time / 1000));
+						model.latestNewsFeedUpdate = (latestNewsFeedUpdate.time / 1000).toString();
+						
+						startTheShow();
+					}  // if statement
+					else
+					{
+						log.error("Request to get latest update has failed!  Error object: " + fail);
+					}  // else statement
+				}  // getNewsFeedHandler
+			}  // userLoginHandler
+			
+			private function userLogoutHandler(event:FacebookDesktopEvent):void
+			{
+				// say goodbye!
+				log.info("Logging out! Goodbye!");
+				notificationManager.show(resourceManager.getString("resources", "toast.goodbye"), "", FacebookDesktopConst.FACEBOOK_NOTIFICATION_DEFAULT_IMAGE);
+				
+				// stop the poller
+				pollTimer.removeEventListener(TimerEvent.TIMER, poll);
+				pollTimer.stop();
+				
+				// change the application state to OFFLINE
+				systemInteractionManager.changeApplicationState(SystemState.OFFLINE);
+				
+				// clear state information
+				notificationManager.clearLatestFiveUpdates();
+				model.currentUser = null;
+				
+				// invalidate the session
+				FacebookDesktop.logout();
+			}  // userLogoutHandler
+			
 			private function startTheShow():void
 			{
 				log.info("Initialization and connection complete!");
@@ -218,7 +244,7 @@
 				
 				// birthdays
 				var getBirthdays:GetBirthdays = new GetBirthdays();
-				getBirthdays.execute();
+				getBirthdays.execute(null, null, {isStartup:true});
 				
 				// likes, comments, and group posts
 				var getNotificationsCommand:GetNotifications = new GetNotifications();
@@ -232,35 +258,38 @@
 				log.info("Starting the poller");
 				pollTimer.addEventListener(TimerEvent.TIMER, poll);
 				pollTimer.start();
-				
-				function poll(event:TimerEvent = null):void
-				{
-					if (model.connected && model.currentUser != null && !model.paused)
-					{
-						log.info("Polling!");
-						
-						// check for news feed updates
-						var getNewsFeedCommand:GetNewsFeed = new GetNewsFeed();
-						getNewsFeedCommand.execute({since:model.latestNewsFeedUpdate});
-						
-						// check for birthdays (don't worry, the command only runs once a day, even if we execute it multiple times)
-						getBirthdays.execute();
-						
-						// check for new likes, comments, and group posts
-						if (model.latestNotificationUpdate != null)
-						{
-							getNotificationsCommand.execute({since:model.latestNotificationUpdate});
-						}  // if statement
-						else
-						{
-							getNotificationsCommand.execute();
-						}  // else statement
-						
-						// check for new messages, pokes, shares, friend-requests, group-invites, and event-invites
-						getAdditionalNotificationsCommand.execute();
-					}  // if statement
-				}  // poll
 			}  // startTheShow
+			
+			private function poll(event:TimerEvent = null):void
+			{
+				if (model.connected && model.currentUser != null && !model.paused)
+				{
+					log.info("Polling!");
+					
+					// check for news feed updates
+					var getNewsFeedCommand:GetNewsFeed = new GetNewsFeed();
+					getNewsFeedCommand.execute({since:model.latestNewsFeedUpdate});
+					
+					// check for birthdays (don't worry, the command only runs once a day, even if we execute it multiple times)
+					var getBirthdays:GetBirthdays = new GetBirthdays();
+					getBirthdays.execute();
+					
+					// check for new likes, comments, and group posts
+					var getNotificationsCommand:GetNotifications = new GetNotifications();
+					if (model.latestNotificationUpdate != null)
+					{
+						getNotificationsCommand.execute({since:model.latestNotificationUpdate});
+					}  // if statement
+					else
+					{
+						getNotificationsCommand.execute();
+					}  // else statement
+					
+					// check for new messages, pokes, shares, friend-requests, group-invites, and event-invites
+					var getAdditionalNotificationsCommand:GetAdditionalNotifications = new GetAdditionalNotifications();
+					getAdditionalNotificationsCommand.execute();
+				}  // if statement
+			}  // poll
 		]]>
 	</fx:Script>
 	
