@@ -33,7 +33,7 @@ package com.facebook.desktop.control.api
 					if (model.preferences.showEventInvites && result.event_invites != null && result.event_invites is Array && result.event_invites.length > 0)
 					{
 						// if this is our first application call, display a summary notification
-						if (passThroughArgs != null && passThroughArgs.isStartup)
+						if (passThroughArgs != null && passThroughArgs.source == FacebookDesktopConst.FACEBOOK_DESKTOP_STARTUP)
 						{
 							var startupEventInvitesMessage:String = (result.event_invites.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.eventInvitation") : ResourceManager.getInstance().getString("resources", "notification.eventInvitationsBegin") + " " + result.event_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.eventInvitationsEnd"));
 							log.info("Startup notification! - {0}", startupEventInvitesMessage);
@@ -60,7 +60,7 @@ package com.facebook.desktop.control.api
 					if (model.preferences.showFriendRequests && result.friend_requests != null && result.friend_requests is Array && result.friend_requests.length > 0)
 					{
 						// if this is our first application call, display a summary notification
-						if (passThroughArgs != null && passThroughArgs.isStartup)
+						if (passThroughArgs != null && passThroughArgs.source == FacebookDesktopConst.FACEBOOK_DESKTOP_STARTUP)
 						{
 							var startupFriendRequestsMessage:String = (result.friend_requests.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.friendRequest") : ResourceManager.getInstance().getString("resources", "notification.friendRequestsBegin") + " " + result.event_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.friendRequestsEnd"));
 							log.info("Startup notification! - {0}", startupFriendRequestsMessage);
@@ -87,7 +87,7 @@ package com.facebook.desktop.control.api
 					if (model.preferences.showGroupInvites && result.group_invites != null && result.group_invites is Array && result.group_invites.length > 0)
 					{
 						// if this is our first application call, display a summary notification
-						if (passThroughArgs != null && passThroughArgs.isStartup)
+						if (passThroughArgs != null && passThroughArgs.source == FacebookDesktopConst.FACEBOOK_DESKTOP_STARTUP)
 						{
 							var startupGroupInvitesMessage:String = (result.group_invites.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.groupInvitation") : ResourceManager.getInstance().getString("resources", "notification.groupInvitationsBegin") + " " + result.group_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.groupInvitationsEnd"));
 							log.info("Startup notification! - {0}", startupGroupInvitesMessage);

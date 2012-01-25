@@ -55,5 +55,9 @@ package com.facebook.desktop
 		
 		// sounds
 		public static const FACEBOOK_NOTIFICATION_SOUND:String = "/assets/sounds/drop.mp3";
+		
+		// event sources
+		public static const FACEBOOK_DESKTOP_CONTEXT_MENU_CLICK:String = "contextMenuClickSource";
+		public static const FACEBOOK_DESKTOP_STARTUP:String = "startupSource";
 	}  // class declaration
 }  // package

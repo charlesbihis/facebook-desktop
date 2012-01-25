@@ -531,7 +531,7 @@ package com.facebook.desktop.control.system
 		{
 			log.info("Context menu click - showing birthday's again");
 			var getBirthdays:GetBirthdays = new GetBirthdays();
-			getBirthdays.execute(null, null, {contextMenuClick:true});
+			getBirthdays.execute(null, null, {source:FacebookDesktopConst.FACEBOOK_DESKTOP_CONTEXT_MENU_CLICK});
 		}  // birthdaysHandler
 		
 		private function eventInvitesHandler(event:Event):void
