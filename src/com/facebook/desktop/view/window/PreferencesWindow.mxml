@@ -217,9 +217,9 @@
 					<mx:HRule width="100%" />
 					
 					<!-- notification settings - options -->
-					<mx:HBox verticalAlign="middle" width="100%" horizontalAlign="right">
-						<s:Label text="show" fontSize="9" toolTip="{resourceManager.getString('resources','preferences.notificationSettings.option.notificationToolTip')}" />
-						<s:Label text="sticky" fontSize="9" toolTip="{resourceManager.getString('resources','preferences.notificationSettings.option.notificationStickyToolTip')}" />
+					<mx:HBox verticalAlign="middle" width="100%" horizontalAlign="right" horizontalGap="4">
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.subheading.show')}" fontSize="9" toolTip="{resourceManager.getString('resources','preferences.notificationSettings.subheading.show.toolTip')}" />
+						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.subheading.sticky')}" fontSize="9" toolTip="{resourceManager.getString('resources','preferences.notificationSettings.subheading.sticky.toolTip')}" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyNewsFeed')}" />
