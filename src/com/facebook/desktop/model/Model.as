@@ -1,13 +1,14 @@
 package com.facebook.desktop.model
 {
+	import flash.events.EventDispatcher;
 	import flash.media.Sound;
 	
 	import mx.resources.ResourceManager;
 
-	public class Model
+	public class Model extends EventDispatcher
 	{
 		public static const APPLICATION_ID:String = "95615112563";
-		public static const REQUIRED_PERMISSIONS:Array = ["manage_notifications", "user_about_me", "friends_birthday", "read_stream", "read_mailbox", "read_requests", "read_insights", "publish_stream", "publish_checkins", "user_events", "user_groups", "offline_access", "user_checkins"];
+		public static const REQUIRED_PERMISSIONS:Array = ["user_about_me", "friends_birthday", "read_stream", "read_mailbox", "read_requests", "read_insights", "publish_stream", "publish_checkins", "user_events", "user_groups", "offline_access", "user_checkins", "manage_notifications"];
 		public static const MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS:int = 10000;	// 10 seconds
 		
 		[Bindable] public var connected:Boolean;
