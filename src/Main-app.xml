@@ -29,14 +29,14 @@
 	<versionNumber>0.84</versionNumber>
 		         
 	<!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
-	<versionLabel>v0.84</versionLabel>
+	<versionLabel>0.85 beta</versionLabel>
 
 	<!-- Description, displayed in the AIR application installer.
 	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
 	<description>Bringing Facebook to your desktop, one notification at a time.</description>
 
 	<!-- Copyright information. Optional -->
-	<copyright>Copyright © 201 Charles Bihis</copyright>
+	<copyright>Copyright © 2012 Charles Bihis</copyright>
 
 	<!-- Publisher ID. Used if you're updating an application created prior to 1.5.3 -->
 	<!-- <publisherID></publisherID> -->
