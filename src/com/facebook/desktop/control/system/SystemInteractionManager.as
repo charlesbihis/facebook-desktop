@@ -180,7 +180,12 @@ package com.facebook.desktop.control.system
 			_onlineMenu.addItem(bottomSeparator);
 			_onlineMenu.addItem(settingsCommand);
 			_onlineMenu.addItem(logoutCommand);
-			_onlineMenu.addItem(exitCommand);
+			
+			// only add this item to system-tray menu since dock menu already has an "Quit" option
+			if (supportsSystemTray)
+			{
+				_onlineMenu.addItem(exitCommand);
+			}  // if statement
 			
 			return _onlineMenu;
 		}  // onlineMenu
@@ -196,7 +201,12 @@ package com.facebook.desktop.control.system
 			_offlineMenu.addItem(topSeparator);
 			_offlineMenu.addItem(settingsCommand);
 			_offlineMenu.addItem(loginCommand);
-			_offlineMenu.addItem(exitCommand);
+			
+			// only add this item to system-tray menu since dock menu already has an "Quit" option
+			if (supportsSystemTray)
+			{
+				_offlineMenu.addItem(exitCommand);
+			}  // if statement
 			
 			return _offlineMenu;
 		}  // offlineMenu
@@ -208,7 +218,12 @@ package com.facebook.desktop.control.system
 			// initialize the disconnected state menus
 			_disconnectedMenu.addItem(aboutCommand);
 			_disconnectedMenu.addItem(topSeparator);
-			_disconnectedMenu.addItem(exitCommand);
+			
+			// only add this item to system-tray menu since dock menu already has an "Quit" option
+			if (supportsSystemTray)
+			{
+				_disconnectedMenu.addItem(exitCommand);
+			}  // if statement
 			
 			return _disconnectedMenu;
 		}  // disconnectedMenu
