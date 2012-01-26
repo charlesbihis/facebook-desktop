@@ -1,5 +1,5 @@
 TO DO FOR v0.85
--test on Mac!
+-think about making a notification wrapper
 -fix language files
 -change version to 0.85
 -RELEASE!
@@ -12,7 +12,7 @@ RELEASE NOTES FOR v0.85
 	-more settings
 		-modifiable notification display length
 		-choice when clicking the system-tray/dock icon
-		-optional notification sounds
+		-optional notification sound
 	-birthday reminders
 	-even smarter notifications
 		-option to make certain posts sticky
