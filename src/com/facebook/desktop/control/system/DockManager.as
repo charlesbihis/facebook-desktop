@@ -110,23 +110,29 @@ package com.facebook.desktop.control.system
 		
 		private function iconClick(event:InvokeEvent):void
 		{
-			if (model.preferences.iconClickAction == 0)
+			// Invoke event gets triggered on application start-up, but at this point
+			// model.preferences haven't yet been loaded.  Detecting here so that we
+			// don't perform the default invoke action every time the app starts.
+			if (model.preferences != null)
 			{
-				// only show update-window if we're connected
-				if (model.connected && model.currentUser != null)
+				if (model.preferences.iconClickAction == 0)
 				{
-					log.info("Attempting to show/hide status-update window");
-					controller.openStatusUpdateWindow();
+					// only show update-window if we're connected
+					if (model.connected && model.currentUser != null)
+					{
+						log.info("Attempting to show/hide status-update window");
+						controller.openStatusUpdateWindow();
+					}  // if statement
+					else
+					{
+						log.info("System-tray/dock icon clicked but user not logged in. Suppressing display of status-update window.");
+					}  // else statement
 				}  // if statement
 				else
 				{
-					log.info("System-tray/dock icon clicked but user not logged in. Suppressing display of status-update window.");
+					flash.net.navigateToURL(new URLRequest(FacebookDesktopConst.FACEBOOK_HOMEPAGE));
 				}  // else statement
 			}  // if statement
-			else
-			{
-				flash.net.navigateToURL(new URLRequest(FacebookDesktopConst.FACEBOOK_HOMEPAGE));
-			}  // else statement
 		}  // iconClick
 	}  // class declaration
 }  // package
