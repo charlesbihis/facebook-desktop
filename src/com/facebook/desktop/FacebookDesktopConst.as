@@ -44,14 +44,12 @@ package com.facebook.desktop
 		public static const FACEBOOK_DESKTOP_OFFLINE_TRAY_ICON:String = "/assets/icons/iconOffline16.png";
 		public static const FACEBOOK_DESKTOP_DISCONNECTED_TRAY_ICON:String = "/assets/icons/iconDisconnected16.png";
 		public static const FACEBOOK_DESKTOP_PAUSED_TRAY_ICON:String = "/assets/icons/iconPaused16.png";
-		public static const FACEBOOK_DESKTOP_NOTIFICATION_WAITING_TRAY_ICON:String = "/assets/icons/iconNotificationWaiting16.png";
 		
 		// dock icons
 		public static const FACEBOOK_DESKTOP_ONLINE_DOCK_ICON:String = "/assets/icons/icon128.png";
 		public static const FACEBOOK_DESKTOP_OFFLINE_DOCK_ICON:String = "/assets/icons/iconOffline128.png";
 		public static const FACEBOOK_DESKTOP_DISCONNECTED_DOCK_ICON:String = "/assets/icons/iconDisconnected128.png";
 		public static const FACEBOOK_DESKTOP_PAUSED_DOCK_ICON:String = "/assets/icons/iconPaused128.png";
-		public static const FACEBOOK_DESKTOP_NOTIFICATION_WAITING_DOCK_ICON:String = "/assets/icons/iconNotificationWaiting128.png";
 		
 		// sounds
 		public static const FACEBOOK_NOTIFICATION_SOUND:String = "/assets/sounds/drop.mp3";

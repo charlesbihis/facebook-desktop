@@ -338,12 +338,7 @@ package com.facebook.desktop.control.system
 			
 			trayDockManager.changeMenu(_customOnlineMenu);
 			
-			// change icon to show that there are notifications waiting
-			if (notificationCount > 0)
-			{
-				// TODO: change icon to actually show notificationCount
-				trayDockManager.changeIcon(supportsSystemTray ? FacebookDesktopConst.FACEBOOK_DESKTOP_NOTIFICATION_WAITING_TRAY_ICON : FacebookDesktopConst.FACEBOOK_DESKTOP_NOTIFICATION_WAITING_DOCK_ICON);
-			}  // if statement
+			// TODO: change icon to show that notifications are waiting based on notificationCount
 		}  // addCustomItemsToMenu
 		
 		private function clearMenus():void
