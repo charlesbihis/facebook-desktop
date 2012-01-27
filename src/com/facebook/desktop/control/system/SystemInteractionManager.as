@@ -277,46 +277,52 @@ package com.facebook.desktop.control.system
 				}  // if statement
 				
 				// event invites
-				if (additionalNotifications.event_invites != null && additionalNotifications.event_invites.length > 0)
+				if (model.preferences.showEventInvites && additionalNotifications.event_invites != null && additionalNotifications.event_invites.length > 0)
 				{
 					_customOnlineMenu.addItem(eventInvitesCommand);
 					notificationCount += additionalNotifications.event_invites.length;
 				}  // if statement
 				
 				// friend requests
-				if (additionalNotifications.friend_requests != null && additionalNotifications.friend_requests.length > 0)
+				if (model.preferences.showFriendRequests && additionalNotifications.friend_requests != null && additionalNotifications.friend_requests.length > 0)
 				{
 					_customOnlineMenu.addItem(friendRequestsCommand);
-					notificationCount += additionalNotifications.event_invites.length;
+					notificationCount += additionalNotifications.friend_requests.length;
 				}  // if statement
 				
 				// group invites
-				if (additionalNotifications.group_invites != null && additionalNotifications.group_invites.length > 0)
+				if (model.preferences.showGroupInvites && additionalNotifications.group_invites != null && additionalNotifications.group_invites.length > 0)
 				{
 					_customOnlineMenu.addItem(groupInvitesCommand);
 					notificationCount += additionalNotifications.group_invites.length;
 				}  // if statement
 				
 				// unread messages
-				if (additionalNotifications.messages != null && additionalNotifications.messages.unread > 0)
+				if (model.preferences.showMessages && additionalNotifications.messages != null && additionalNotifications.messages.unread > 0)
 				{
 					_customOnlineMenu.addItem(unreadMessagesCommand);
 					notificationCount += additionalNotifications.messages.unread;
 				}  // if statement
 				
 				// pokes
-				if (additionalNotifications.pokes != null && additionalNotifications.pokes.unread > 0)
+				if (model.preferences.showPokes && additionalNotifications.pokes != null && additionalNotifications.pokes.unread > 0)
 				{
 					_customOnlineMenu.addItem(newPokesCommand);
 					notificationCount += additionalNotifications.pokes.unread;
 				}  // if statement
 				
 				// shares
-				if (additionalNotifications.shares != null && additionalNotifications.shares.unread > 0)
+				if (model.preferences.showShares && additionalNotifications.shares != null && additionalNotifications.shares.unread > 0)
 				{
 					_customOnlineMenu.addItem(newSharesCommand);
 					notificationCount += additionalNotifications.shares.unread;
 				}  // if statement
+			}  // if statement
+			
+			// if we didn't add any new menu items, remove the middle separator
+			if (notificationCount == 0)
+			{
+				_customOnlineMenu.removeItem(middleSeparator);
 			}  // if statement
 			
 			// re-build bottom menu items
@@ -350,45 +356,51 @@ package com.facebook.desktop.control.system
 		
 		private function setCustomMenuCommandLabels():void
 		{
-			// set birthdays-command label
-			if (birthdayNotifications != null && birthdayNotifications.length > 0)
+			if (birthdayNotifications != null)
 			{
-				birthdaysCommand.label = (birthdayNotifications.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.birthday") : ResourceManager.getInstance().getString("resources", "notification.birthdaysBegin") + " " + birthdayNotifications.length + " " + ResourceManager.getInstance().getString("resources", "notification.birthdaysEnd"));
+				// set birthdays-command label
+				if (birthdayNotifications != null && birthdayNotifications.length > 0)
+				{
+					birthdaysCommand.label = (birthdayNotifications.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.birthday") : ResourceManager.getInstance().getString("resources", "notification.birthdaysBegin") + " " + birthdayNotifications.length + " " + ResourceManager.getInstance().getString("resources", "notification.birthdaysEnd"));
+				}  // if statement
 			}  // if statement
 			
-			// set event-invites-command label
-			if (additionalNotifications.event_invites != null && additionalNotifications.event_invites.length > 0)
+			if (additionalNotifications != null)
 			{
-				eventInvitesCommand.label = (additionalNotifications.event_invites.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.eventInvitation") : ResourceManager.getInstance().getString("resources", "notification.eventInvitationsBegin") + " " + additionalNotifications.event_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.eventInvitationsEnd");
-			}  // if statement
-			
-			// set friend-requests-command label
-			if (additionalNotifications.friend_requests != null && additionalNotifications.friend_requests.length > 0)
-			{
-				friendRequestsCommand.label = (additionalNotifications.friend_requests.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.friendRequest") : ResourceManager.getInstance().getString("resources", "notification.friendRequestsBegin") + " " + additionalNotifications.friend_requests.length + " " + ResourceManager.getInstance().getString("resources", "notification.friendRequestsEnd");
-			}  // if statement
-			
-			// set group-invites-command label
-			if (additionalNotifications.group_invites != null && additionalNotifications.group_invites.length > 0)
-			{
-				groupInvitesCommand.label = (additionalNotifications.group_invites.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.groupInvitation") : ResourceManager.getInstance().getString("resources", "notification.groupInvitationsBegin") + " " + additionalNotifications.group_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.groupInvitationsEnd");
-			}  // if statement
-			
-			// set unread-messages-command label
-			if (additionalNotifications.messages != null && additionalNotifications.messages.unread > 0)
-			{
-				unreadMessagesCommand.label = (additionalNotifications.messages.unread == 1) ? ResourceManager.getInstance().getString("resources", "notification.unreadMessage") : ResourceManager.getInstance().getString("resources", "notification.unreadMessagesBegin") + " " + additionalNotifications.messages.unread + " " + ResourceManager.getInstance().getString("resources", "notification.unreadMessagesEnd");
-			}  // if statement
-			
-			// set pokes-command label
-			if (additionalNotifications.pokes != null && additionalNotifications.pokes.unread > 0)
-			{
-				newPokesCommand.label = ResourceManager.getInstance().getString("resources", "notification.poked");
-			}  // if statement
-			
-			if (additionalNotifications.shares != null && additionalNotifications.shares.unread > 0)
-			{
-				newSharesCommand.label = ResourceManager.getInstance().getString("resources", "notification.sharedLink");
+				// set event-invites-command label
+				if (additionalNotifications.event_invites != null && additionalNotifications.event_invites.length > 0)
+				{
+					eventInvitesCommand.label = (additionalNotifications.event_invites.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.eventInvitation") : ResourceManager.getInstance().getString("resources", "notification.eventInvitationsBegin") + " " + additionalNotifications.event_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.eventInvitationsEnd");
+				}  // if statement
+				
+				// set friend-requests-command label
+				if (additionalNotifications.friend_requests != null && additionalNotifications.friend_requests.length > 0)
+				{
+					friendRequestsCommand.label = (additionalNotifications.friend_requests.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.friendRequest") : ResourceManager.getInstance().getString("resources", "notification.friendRequestsBegin") + " " + additionalNotifications.friend_requests.length + " " + ResourceManager.getInstance().getString("resources", "notification.friendRequestsEnd");
+				}  // if statement
+				
+				// set group-invites-command label
+				if (additionalNotifications.group_invites != null && additionalNotifications.group_invites.length > 0)
+				{
+					groupInvitesCommand.label = (additionalNotifications.group_invites.length == 1) ? ResourceManager.getInstance().getString("resources", "notification.groupInvitation") : ResourceManager.getInstance().getString("resources", "notification.groupInvitationsBegin") + " " + additionalNotifications.group_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.groupInvitationsEnd");
+				}  // if statement
+				
+				// set unread-messages-command label
+				if (additionalNotifications.messages != null && additionalNotifications.messages.unread > 0)
+				{
+					unreadMessagesCommand.label = (additionalNotifications.messages.unread == 1) ? ResourceManager.getInstance().getString("resources", "notification.unreadMessage") : ResourceManager.getInstance().getString("resources", "notification.unreadMessagesBegin") + " " + additionalNotifications.messages.unread + " " + ResourceManager.getInstance().getString("resources", "notification.unreadMessagesEnd");
+				}  // if statement
+				
+				// set pokes-command label
+				if (additionalNotifications.pokes != null && additionalNotifications.pokes.unread > 0)
+				{
+					newPokesCommand.label = ResourceManager.getInstance().getString("resources", "notification.poked");
+				}  // if statement
+				
+				if (additionalNotifications.shares != null && additionalNotifications.shares.unread > 0)
+				{
+					newSharesCommand.label = ResourceManager.getInstance().getString("resources", "notification.sharedLink");
+				}  // if statement
 			}  // if statement
 		}  // setCustomMenuCommandLabels
 

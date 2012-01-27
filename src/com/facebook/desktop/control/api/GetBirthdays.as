@@ -34,6 +34,10 @@ package com.facebook.desktop.control.api
 				FacebookDesktop.callRestAPI(API, getBirthdaysHandler, {query:fql});
 				model.latestBirthdayString = birthdayString;
 			}  // if statement
+			else if (!model.preferences.showBirthdays)
+			{
+				systemInteractionManager.addBirthdaysToMenu(null);
+			}  // else-if statement
 			
 			function getBirthdaysHandler(result:Object, fail:Object):void
 			{

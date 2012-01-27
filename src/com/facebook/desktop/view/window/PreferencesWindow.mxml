@@ -21,6 +21,8 @@
 			import com.charlesbihis.engine.notification.NotificationConst;
 			import com.charlesbihis.engine.notification.NotificationManager;
 			import com.facebook.desktop.control.Controller;
+			import com.facebook.desktop.control.api.GetAdditionalNotifications;
+			import com.facebook.desktop.control.api.GetBirthdays;
 			import com.facebook.desktop.control.preferences.PreferencesManager;
 			import com.facebook.desktop.model.Model;
 			
@@ -236,43 +238,43 @@
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyMessage')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showNewMessages" change="saveSettings();log.info('Changing \'Notify me when someone sends me a message\' setting to {0}', showNewMessages.selected)" />
+						<s:CheckBox id="showNewMessages" change="saveSettings();new GetAdditionalNotifications().execute();log.info('Changing \'Notify me when someone sends me a message\' setting to {0}', showNewMessages.selected)" />
 						<s:CheckBox id="showNewMessagesSticky" enabled="{showNewMessages.selected}" change="saveSettings();log.info('Changing \'Notify me when someone sends me a message\' sticky setting to {0}', showNewMessagesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyFriendRequest')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showFriendRequests" change="saveSettings();log.info('Changing \'Notify me when I get a new friend request\' setting to {0}', showFriendRequests.selected)" />
+						<s:CheckBox id="showFriendRequests" change="saveSettings();new GetAdditionalNotifications().execute();log.info('Changing \'Notify me when I get a new friend request\' setting to {0}', showFriendRequests.selected)" />
 						<s:CheckBox id="showFriendRequestsSticky" enabled="{showFriendRequests.selected}" change="saveSettings();log.info('Changing \'Notify me when I get a new friend request\' sticky setting to {0}', showFriendRequestsSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyShare')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showShares" change="saveSettings();log.info('Changing \'Notify me when someone shares something with me\' setting to {0}', showShares.selected)" />
+						<s:CheckBox id="showShares" change="saveSettings();new GetAdditionalNotifications().execute();log.info('Changing \'Notify me when someone shares something with me\' setting to {0}', showShares.selected)" />
 						<s:CheckBox id="showSharesSticky" enabled="{showShares.selected}" change="saveSettings();log.info('Changing \'Notify me when someone shares something with me\' sticky setting to {0}', showSharesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyGroupInvite')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showGroupInvites" change="saveSettings();log.info('Changing \'Notify me when I get a group invite\' setting to {0}', showGroupInvites.selected)" />
+						<s:CheckBox id="showGroupInvites" change="saveSettings();new GetAdditionalNotifications().execute();log.info('Changing \'Notify me when I get a group invite\' setting to {0}', showGroupInvites.selected)" />
 						<s:CheckBox id="showGroupInvitesSticky" enabled="{showGroupInvites.selected}" change="saveSettings();log.info('Changing \'Notify me when I get a group invite\' sticky setting to {0}', showGroupInvitesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyEventInvite')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showEventInvites" change="saveSettings();log.info('Changing \'Notify me when I get an event invite\' setting to {0}',showEventInvites.selected)" />
+						<s:CheckBox id="showEventInvites" change="saveSettings();new GetAdditionalNotifications().execute();log.info('Changing \'Notify me when I get an event invite\' setting to {0}',showEventInvites.selected)" />
 						<s:CheckBox id="showEventInvitesSticky" enabled="{showEventInvites.selected}" change="saveSettings();log.info('Changing \'Notify me when I get an event invite\' sticky setting to {0}', showEventInvitesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyPoke')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showPokes" change="saveSettings();log.info('Changing \'Notify me when someone pokes me\' setting to {0}', showPokes.selected)" />
+						<s:CheckBox id="showPokes" change="saveSettings();new GetAdditionalNotifications().execute();log.info('Changing \'Notify me when someone pokes me\' setting to {0}', showPokes.selected)" />
 						<s:CheckBox id="showPokesSticky" enabled="{showPokes.selected}" change="saveSettings();log.info('Changing \'Notify me when someone pokes me\' sticky setting to {0}', showPokesSticky.selected)" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.notificationSettings.option.notifyBirthdays')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="showBirthdays" change="saveSettings();log.info('Changing \'Notify me when my friends have birthdays\' setting to {0}', showBirthdays.selected)" />
+						<s:CheckBox id="showBirthdays" change="saveSettings();new GetBirthdays().execute();log.info('Changing \'Notify me when my friends have birthdays\' setting to {0}', showBirthdays.selected)" />
 						<s:CheckBox id="showBirthdaysSticky" enabled="{showBirthdays.selected}" change="saveSettings();log.info('Changing \'Notify me when my friends have birthdays\' sticky setting to {0}', showBirthdaysSticky.selected)" />
 					</mx:HBox>
 					<mx:Spacer height="15" />
