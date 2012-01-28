@@ -43,17 +43,17 @@ TIMELINE
 	(done) post on Facebook page about release of v0.80
 	(done) post on Facebook page about release of v0.81
 	(done) post on Facebook page about release of v0.82
-	-post on Facebook page about release of v0.83
-	-post on Facebook page about release of v0.84
-	-post on Facebook page link to Facebook Desktop extended promo
-	-post on Facebook page about release of v0.85
-	-post on Adobe blog about release of v0.85
-	-post on Adobe blog some content (maybe puzzler or OAuth2 library)
-	-create GitHub page for notification engine
-	-post on Adobe blog about open-sourcing of notification engine
-	-link on Facebook page the Adobe blog post about open-sourcing notification engine
-	-post on Adobe blog some content (maybe puzzler or OAuth2 library)
-	-create GitHub page for Facebook Desktop
-	-post on Facebook page about release of v1.0.0 -> make this a large post looking at the history of Facebook Desktop
-	-post on Adobe blog about open-sourcing all of Facebook Desktop
-	-link on Facebook page the Adobe blog post about open-sourcing entire Facebook Desktop application
+	(done) post on Facebook page about release of v0.83
+	-(01/30) post on Facebook page about release of v0.84
+	-(02/01) post on Facebook page link to Facebook Desktop extended promo
+	-(02/06) post on Facebook page about release of v0.85
+	-(02/06) post on Adobe blog about release of v0.85
+	-(02/08) post on Adobe blog some content (maybe puzzler or OAuth2 library)
+	-(02/13) create GitHub page for notification engine
+	-(02/13) post on Adobe blog about open-sourcing of notification engine
+	-(02/13) link on Facebook page the Adobe blog post about open-sourcing notification engine
+	-(02/15) post on Adobe blog some content (maybe puzzler or OAuth2 library)
+	-(02/20) create GitHub page for Facebook Desktop
+	-(02/20) post on Facebook page about release of v1.0.0 -> make this a large post looking at the history of Facebook Desktop
+	-(02/20) post on Adobe blog about open-sourcing all of Facebook Desktop
+	-(02/20) link on Facebook page the Adobe blog post about open-sourcing entire Facebook Desktop application
