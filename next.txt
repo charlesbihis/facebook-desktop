@@ -24,11 +24,9 @@ PRESENTATION AND ORGANIZATION
 -on GitHub
   -create project page for actionscript-notification-engine
     -http://pages.github.com/
-	-http://xlson.com/2010/11/09/getting-started-with-github-pages.html
-	-http://drnicwilliams.com/2008/12/21/migrating-project-websites-to-github-pages-with-sake-tasks-new-websites-with-jekyll_generator/
-    -use http://mxcl.github.com/homebrew/ as a reference
-	-use http://visionmedia.github.com/mini/ too
-	-and this too -> http://joehewitt.github.com/scrollability/
+    -see http://mxcl.github.com/homebrew/
+	-see http://joehewitt.github.com/scrollability/
+	-https://news.ycombinator.com/item?id=3511730
 	-follow guidelines on http://thechangelog.com/post/3032074343/top-ten-reasons-why-i-wont-use-your-open-source-project
   -create project page for facebook-desktop
     -use resources mentioned above too
@@ -44,10 +42,10 @@ TIMELINE
 	(done) post on Facebook page about release of v0.81
 	(done) post on Facebook page about release of v0.82
 	(done) post on Facebook page about release of v0.83
-	-(01/30) post on Facebook page about release of v0.84
-	-(02/01) post on Facebook page link to Facebook Desktop extended promo
-	-(02/06) post on Facebook page about release of v0.85
-	-(02/06) post on Adobe blog about release of v0.85
+	(done) post on Facebook page about release of v0.84
+	-(02/03) post on Facebook page link to Facebook Desktop extended promo
+	-(02/04) post on Facebook page about release of v1.0.0
+	-(02/06) post on Adobe blog about release of v0.85...MAYBE
 	-(02/08) post on Adobe blog some content (maybe puzzler or OAuth2 library)
 	-(02/13) create GitHub page for notification engine
 	-(02/13) post on Adobe blog about open-sourcing of notification engine
