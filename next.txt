@@ -1,5 +1,4 @@
 TO DO FOR v0.85
--think about making a notification wrapper
 -fix language files
 -change version to 0.85
 -RELEASE!
