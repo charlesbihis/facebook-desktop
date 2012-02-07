@@ -58,6 +58,16 @@ package com.facebook.desktop.control.api
 							var messageString:String;
 							switch (story.type)
 							{
+								case "checkin":
+									if (story.message != null && story.message is String && (story.message as String).length > 0)
+									{
+										messageString = story.message;
+									}  // if statement
+									else
+									{
+										messageString = "has posted a photo to Facebook";
+									}  // else statement
+									break;
 								case "link":
 									if (story.story != null && story.story is String && (story.story as String).length > 0)
 									{
@@ -114,6 +124,7 @@ package com.facebook.desktop.control.api
 								case "photo":
 									linkString = story.link;
 									break;
+								case "checkin":
 								case "link":
 								case "status":
 								case "video":
