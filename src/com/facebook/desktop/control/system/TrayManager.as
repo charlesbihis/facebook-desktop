@@ -80,26 +80,26 @@ package com.facebook.desktop.control.system
 		{
 			log.info("Changing application to ONLINE state");
 			model.paused = false;
-			changeStateManually(SystemInteractionManager.instance.onlineMenu, FacebookDesktopConst.FACEBOOK_DESKTOP_ONLINE_TRAY_ICON, ResourceManager.getInstance().getString("resources", "application.name"));
+			changeStateManually(SystemInteractionManager.instance.onlineMenu, FacebookDesktopConst.TRAY_ICON_ONLINE, ResourceManager.getInstance().getString("resources", "application.name"));
 		}  // changeToOnlineState
 		
 		private function changeToOfflineState():void
 		{
 			log.info("Changing application to OFFLINE state");
-			changeStateManually(SystemInteractionManager.instance.offlineMenu, FacebookDesktopConst.FACEBOOK_DESKTOP_OFFLINE_TRAY_ICON, ResourceManager.getInstance().getString("resources", "application.toolTip.offline"));
+			changeStateManually(SystemInteractionManager.instance.offlineMenu, FacebookDesktopConst.TRAY_ICON_OFFLINE, ResourceManager.getInstance().getString("resources", "application.toolTip.offline"));
 		}  // changeToDisconnectedState
 		
 		private function changeToDisconnectedState():void
 		{
 			log.info("Changing application to DISCONNECTED state");
-			changeStateManually(SystemInteractionManager.instance.disconnectedMenu, FacebookDesktopConst.FACEBOOK_DESKTOP_DISCONNECTED_TRAY_ICON, ResourceManager.getInstance().getString("resources", "application.toolTip.disconnected"));
+			changeStateManually(SystemInteractionManager.instance.disconnectedMenu, FacebookDesktopConst.TRAY_ICON_DISCONNECTED, ResourceManager.getInstance().getString("resources", "application.toolTip.disconnected"));
 		}  // changeToDisconnectedState
 		
 		private function changeToPausedState():void
 		{
 			log.info("Changing application to PAUSED state");
 			model.paused = true;
-			changeStateManually(SystemInteractionManager.instance.onlineMenu, FacebookDesktopConst.FACEBOOK_DESKTOP_PAUSED_TRAY_ICON, ResourceManager.getInstance().getString("resources", "application.name"));
+			changeStateManually(SystemInteractionManager.instance.onlineMenu, FacebookDesktopConst.TRAY_ICON_PAUSED, ResourceManager.getInstance().getString("resources", "application.name"));
 		}  // changeToPausedState
 		
 		private function iconLoadComplete(event:Event):void

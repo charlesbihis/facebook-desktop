@@ -34,7 +34,6 @@
 			import mx.managers.ToolTipManager;
 			
 			private static var controller:Controller = Controller.instance;
-			private static var notificationManager:NotificationManager = NotificationManager.instance;
 			private static var log:ILogger = Log.getLogger("com.facebook.preferences.PreferencesWindow");
 			
 			[Bindable]
@@ -289,7 +288,7 @@
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.notificationDisplayLength')}" />
 						<mx:Spacer width="100%" />
-						<mx:HSlider id="notificationDisplayLength" minimum="4" maximum="12" snapInterval="2" tickInterval="2" value="8" labelStyleName="displayLengthSliderLabel" labels="[short,medium,long]" dataTipFormatFunction="notificationDisplayLengthFormatter" change="saveSettings();log.info('Changing \'Notification display length\' setting to {0}', notificationDisplayLength.value);NotificationManager.notificationDisplayLength=notificationDisplayLength.value" />
+						<mx:HSlider id="notificationDisplayLength" minimum="4" maximum="12" snapInterval="2" tickInterval="2" value="8" labelStyleName="displayLengthSliderLabel" labels="[short,medium,long]" dataTipFormatFunction="notificationDisplayLengthFormatter" change="saveSettings();log.info('Changing \'Notification display length\' setting to {0}', notificationDisplayLength.value);model.notificationManager.displayLength=notificationDisplayLength.value" />
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.clickAction.' + model.operatingSystem.toLowerCase())}" />

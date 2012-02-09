@@ -37,7 +37,6 @@
 			
 			private var model:Model = Model.instance;
 			private var systemInteractionManager:SystemInteractionManager = SystemInteractionManager.instance;
-			private var notificationManager:NotificationManager = NotificationManager.instance;
 			private var log:ILogger = Log.getLogger(className);
 			private var pollTimer:Timer = new Timer(POLL_DELAY);
 			
@@ -51,7 +50,10 @@
 				Logging.init();
 				log.info("\n********* starting new session *********\n");
 				log.info("Logging initialized");
-
+				
+				// configure notification engine
+				model.notificationManager = new NotificationManager(FacebookDesktopConst.NOTIFICATION_STYLE_DARK, FacebookDesktopConst.DEFAULT_NOTIFICATION_IMAGE, FacebookDesktopConst.DEFAULT_COMPACT_NOTIFICATION_IMAGE, FacebookDesktopConst.DEFAULT_NOTIFICATION_SOUND, NotificationConst.DISPLAY_LENGTH_DEFAULT, NotificationConst.DISPLAY_LOCATION_DEFAULT);
+				
 				// grab preferences
 				PreferencesManager.loadPreferences();
 				
@@ -66,12 +68,6 @@
 				urlMonitor.addEventListener(StatusEvent.STATUS, connectionMonitorHandler);
 				urlMonitor.start();
 				
-				// configuring notification properties
-				NotificationManager.defaultNotificationImage = FacebookDesktopConst.FACEBOOK_NOTIFICATION_DEFAULT_IMAGE;
-				NotificationManager.otherWindowsToAvoid.push(FacebookDesktopConst.FACEBOOK_STATUS_UPDATE_WINDOW_TITLE);
-				model.notificationSound = new Sound(new URLRequest(FacebookDesktopConst.FACEBOOK_NOTIFICATION_SOUND));
-				model.notificationSound.addEventListener(Event.COMPLETE, loadSoundHandler);
-				
 				// determine OS
 				var os:String = flash.system.Capabilities.os.substr(0, 3);
 				if (os.indexOf("Win") >= 0)
@@ -81,7 +77,6 @@
 				else if (os.indexOf("Mac") >= 0)
 				{
 					model.operatingSystem = "Mac";
-					NotificationManager.notificationDisplayLocation = NotificationConst.DISPLAY_LOCATION_TOP_RIGHT;
 					
 					// Unfortunately, Hindi characters don't render correctly using
 					// the Spark component namespace on Mac, so instead of removing
@@ -175,11 +170,6 @@
 						}  // else statement
 					}  // else statement
 				}  // connectionMonitorHandler
-				
-				function loadSoundHandler(event:Event):void
-				{
-					log.info("Notification sound loaded");
-				}  // loadSoundHandler
 			}  // init
 			
 			private function userLoginHandler(event:FacebookDesktopEvent):void
@@ -190,8 +180,8 @@
 				systemInteractionManager.changeApplicationState(SystemState.ONLINE);
 				
 				// show login popup
-				notificationManager.show(resourceManager.getString("resources", "toast.welcome"), "", FacebookDesktop.getImageUrl(model.currentUser.id), FacebookDesktopConst.FACEBOOK_DESKTOP_PAGE);
-				notificationManager.clearLatestFiveUpdates();
+				model.notificationManager.show(resourceManager.getString("resources", "toast.welcome"), null, FacebookDesktop.getImageUrl(model.currentUser.id), FacebookDesktopConst.FACEBOOK_DESKTOP_PAGE);
+				model.notificationManager.clearLatestFiveUpdates();
 				
 				// get latest update so that we can start receiving pop-ups for *new* updates
 				FacebookDesktop.api("/me/home", getNewsFeedHandler, {limit:1});
@@ -218,7 +208,7 @@
 			{
 				// say goodbye!
 				log.info("Logging out! Goodbye!");
-				notificationManager.show(resourceManager.getString("resources", "toast.goodbye"), "", FacebookDesktopConst.FACEBOOK_NOTIFICATION_DEFAULT_IMAGE);
+				model.notificationManager.show(resourceManager.getString("resources", "toast.goodbye"), null, FacebookDesktopConst.DEFAULT_NOTIFICATION_IMAGE, null, false, false, false);
 				
 				// stop the poller
 				pollTimer.removeEventListener(TimerEvent.TIMER, poll);
@@ -228,7 +218,7 @@
 				systemInteractionManager.changeApplicationState(SystemState.OFFLINE);
 				
 				// clear state information
-				notificationManager.clearLatestFiveUpdates();
+				model.notificationManager.clearLatestFiveUpdates();
 				model.currentUser = null;
 				
 				// invalidate the session
@@ -244,7 +234,7 @@
 				
 				// birthdays
 				var getBirthdays:GetBirthdays = new GetBirthdays();
-				getBirthdays.execute(null, null, {source:FacebookDesktopConst.FACEBOOK_DESKTOP_STARTUP});
+				getBirthdays.execute(null, null, {source:FacebookDesktopConst.STARTUP});
 				
 				// likes, comments, and group posts
 				var getNotificationsCommand:GetNotifications = new GetNotifications();
@@ -252,7 +242,7 @@
 				
 				// messages, pokes, shares, friend-requests, group-invites, and event-invites
 				var getAdditionalNotificationsCommand:GetAdditionalNotifications = new GetAdditionalNotifications();
-				getAdditionalNotificationsCommand.execute(null, null, {source:FacebookDesktopConst.FACEBOOK_DESKTOP_STARTUP});
+				getAdditionalNotificationsCommand.execute(null, null, {source:FacebookDesktopConst.STARTUP});
 				
 				// finally, start the poller
 				log.info("Starting the poller");

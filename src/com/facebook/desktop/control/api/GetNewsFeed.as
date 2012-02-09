@@ -16,7 +16,6 @@ package com.facebook.desktop.control.api
 		private static const API:String = "/me/home";
 		
 		private static var model:Model = Model.instance;
-		private static var notificationManager:NotificationManager = NotificationManager.instance;
 		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetNewsFeed");
 		
 		private var args:Object;
@@ -135,19 +134,12 @@ package com.facebook.desktop.control.api
 							
 							// show it
 							var notification:Notification = new Notification();
-							notification.notificationTitle = titleString;
-							notification.notificationMessage = messageString;
-							notification.notificationImage = FacebookDesktopConst.FACEBOOK_GRAPH_API_ENDPOINT + story.from.id + "/picture";
-							notification.notificationLink = linkString;
+							notification.title = titleString;
+							notification.message = messageString;
+							notification.image = FacebookDesktopConst.FACEBOOK_GRAPH_API_ENDPOINT + story.from.id + "/picture";
+							notification.link = linkString;
 							notification.isSticky = model.preferences.showNewsFeedUpdatesSticky;
-							notificationManager.showNotification(notification);
-							
-							// play sound
-							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
-							{
-								model.notificationSound.play();
-								model.latestNotificationSound = new Date().time;
-							}  // if statement
+							model.notificationManager.showNotification(notification);
 						}  // for loop
 					}  // if statement
 				}  // if statement

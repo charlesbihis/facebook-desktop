@@ -55,7 +55,6 @@ package com.facebook.desktop.control.system
 		private var model:Model = Model.instance;
 		private var userCache:UserCache = UserCache.instance;
 		private var controller:Controller = Controller.instance;
-		private var notificationManager:NotificationManager = NotificationManager.instance;
 		private var log:ILogger = Log.getLogger("com.facebook.desktop.control.system.SystemInteractionManager");
 		
 		// menus
@@ -531,7 +530,7 @@ package com.facebook.desktop.control.system
 					if (totalUpdates == 0)
 					{
 						log.info("No new updates to show");
-						notificationManager.show(ResourceManager.getInstance().getString("resources", "toast.noNewUpdates"), "", "/assets/images/toast/icon50.png", null, false, false, false);
+						model.notificationManager.show(ResourceManager.getInstance().getString("resources", "toast.noNewUpdates"), null, FacebookDesktopConst.DEFAULT_NOTIFICATION_IMAGE, null, false, false, false);
 					}  // if statement
 				}  // if statement
 			}  // getAdditionalNotificationsHandler
@@ -540,7 +539,7 @@ package com.facebook.desktop.control.system
 		private function replayLatestFiveUpdatesHandler(event:Event = null):void
 		{
 			log.info("Displaying latest 5 updates");
-			notificationManager.replayLatestFiveUpdates();
+			model.notificationManager.replayLatestFiveUpdates();
 		}  // replayLatestFiveUpdatesHandler
 		
 		private function exitHandler(event:Event = null):void
@@ -553,7 +552,7 @@ package com.facebook.desktop.control.system
 		{
 			log.info("Context menu click - showing birthday's again");
 			var getBirthdays:GetBirthdays = new GetBirthdays();
-			getBirthdays.execute(null, null, {source:FacebookDesktopConst.FACEBOOK_DESKTOP_CONTEXT_MENU_CLICK});
+			getBirthdays.execute(null, null, {source:FacebookDesktopConst.CONTEXT_MENU_CLICK});
 		}  // birthdaysHandler
 		
 		private function eventInvitesHandler(event:Event):void

@@ -1,7 +1,8 @@
 package com.facebook.desktop.model
 {
+	import com.charlesbihis.engine.notification.NotificationManager;
+	
 	import flash.events.EventDispatcher;
-	import flash.media.Sound;
 	
 	import mx.resources.ResourceManager;
 
@@ -39,15 +40,13 @@ package com.facebook.desktop.model
 		
 		public var currentUser:Object;
 		public var preferences:Object;
-		public var notificationSound:Sound;
-		public var latestNotificationSound:Number;
-		
 		public var latestNewsFeedUpdate:String;
 		public var latestNotificationUpdate:String;
 		public var latestMessageUpdate:String;
 		public var latestPokeUpdate:String;
 		public var latestShareUpdate:String;
 		public var latestBirthdayString:String;
+		public var notificationManager:NotificationManager;
 		
 		private static var _instance:Model = new Model(SingletonLock);
 		
@@ -57,8 +56,6 @@ package com.facebook.desktop.model
 			{
 				throw new Error("Invalid singleton access.  User Model.instance instead.");
 			}  // if statement
-			
-			latestNotificationSound = 0;
 		}  // Model
 		
 		public static function get instance():Model

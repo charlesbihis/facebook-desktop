@@ -33,7 +33,7 @@ package com.facebook.desktop.control.preferences
 				
 				// setting default notification length
 				log.info("Configuring preferred notification display length: {0}", model.preferences.notificationDisplayLength);
-				NotificationManager.notificationDisplayLength = model.preferences.notificationDisplayLength;
+				model.notificationManager.displayLength = model.preferences.notificationDisplayLength;
 				
 				// set defaults for new preference properties
 				if (model.preferences.language == null)

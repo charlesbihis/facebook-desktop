@@ -5,7 +5,7 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	xmlns:composer="com.facebook.desktop.view.composer.*"
 	xmlns:component="com.facebook.desktop.view.component.*"
-	title="{FacebookDesktopConst.FACEBOOK_STATUS_UPDATE_WINDOW_TITLE}"
+	title="{FacebookDesktopConst.STATUS_UPDATE_WINDOW_TITLE}"
 	width="400" height="132"
 	transparent="true"
 	systemChrome="none"
@@ -35,7 +35,6 @@
 			private static const DEFAULT_HEIGHT:int = 107;
 			
 			private static var model:Model = Model.instance;
-			private static var notificationManager:NotificationManager = NotificationManager.instance;
 			private static var logger:ILogger = Log.getLogger("com.facebook.composer.Composer");
 			private static var controller:Controller = Controller.instance;
 
@@ -110,7 +109,7 @@
 						composerInput.editable = true;
 						shareButton.enabled = true;
 						
-						notificationManager.show(resourceManager.getString("resources", "action.statusUpdate.success"), "", model.currentUser.link, FacebookDesktopConst.FACEBOOK_WALL_POST_ICON, true, false, false);
+						model.notificationManager.show(resourceManager.getString("resources", "action.statusUpdate.success"), null, FacebookDesktopConst.FACEBOOK_WALL_POST_ICON, model.currentUser.link, true, false, false);
 						
 						var getNewsFeedCommand:GetNewsFeed = new GetNewsFeed();
 						getNewsFeedCommand.execute({since:model.latestNewsFeedUpdate});

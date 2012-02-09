@@ -15,7 +15,6 @@ package com.facebook.desktop.control.api
 		private static const API:String = "/me/notifications";
 		
 		private static var model:Model = Model.instance;
-		private static var notificationManager:NotificationManager = NotificationManager.instance;
 		private static var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetNotifications");
 		
 		private var args:Object;
@@ -81,20 +80,13 @@ package com.facebook.desktop.control.api
 
 				// show notification
 				var notification:Notification = new Notification();
-				notification.notificationTitle = passThrough.title;
-				notification.notificationMessage = "";
-				notification.notificationImage = result.icon_url;
-				notification.notificationLink = passThrough.link;
+				notification.title = passThrough.title;
+				notification.message = "";
+				notification.image = result.icon_url;
+				notification.link = passThrough.link;
 				notification.isCompact = true;
 				notification.isSticky = model.preferences.showActivityUpdatesSticky;
-				notificationManager.showNotification(notification);
-				
-				// play sound
-				if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
-				{
-					model.notificationSound.play();
-					model.latestNotificationSound = new Date().time;
-				}  // if statement
+				model.notificationManager.showNotification(notification);
 			}  // getApplicationHandler
 		}  // execute
 	}  // class declaration

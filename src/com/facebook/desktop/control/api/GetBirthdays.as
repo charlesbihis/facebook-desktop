@@ -16,7 +16,6 @@ package com.facebook.desktop.control.api
 		private static const API:String = "fql.query";
 		
 		private var model:Model = Model.instance;
-		private var notificationManager:NotificationManager = NotificationManager.instance;
 		private var systemInteractionManager:SystemInteractionManager = SystemInteractionManager.instance;
 		private var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetBirthdays");
 		
@@ -29,7 +28,7 @@ package com.facebook.desktop.control.api
 			var birthdayString:String = thisMonthString + "/" + thisDateString;
 			var fql:String = "SELECT name, uid, birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND '" + birthdayString + "' IN birthday_date";
 			
-			if (model.preferences.showBirthdays && (model.latestBirthdayString != birthdayString || (passThroughArgs != null && (passThroughArgs.source == FacebookDesktopConst.FACEBOOK_DESKTOP_STARTUP || passThroughArgs.source == FacebookDesktopConst.FACEBOOK_DESKTOP_CONTEXT_MENU_CLICK))))
+			if (model.preferences.showBirthdays && (model.latestBirthdayString != birthdayString || (passThroughArgs != null && (passThroughArgs.source == FacebookDesktopConst.STARTUP || passThroughArgs.source == FacebookDesktopConst.CONTEXT_MENU_CLICK))))
 			{
 				FacebookDesktop.callRestAPI(API, getBirthdaysHandler, {query:fql});
 				model.latestBirthdayString = birthdayString;
@@ -47,20 +46,12 @@ package com.facebook.desktop.control.api
 					for (var i:int = 0; i < birthdays.length; i++)
 					{
 						var birthdayNotification:Notification = new Notification();
-						birthdayNotification.notificationTitle = "It's " + birthdays[i].name + "'s birthday today!";
-						birthdayNotification.notificationMessage = "";
-						birthdayNotification.notificationImage = FacebookDesktopConst.FACEBOOK_BIRTHDAY_ICON;
-						birthdayNotification.notificationLink = FacebookDesktopConst.FACEBOOK_HOMEPAGE + birthdays[i].uid;
+						birthdayNotification.title = "It's " + birthdays[i].name + "'s birthday today!";
+						birthdayNotification.image = FacebookDesktopConst.FACEBOOK_BIRTHDAY_ICON;
+						birthdayNotification.link = FacebookDesktopConst.FACEBOOK_HOMEPAGE + birthdays[i].uid;
 						birthdayNotification.isCompact = true;
 						birthdayNotification.isSticky = model.preferences.showBirthdaysSticky;
-						notificationManager.showNotification(birthdayNotification);
-						
-						// play sound
-						if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
-						{
-							model.notificationSound.play();
-							model.latestNotificationSound = new Date().time;
-						}  // if statement
+						model.notificationManager.showNotification(birthdayNotification);
 					}  // for loop
 					
 					systemInteractionManager.addBirthdaysToMenu(birthdays);

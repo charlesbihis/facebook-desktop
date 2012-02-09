@@ -17,7 +17,6 @@ package com.facebook.desktop.control.api
 		private static const API:String = "notifications.get";
 		
 		private var model:Model = Model.instance;
-		private var notificationManager:NotificationManager = NotificationManager.instance;
 		private var systemInteractionManager:SystemInteractionManager = SystemInteractionManager.instance;
 		private var log:ILogger = Log.getLogger("com.facebook.desktop.control.api.GetAdditionalNotifications");
 		
@@ -33,26 +32,18 @@ package com.facebook.desktop.control.api
 					if (model.preferences.showEventInvites && result.event_invites != null && result.event_invites is Array && result.event_invites.length > 0)
 					{
 						// if this is our first application call, display a summary notification
-						if (passThroughArgs != null && passThroughArgs.source == FacebookDesktopConst.FACEBOOK_DESKTOP_STARTUP)
+						if (passThroughArgs != null && passThroughArgs.source == FacebookDesktopConst.STARTUP)
 						{
 							var startupEventInvitesMessage:String = (result.event_invites.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.eventInvitation") : ResourceManager.getInstance().getString("resources", "notification.eventInvitationsBegin") + " " + result.event_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.eventInvitationsEnd"));
 							log.info("Startup notification! - {0}", startupEventInvitesMessage);
 							
 							var eventInviteNotification:Notification = new Notification();
-							eventInviteNotification.notificationTitle = startupEventInvitesMessage;
-							eventInviteNotification.notificationMessage = "";
-							eventInviteNotification.notificationImage = FacebookDesktopConst.FACEBOOK_EVENT_INVITES_ICON;
-							eventInviteNotification.notificationLink = FacebookDesktopConst.FACEBOOK_EVENT_INVITES_URL;
+							eventInviteNotification.title = startupEventInvitesMessage;
+							eventInviteNotification.image = FacebookDesktopConst.FACEBOOK_EVENT_INVITES_ICON;
+							eventInviteNotification.link = FacebookDesktopConst.FACEBOOK_EVENT_INVITES_URL;
 							eventInviteNotification.isCompact = true;
 							eventInviteNotification.isSticky = model.preferences.showEventInvitesSticky;
-							notificationManager.showNotification(eventInviteNotification);
-							
-							// play sound
-							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
-							{
-								model.notificationSound.play();
-								model.latestNotificationSound = new Date().time;
-							}  // if statement
+							model.notificationManager.showNotification(eventInviteNotification);
 						}  // if statement
 					}  // if statement
 					
@@ -60,26 +51,18 @@ package com.facebook.desktop.control.api
 					if (model.preferences.showFriendRequests && result.friend_requests != null && result.friend_requests is Array && result.friend_requests.length > 0)
 					{
 						// if this is our first application call, display a summary notification
-						if (passThroughArgs != null && passThroughArgs.source == FacebookDesktopConst.FACEBOOK_DESKTOP_STARTUP)
+						if (passThroughArgs != null && passThroughArgs.source == FacebookDesktopConst.STARTUP)
 						{
 							var startupFriendRequestsMessage:String = (result.friend_requests.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.friendRequest") : ResourceManager.getInstance().getString("resources", "notification.friendRequestsBegin") + " " + result.event_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.friendRequestsEnd"));
 							log.info("Startup notification! - {0}", startupFriendRequestsMessage);
 							
 							var friendRequestsNotification:Notification = new Notification();
-							friendRequestsNotification.notificationTitle = startupFriendRequestsMessage;
-							friendRequestsNotification.notificationMessage = "";
-							friendRequestsNotification.notificationImage = FacebookDesktopConst.FACEBOOK_FRIEND_REQUESTS_ICON;
-							friendRequestsNotification.notificationLink = FacebookDesktopConst.FACEBOOK_FRIEND_REQUESTS_URL;
+							friendRequestsNotification.title = startupFriendRequestsMessage;
+							friendRequestsNotification.image = FacebookDesktopConst.FACEBOOK_FRIEND_REQUESTS_ICON;
+							friendRequestsNotification.link = FacebookDesktopConst.FACEBOOK_FRIEND_REQUESTS_URL;
 							friendRequestsNotification.isCompact = true;
 							friendRequestsNotification.isSticky = model.preferences.showFriendRequestsSticky;
-							notificationManager.showNotification(friendRequestsNotification);
-							
-							// play sound
-							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
-							{
-								model.notificationSound.play();
-								model.latestNotificationSound = new Date().time;
-							}  // if statement
+							model.notificationManager.showNotification(friendRequestsNotification);
 						}  // if statement
 					}  // if statement
 					
@@ -87,26 +70,18 @@ package com.facebook.desktop.control.api
 					if (model.preferences.showGroupInvites && result.group_invites != null && result.group_invites is Array && result.group_invites.length > 0)
 					{
 						// if this is our first application call, display a summary notification
-						if (passThroughArgs != null && passThroughArgs.source == FacebookDesktopConst.FACEBOOK_DESKTOP_STARTUP)
+						if (passThroughArgs != null && passThroughArgs.source == FacebookDesktopConst.STARTUP)
 						{
 							var startupGroupInvitesMessage:String = (result.group_invites.length == 1 ? ResourceManager.getInstance().getString("resources", "notification.groupInvitation") : ResourceManager.getInstance().getString("resources", "notification.groupInvitationsBegin") + " " + result.group_invites.length + " " + ResourceManager.getInstance().getString("resources", "notification.groupInvitationsEnd"));
 							log.info("Startup notification! - {0}", startupGroupInvitesMessage);
 							
 							var groupInvitesNotification:Notification = new Notification();
-							groupInvitesNotification.notificationTitle = startupGroupInvitesMessage;
-							groupInvitesNotification.notificationMessage = "";
-							groupInvitesNotification.notificationImage = FacebookDesktopConst.FACEBOOK_GROUP_INVITES_ICON;
-							groupInvitesNotification.notificationLink = FacebookDesktopConst.FACEBOOK_GROUP_INVITES_URL;
+							groupInvitesNotification.title = startupGroupInvitesMessage;
+							groupInvitesNotification.image = FacebookDesktopConst.FACEBOOK_GROUP_INVITES_ICON;
+							groupInvitesNotification.link = FacebookDesktopConst.FACEBOOK_GROUP_INVITES_URL;
 							groupInvitesNotification.isCompact = true;
 							groupInvitesNotification.isSticky = model.preferences.showGroupInvitesSticky;
-							notificationManager.showNotification(groupInvitesNotification);
-							
-							// play sound
-							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
-							{
-								model.notificationSound.play();
-								model.latestNotificationSound = new Date().time;
-							}  // if statement
+							model.notificationManager.showNotification(groupInvitesNotification);
 						}  // if statement
 					}  // if statement
 					
@@ -121,20 +96,12 @@ package com.facebook.desktop.control.api
 							
 							// show notification
 							var newMessagesNotification:Notification = new Notification();
-							newMessagesNotification.notificationTitle = newMessagesMessage;
-							newMessagesNotification.notificationMessage = "";
-							newMessagesNotification.notificationImage = FacebookDesktopConst.FACEBOOK_MESSAGES_ICON;
-							newMessagesNotification.notificationLink = FacebookDesktopConst.FACEBOOK_MESSAGES_URL;
+							newMessagesNotification.title = newMessagesMessage;
+							newMessagesNotification.image = FacebookDesktopConst.FACEBOOK_MESSAGES_ICON;
+							newMessagesNotification.link = FacebookDesktopConst.FACEBOOK_MESSAGES_URL;
 							newMessagesNotification.isCompact = true;
 							newMessagesNotification.isSticky = model.preferences.showMessagesSticky;
-							notificationManager.showNotification(newMessagesNotification);
-							
-							// play sound
-							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
-							{
-								model.notificationSound.play();
-								model.latestNotificationSound = new Date().time;
-							}  // if statement
+							model.notificationManager.showNotification(newMessagesNotification);
 						}  // if statement
 						
 						// update model
@@ -153,20 +120,12 @@ package com.facebook.desktop.control.api
 							
 							// show notification
 							var pokeNotification:Notification = new Notification();
-							pokeNotification.notificationTitle = newPokeMessage;
-							pokeNotification.notificationMessage = "";
-							pokeNotification.notificationImage = FacebookDesktopConst.FACEBOOK_POKES_ICON;
-							pokeNotification.notificationLink = FacebookDesktopConst.FACEBOOK_POKES_URL;
+							pokeNotification.title = newPokeMessage;
+							pokeNotification.image = FacebookDesktopConst.FACEBOOK_POKES_ICON;
+							pokeNotification.link = FacebookDesktopConst.FACEBOOK_POKES_URL;
 							pokeNotification.isCompact = true;
 							pokeNotification.isSticky = model.preferences.showPokesSticky;
-							notificationManager.showNotification(pokeNotification);
-							
-							// play sound
-							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
-							{
-								model.notificationSound.play();
-								model.latestNotificationSound = new Date().time;
-							}  // if statement
+							model.notificationManager.showNotification(pokeNotification);
 						}  // if statement
 						
 						// update model
@@ -185,20 +144,12 @@ package com.facebook.desktop.control.api
 							
 							// show notification
 							var shareNotification:Notification = new Notification();
-							shareNotification.notificationTitle = newShareMessage;
-							shareNotification.notificationMessage = "";
-							shareNotification.notificationImage = FacebookDesktopConst.FACEBOOK_SHARES_ICON;
-							shareNotification.notificationLink = FacebookDesktopConst.FACEBOOK_SHARES_URL;
+							shareNotification.title = newShareMessage;
+							shareNotification.image = FacebookDesktopConst.FACEBOOK_SHARES_ICON;
+							shareNotification.link = FacebookDesktopConst.FACEBOOK_SHARES_URL;
 							shareNotification.isCompact = true;
 							shareNotification.isSticky = model.preferences.showSharesSticky;
-							notificationManager.showNotification(shareNotification);
-							
-							// play sound
-							if (model.preferences.playNotificationSound && (new Date().time - model.latestNotificationSound > Model.MINIMUM_TIME_BETWEEN_NOTIFICATION_SOUNDS))
-							{
-								model.notificationSound.play();
-								model.latestNotificationSound = new Date().time;
-							}  // if statement
+							model.notificationManager.showNotification(shareNotification);
 						}  // if statement
 						
 						// update model
