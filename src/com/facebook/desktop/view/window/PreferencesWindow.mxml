@@ -20,6 +20,7 @@
 		<![CDATA[
 			import com.charlesbihis.engine.notification.NotificationConst;
 			import com.charlesbihis.engine.notification.NotificationManager;
+			import com.facebook.desktop.FacebookDesktopConst;
 			import com.facebook.desktop.control.Controller;
 			import com.facebook.desktop.control.api.GetAdditionalNotifications;
 			import com.facebook.desktop.control.api.GetBirthdays;
@@ -79,6 +80,7 @@
 				// advanced settings
 				notificationDisplayLength.value = model.preferences.notificationDisplayLength;
 				clickActionComboBox.selectedIndex = model.preferences.iconClickAction;
+				themeComboBox.selectedIndex = model.preferences.theme;
 				markAsReadCheckBox.selected = model.preferences.markNotificationsAsRead;
 				playNotificationSound.selected = model.preferences.playNotificationSound;
 				
@@ -117,6 +119,7 @@
 				// advanced settings
 				model.preferences.notificationDisplayLength = notificationDisplayLength.value;
 				model.preferences.iconClickAction = clickActionComboBox.selectedIndex;
+				model.preferences.theme = themeComboBox.selectedIndex;
 				model.preferences.markNotificationsAsRead = markAsReadCheckBox.selected;
 				model.preferences.playNotificationSound = playNotificationSound.selected;
 				
@@ -288,12 +291,20 @@
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.notificationDisplayLength')}" />
 						<mx:Spacer width="100%" />
-						<mx:HSlider id="notificationDisplayLength" minimum="4" maximum="12" snapInterval="2" tickInterval="2" value="8" labelStyleName="displayLengthSliderLabel" labels="[short,medium,long]" dataTipFormatFunction="notificationDisplayLengthFormatter" change="saveSettings();log.info('Changing \'Notification display length\' setting to {0}', notificationDisplayLength.value);model.notificationManager.displayLength=notificationDisplayLength.value" />
+						<s:VGroup>
+							<s:Label text="short     medium     long" fontSize="9" />
+							<s:HSlider id="notificationDisplayLength" minimum="{NotificationConst.DISPLAY_LENGTH_SHORT}" maximum="{NotificationConst.DISPLAY_LENGTH_LONG}" value="{NotificationConst.DISPLAY_LENGTH_DEFAULT}" snapInterval="2" dataTipFormatFunction="notificationDisplayLengthFormatter" change="saveSettings();log.info('Changing \'Notification display length\' setting to {0}', notificationDisplayLength.value);model.notificationManager.displayLength=notificationDisplayLength.value" />
+						</s:VGroup>
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.clickAction.' + model.operatingSystem.toLowerCase())}" />
 						<mx:Spacer width="100%" />
 						<mx:ComboBox id="clickActionComboBox" dataProvider="{model.clickActions}" change="saveSettings();log.info('Changing \'Default icon click action to \' setting to {0}', clickActionComboBox.selectedLabel)"/>
+					</mx:HBox>
+					<mx:HBox verticalAlign="middle" width="100%">
+						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.theme')}" />
+						<mx:Spacer width="100%" />
+						<mx:ComboBox id="themeComboBox" dataProvider="{model.themes}" change="saveSettings();log.info('Changing \'Notification theme \' setting to {0}', themeComboBox.selectedLabel);model.notificationManager.closeAllNotifications();model.notificationManager.loadStyle(themeComboBox.selectedItem.data);model.notificationManager.show('You are now using the ' + themeComboBox.selectedLabel + ' theme!',null,FacebookDesktopConst.DEFAULT_NOTIFICATION_IMAGE,null,false,false,false)"/>
 					</mx:HBox>
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.markNotificationsRead')}" />
@@ -305,6 +316,7 @@
 						<mx:Spacer width="100%" />
 						<s:CheckBox id="playNotificationSound" change="saveSettings();log.info('Changing \'Play notification sound\' setting to {0}', playNotificationSound.selected)" />
 					</mx:HBox>
+					
 				</mx:VBox>
 			</mx:HBox>
 			<mx:HBox minHeight="43" width="100%" backgroundColor="#f2f2f2" verticalAlign="middle" horizontalAlign="right" paddingRight="12" paddingTop="9" paddingBottom="9">

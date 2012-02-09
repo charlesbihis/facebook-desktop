@@ -1,6 +1,7 @@
 package com.facebook.desktop.model
 {
 	import com.charlesbihis.engine.notification.NotificationManager;
+	import com.facebook.desktop.FacebookDesktopConst;
 	
 	import flash.events.EventDispatcher;
 	
@@ -17,6 +18,9 @@ package com.facebook.desktop.model
 		[Bindable] public var operatingSystem:String;
 		[Bindable] public var clickActions:Array = [{label:ResourceManager.getInstance().getString('resources','preferences.advancedSettings.option.clickAction.openComposer').toString()},
 													{label:ResourceManager.getInstance().getString('resources','preferences.advancedSettings.option.clickAction.openFacebook').toString()}];
+		[Bindable] public var themes:Array = [{label:ResourceManager.getInstance().getString('resources','preferences.advancedSettings.option.theme.dark').toString(), data:FacebookDesktopConst.NOTIFICATION_STYLE_DARK},
+											  {label:ResourceManager.getInstance().getString('resources','preferences.advancedSettings.option.theme.light').toString(), data:FacebookDesktopConst.NOTIFICATION_STYLE_LIGHT},
+											  {label:ResourceManager.getInstance().getString('resources','preferences.advancedSettings.option.theme.facebook').toString(), data:FacebookDesktopConst.NOTIFICATION_STYLE_FACEBOOK}];
 		[Bindable] public var locales:Array = [{label:ResourceManager.getInstance().getString('resources','language.english').toString(), locale:"en_US", toolTip:"English"},
 											   {label:ResourceManager.getInstance().getString('resources','language.malay').toString(), locale:"ms_MY", toolTip:"Malay"},
 											   {label:ResourceManager.getInstance().getString('resources','language.bosnian').toString(), locale:"bs_BA", toolTip:"Bosnian"},

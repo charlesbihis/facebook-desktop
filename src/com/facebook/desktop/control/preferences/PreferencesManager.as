@@ -31,10 +31,6 @@ package com.facebook.desktop.control.preferences
 					ResourceManager.getInstance().localeChain = [model.locales[model.preferences.language].locale];
 				}  // if statement
 				
-				// setting default notification length
-				log.info("Configuring preferred notification display length: {0}", model.preferences.notificationDisplayLength);
-				model.notificationManager.displayLength = model.preferences.notificationDisplayLength;
-				
 				// set defaults for new preference properties
 				if (model.preferences.language == null)
 				{
@@ -124,6 +120,10 @@ package com.facebook.desktop.control.preferences
 				{
 					model.preferences.iconClickAction = 0;
 				}  // if statement
+				if (model.preferences.theme == null)
+				{
+					model.preferences.theme = 0;
+				}  // if statement
 				if (model.preferences.markNotificationsAsRead == null)
 				{
 					model.preferences.markNotificationsAsRead = false;
@@ -166,6 +166,7 @@ package com.facebook.desktop.control.preferences
 				// advanced settings
 				preferences.notificationDisplayLength = NotificationConst.DISPLAY_LENGTH_MEDIUM;
 				preferences.iconClickAction = 0;	// defaults to opening the status update window which is index 0 in model.clickActions
+				preferences.theme = 0;				// defaults to "Dark" theme which is index 0 in model.themes
 				preferences.markNotificationsAsRead = false;
 				preferences.playNotificationSound = false;
 				
