@@ -90,27 +90,27 @@ package com.facebook.desktop.control.preferences
 				}  // if statement
 				if (model.preferences.showMessagesSticky == null)
 				{
-					model.preferences.showMessagesSticky = true;
+					model.preferences.showMessagesSticky = false;
 				}  // if statement
 				if (model.preferences.showFriendRequestsSticky == null)
 				{
-					model.preferences.showFriendRequestsSticky = true;
+					model.preferences.showFriendRequestsSticky = false;
 				}  // if statement
 				if (model.preferences.showSharesSticky == null)
 				{
-					model.preferences.showSharesSticky = true;
+					model.preferences.showSharesSticky = false;
 				}  // if statement
 				if (model.preferences.showGroupInvitesSticky == null)
 				{
-					model.preferences.showGroupInvitesSticky = true;
+					model.preferences.showGroupInvitesSticky = false;
 				}  // if statement
 				if (model.preferences.showEventInvitesSticky == null)
 				{
-					model.preferences.showEventInvitesSticky = true;
+					model.preferences.showEventInvitesSticky = false;
 				}  // if statement
 				if (model.preferences.showPokesSticky == null)
 				{
-					model.preferences.showPokesSticky = true;
+					model.preferences.showPokesSticky = false;
 				}  // if statement
 				if (model.preferences.showBirthdaysSticky == null)
 				{
