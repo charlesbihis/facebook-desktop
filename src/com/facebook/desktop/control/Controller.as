@@ -20,7 +20,6 @@ package com.facebook.desktop.control
 		private var settingsWindow:PreferencesWindow;
 		private var statusUpdateWindow:Composer;
 
-
 		public function Controller(lock:Class)
 		{
 			if (lock != SingletonLock)
