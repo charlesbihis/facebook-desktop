@@ -51,11 +51,11 @@
 				log.info("\n********* starting new session *********\n");
 				log.info("Logging initialized");
 				
-				// configure notification engine
-				model.notificationManager = new NotificationManager(FacebookDesktopConst.NOTIFICATION_STYLE_DARK, FacebookDesktopConst.DEFAULT_NOTIFICATION_IMAGE, FacebookDesktopConst.DEFAULT_COMPACT_NOTIFICATION_IMAGE, FacebookDesktopConst.DEFAULT_NOTIFICATION_SOUND, NotificationConst.DISPLAY_LENGTH_DEFAULT, NotificationConst.DISPLAY_LOCATION_DEFAULT);
-				
 				// grab preferences
 				PreferencesManager.loadPreferences();
+				
+				// configure notification engine
+				model.notificationManager = new NotificationManager(model.themes[model.preferences.theme].data, FacebookDesktopConst.DEFAULT_NOTIFICATION_IMAGE, FacebookDesktopConst.DEFAULT_COMPACT_NOTIFICATION_IMAGE, FacebookDesktopConst.DEFAULT_NOTIFICATION_SOUND, model.preferences.notificationDisplayLength, NotificationConst.DISPLAY_LOCATION_AUTO);
 				
 				// set up application to start on user-login
 				log.info("Setting app to start on user-login: {0}", model.preferences.startAtLogin);
