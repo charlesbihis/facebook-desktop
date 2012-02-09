@@ -98,7 +98,7 @@
 				var updateStatusCommand:UpdateStatus = new UpdateStatus();
 				updateStatusCommand.execute({message: composerInput.text}, updateStatusHandler);
 				
-				function updateStatusHandler(result:Object, fail:Object):void
+				function updateStatusHandler(result:Object, fail:Object, passThroughArgs:Object = null):void
 				{
 					if (!fail)
 					{
