@@ -56,7 +56,7 @@ package com.facebook.desktop.control.api
 					
 					systemInteractionManager.addBirthdaysToMenu(birthdays);
 				}  // if statement
-				else if (result.error_code != null)
+				else if (result != null && result.error_code != null)
 				{
 					log.error("Request to get friends birthdays has failed!  Error object: " + ObjectUtil.toString(result));
 				}  // else-if statement
