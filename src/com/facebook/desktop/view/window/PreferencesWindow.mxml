@@ -128,7 +128,7 @@
 			
 			private function changeLanguage():void
 			{
-				resourceManager.localeChain = [localeComboBox.selectedItem.locale];
+				resourceManager.localeChain = [localeComboBox.selectedItem.locale, model.locales[0].locale];
 				hideToolTip();
 			}  // changeLanguage
 			
