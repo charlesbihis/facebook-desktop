@@ -19,7 +19,6 @@
 	<fx:Script>
 		<![CDATA[
 			import com.charlesbihis.engine.notification.NotificationConst;
-			import com.charlesbihis.engine.notification.NotificationManager;
 			import com.facebook.desktop.FacebookDesktopConst;
 			import com.facebook.desktop.control.Controller;
 			import com.facebook.desktop.control.api.GetAdditionalNotifications;
@@ -314,7 +313,7 @@
 					<mx:HBox verticalAlign="middle" width="100%">
 						<s:Label text="{resourceManager.getString('resources','preferences.advancedSettings.option.playNotificationSound')}" />
 						<mx:Spacer width="100%" />
-						<s:CheckBox id="playNotificationSound" change="saveSettings();log.info('Changing \'Play notification sound\' setting to {0}', playNotificationSound.selected)" />
+						<s:CheckBox id="playNotificationSound" change="saveSettings();log.info('Changing \'Play notification sound\' setting to {0}', playNotificationSound.selected);model.notificationManager.loadSound((playNotificationSound.selected ? FacebookDesktopConst.DEFAULT_NOTIFICATION_SOUND : null))" />
 					</mx:HBox>
 					
 				</mx:VBox>
