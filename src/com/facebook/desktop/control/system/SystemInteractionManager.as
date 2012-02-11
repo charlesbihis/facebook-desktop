@@ -269,10 +269,8 @@ package com.facebook.desktop.control.system
 				// birthdays
 				if (birthdayNotifications != null && birthdayNotifications is Array && birthdayNotifications.length > 0)
 				{
-					// Note: We are *not* changing the icon to notification-waiting for birthdays because
-					//       we don't want users icons to be forever in the notification-waiting state
-					//       whenever they have a friend whose birthday is today.
 					_customOnlineMenu.addItem(birthdaysCommand);
+					notificationCount += birthdayNotifications.length;
 				}  // if statement
 				
 				// event invites
@@ -319,7 +317,7 @@ package com.facebook.desktop.control.system
 			}  // if statement
 			
 			// if we didn't add any new menu items, remove the middle separator
-			if (notificationCount == 0 && (birthdayNotifications == null || (birthdayNotifications is Array && birthdayNotifications.length == 0)) && _customOnlineMenu.containsItem(middleSeparator))
+			if (notificationCount == 0 && _customOnlineMenu.containsItem(middleSeparator))
 			{
 				_customOnlineMenu.removeItem(middleSeparator);
 			}  // if statement
