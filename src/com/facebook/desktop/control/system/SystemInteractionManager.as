@@ -319,7 +319,7 @@ package com.facebook.desktop.control.system
 			}  // if statement
 			
 			// if we didn't add any new menu items, remove the middle separator
-			if (notificationCount == 0 && _customOnlineMenu.containsItem(middleSeparator))
+			if (notificationCount == 0 && (birthdayNotifications == null || (birthdayNotifications is Array && birthdayNotifications.length == 0)) && _customOnlineMenu.containsItem(middleSeparator))
 			{
 				_customOnlineMenu.removeItem(middleSeparator);
 			}  // if statement
