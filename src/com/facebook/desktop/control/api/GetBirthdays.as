@@ -40,7 +40,7 @@ package com.facebook.desktop.control.api
 			
 			function getBirthdaysHandler(result:Object, fail:Object):void
 			{
-				if (fail == null && result != null && result is Array && (result as Array).length > 0)
+				if (fail == null && result != null && result is Array)
 				{
 					var birthdays:Array = result as Array;
 					for (var i:int = 0; i < birthdays.length; i++)
