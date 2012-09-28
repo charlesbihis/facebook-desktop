@@ -10,6 +10,10 @@ This project is built with Adobe Flash Builder 4.5 using the Adobe Flex 4.5 SDK 
 
 This project was first mentioned in my blog post at http://blogs.adobe.com/charles/2011/01/introducing-facebook-desktop-a-lightweight-unobtrusive-notification-engine-for-facebook-built-on-adobe-air.html.
 
+### Codename
+
+Leanne
+
 ### Features
 
 Facebook Desktop supports the following features...
