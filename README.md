@@ -9,6 +9,7 @@ Facebook Desktop is a notification engine that gives you updates about your Face
 This project is built with Adobe Flash Builder 4.5 using the Adobe Flex 4.5 SDK and the Adobe AIR 3.0 SDK.  It is cross-platform, capable of running on Windows, Mac, and Linux systems.
 
 This project was first mentioned in my blog post at http://blogs.adobe.com/charles/2011/01/introducing-facebook-desktop-a-lightweight-unobtrusive-notification-engine-for-facebook-built-on-adobe-air.html.
+Facebook Desktop was eventually open-sourced with the announcement posted on my blog at http://blogs.adobe.com/charles/2012/10/facebook-desktop-open-sourced.html.
 
 ### Codename
 
